@@ -11,6 +11,21 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        moveUpDown: {
+          '0%': { transform: 'translateY(0%)' },
+          '50%': { transform: 'translateY(40%)' },
+          '100%': { transform: 'translateY(0%)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'move-up-down': 'moveUpDown 1.5s infinite ease-in-out',
+      },
     },
   },
   plugins: [],
