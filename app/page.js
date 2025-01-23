@@ -10,6 +10,7 @@ import image7 from "../public/automation 1.png"
 import image8 from "../public/data-analysis 1.png"
 import image9 from "../public/Group 3915.png"
 import image10 from "../public/google1.png"
+import image11 from "../public/contact-us.png"
 import Image from "next/image";
 const GA4AuditorTool = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,20 +44,20 @@ const GA4AuditorTool = () => {
       }
     };
 
-    const preventMouseWheelZoom = (event) => {
-      if (event.ctrlKey) {
-        event.preventDefault();
-        showToastMessage();
-      }
-    };
+    // const preventMouseWheelZoom = (event) => {
+    //   if (event.ctrlKey) {
+    //     event.preventDefault();
+    //     showToastMessage();
+    //   }
+    // };
 
-    document.addEventListener("keydown", preventZoom);
-    window.addEventListener("wheel", preventMouseWheelZoom, { passive: false });
+    // document.addEventListener("keydown", preventZoom);
+    // window.addEventListener("wheel", preventMouseWheelZoom, { passive: false });
 
-    return () => {
-      document.removeEventListener("keydown", preventZoom);
-      window.removeEventListener("wheel", preventMouseWheelZoom);
-    };
+    // return () => {
+    //   document.removeEventListener("keydown", preventZoom);
+    //   window.removeEventListener("wheel", preventMouseWheelZoom);
+    // };
   }, []);
 
   const showToastMessage = () => {
@@ -108,19 +109,29 @@ const GA4AuditorTool = () => {
 
   return (
 <>
-    <div >
-
-      {/* Taking left and right component as 1 component  */}
-      <div className="h-[1/2] ">
-        {/* Component present in the left */}
-        <div className="flex flex-col w-1/3 h-full place-items-center justify-items-start mt-10">
-          {/* Image component */}
-          <div className="flex items-center">
-            <Image src={image1} alt="GA4 Auditor Tool Logo" className="w-20 top-[43px]" />
-            <p className="font-[700] text-[40px] ">
+    <div className="pl-40 mt-[-70px] pr-24 justify-between">
+      <div className="flex justify-between items-center mt-10">
+        {/* Logo and name */}
+        <div className="flex justify-between items-center gap-4">
+            <Image src={image1} alt="GA4 Auditor Tool Logo" className="w-10 top-[33px]" />
+            <p className="font-[700] text-[30px] ">
               GA4 Auditor Tool
             </p>
-          </div>
+        </div>
+        
+        {/* Contact Us button */}
+            <button type="submit" className="bg-white border-[#1A73E8] border-2 h-[56px] w-[200px] flex relative items-center justify-center rounded-md z-10 right-[50px] " >
+                  <Image src={image11} className="pr-[12px] h-[30px] w-[42px]" />
+                  <p>Contact Us</p>
+            </button>
+            </div>
+      </div>
+    
+
+    <div>
+      {/* Component present in the left */}
+        <div className="px-40 flex justify-between ">
+          
 
           {/* Component with 4 elements (3p tags and 1 button) */}
           <div className="flex flex-col mt-[60px]">
@@ -130,20 +141,36 @@ const GA4AuditorTool = () => {
             <p className="text-[#EF611A] text-[45px] font-[700]">
               GA4 Auditor Tool
             </p>
-            <p className="w-[388px] h-[120px] mt-10 text-black">
+            <p className="w-[388px] mt-10 text-black">
               GA4 audit automation tools can help you automatically check your Google Analytics 4 (GA4) setup for accuracy and efficiency. They analyse your data and configuration, identifying potential issues like missing data, duplicate entries, or incorrect tracking codes.
             </p>
-            <button className="bg-[#1A73E8] h-[56px] w-[270px] flex relative items-center justify-center mt-10 rounded-md">
-                <Image src={image10} className="pr-[12px] h-[30px] w-[42px]" />
+            <button className="bg-[#1A73E8] h-[56px] w-[200px] flex relative items-center justify-center mt-10 rounded-md">
+                <Image src={image10} alt="Google logo"className="pr-[12px] h-[30px] w-[41px]" />
                 <p>Sign in with Google</p>
-            </button>
+              </button>  
           </div>
+          <div>
+            <Image src={image6} alt="The image" className="w-[563px] h-[400.57px] z-10 relative" />
+          </div>
+
+</div>
+
+
+
+
+
+    <div >
+
+      <div className="">
+        
         </div>
 
 
         {/* Taking right side 3 elements as one component */}
-        <div>
-
+        <div className="relative">
+            
+            <Image src={image5} alt="Shadow of image" className="right-0 bottom-[50px] -z-10 absolute "/>
+            
         </div>
       </div>
 
@@ -152,7 +179,10 @@ const GA4AuditorTool = () => {
 
       {/* Taking the bottom rectangle as 1 component */}
       <div>
-
+           
+            {/* <Image src={image7} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[257px] gap-0"/>    
+            <Image src={image8} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[692px] gap-0"/>
+            <Image src={image9} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[1116px] gap-0"/> */}
       </div>
     </div>
 
@@ -197,7 +227,7 @@ const GA4AuditorTool = () => {
             className="w-full p-2 mb-4 border-2 border-gray-300 focus:outline-none focus:border-blue-600 resize-none"
           />
           <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-md w-full hover:bg-blue-500">
-            isSubmitting ? "Submitting..." : "Submit"
+            Submit
           </button>
         </form>
       </div>
@@ -230,11 +260,7 @@ export default GA4AuditorTool;
   //           These tools can save you time and effort by using
   //         </div>
 
-  //       <Image src={image5} alt="Shadow of image" className="w-[692px] h-[819px]  top-[-114px] left-[1025px] gap-0 shadow-[0px_4px_4px_0px_#00000040]"/>
-  //       <Image src={image6} alt="The image"className="w-[873px] h-[554.57px]  top-[170px] left-[507px] gap-0"/>
-  //       <Image src={image7} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] left-[257px] gap-0"/>
-  //       <Image src={image8} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] left-[692px] gap-0"/>
-  //       <Image src={image9} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] left-[1116px] gap-0"/>
+  //       <
         
       
       
