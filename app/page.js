@@ -106,11 +106,11 @@ const GA4AuditorTool = () => {
       });
     }, 3000);
   };
-
+// lg:px-[4%]
   return (
 <>
-    <div className="pl-40 mt-[-70px] pr-24 justify-between">
-      <div className="flex justify-between items-center mt-10">
+    <div className="pl-[8%]   mt-[-70px] justify-between">
+      <div className="flex justify-between items-center mt-20">
         {/* Logo and name */}
         <div className="flex justify-between items-center gap-4">
             <Image src={image1} alt="GA4 Auditor Tool Logo" className="w-10 top-[33px]" />
@@ -129,12 +129,12 @@ const GA4AuditorTool = () => {
     
 
     <div>
-      {/* Component present in the left */}
-        <div className="px-40 flex justify-between ">
+     
+        <div className="pl-[8%] flex items-center justify-between -mt-10">
           
 
           {/* Component with 4 elements (3p tags and 1 button) */}
-          <div className="flex flex-col mt-[60px]">
+          <div className="flex flex-col mt-[10px]">
             <p className="text-[30px]">
               Welcome to
             </p>
@@ -150,7 +150,8 @@ const GA4AuditorTool = () => {
               </button>  
           </div>
           <div>
-            <Image src={image6} alt="The image" className="w-[563px] h-[400.57px] z-10 relative" />
+            <Image src={image6} alt="The image" className="w-[873px] h-[554.57px] mt-12 z-10 pr-10
+             relative" />
           </div>
 
 </div>
@@ -166,7 +167,7 @@ const GA4AuditorTool = () => {
         </div>
 
 
-        {/* Taking right side 3 elements as one component */}
+        {/* Taking orange shadow behind the image as one component */}
         <div className="relative">
             
             <Image src={image5} alt="Shadow of image" className="right-0 bottom-[50px] -z-10 absolute "/>
@@ -178,62 +179,34 @@ const GA4AuditorTool = () => {
 
 
       {/* Taking the bottom rectangle as 1 component */}
-      <div>
-           
-            {/* <Image src={image7} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[257px] gap-0"/>    
-            <Image src={image8} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[692px] gap-0"/>
-            <Image src={image9} alt="Shadow of image" className="w-[95px] h-[95px]  top-[927px] ml-[1116px] gap-0"/> */}
+      <div className=" justify-center mt-9">
+            <p className="text-center text-[#14183E] font-semibold text-[24px]">
+              These tool can save you time and effort by using</p>
+            <div className="flex mt-24 mb-24 shadow-custom justify-evenly ">  
+            <div className="flex flex-col border-[1px] rounded-3xl px-7 h-[250px] w-[220px] justify-center gap-6 items-center shadow-xl shadow-[#A8A8A8]">
+                  <Image src={image7} alt="1st card" className="w-[95px] h-[95px] "/>
+                  <div className="text-center text-[#1E1D4C] font-[700] ">
+                  <p className="text-center">Automating</p> <p>repetitive tasks</p>
+                  </div>
+            </div> 
+              <div className="flex flex-col border-[1px] border-[#F2F2F2] rounded-3xl px-7 h-[250px] w-[220px] justify-center gap-6 items-center shadow-xl shadow-[#A8A8A8]">
+                  <Image src={image8} alt="2nd card" className="w-[95px] h-[95px] "/>
+                  <div className="text-center text-[#1E1D4C] font-[700] ">
+                  <p className="text-center">Improving </p> <p>data reliability</p>
+                  </div>
+            </div>
+            <div className="flex flex-col border-[1px] border-[#F2F2F2] rounded-3xl px-7 h-[250px] w-[220px] justify-center gap-6 items-center shadow-xl shadow-[#A8A8A8]">
+                  <Image src={image9} alt="3rd card" className="w-[95px] h-[95px] "/>
+                  <div className="text-center text-[#1E1D4C] font-[700] ">
+                  <p className="text-center">Providing 
+                  </p> <p>actionable insights</p>
+                  </div>
+            </div>
+            </div>
       </div>
     </div>
 
-{
-  isModalOpen && (
-    <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-        <button className="absolute top-2 right-2 text-gray-500 text-2xl" onClick={handleModalToggle}>&times;</button>
-        <h2 className="text-xl font-bold text-center mb-4">Contact Form</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="flex gap-4 mb-4">
-            <input
-              type="text"
-              name="firstName"
-              value={formState.firstName}
-              onChange={handleInputChange}
-              placeholder="First Name"
-              className="w-full p-2 border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={formState.lastName}
-              onChange={handleInputChange}
-              placeholder="Last Name"
-              className="w-full p-2 border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
-            />
-          </div>
-          <input
-            type="email"
-            name="email"
-            value={formState.email}
-            onChange={handleInputChange}
-            placeholder="Email"
-            className="w-full p-2 mb-4 border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
-          />
-          <textarea
-            name="query"
-            value={formState.query}
-            onChange={handleInputChange}
-            placeholder="Your Query"
-            className="w-full p-2 mb-4 border-2 border-gray-300 focus:outline-none focus:border-blue-600 resize-none"
-          />
-          <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-md w-full hover:bg-blue-500">
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
+
 </>
   )
 };
@@ -243,27 +216,3 @@ export default GA4AuditorTool;
 
 
 
-
-
-
-  // <div className="w-screen">
-  //   <div className="flex h-screen overflow-hidden w-full">
-  //     <div className="w-full flex flex-col justify-center items-center p-8">
-  //       <div className="flex items-center gap-8 ">
-  //         
-  //       </div>
-  //       <div className="flex flex-row ">
-  //         
-  //         
-  //        
-  //         <div className="w-[590px] h-[36px] absolute top-[784px] left-[425px] gap-0 font-poppins text-[24px] font-semibold leading-[36px] text-center text-[#14183E] underline underline-offset-[2px] decoration-[from-font] decoration-skip-ink-none">
-  //           These tools can save you time and effort by using
-  //         </div>
-
-  //       <
-        
-      
-      
-      // </div >
-
-  // {/* Modal */ }
