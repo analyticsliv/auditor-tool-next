@@ -26,6 +26,9 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'move-up-down': 'moveUpDown 1.5s infinite ease-in-out',
       },
+      boxShadow: {
+        custom: "1px 1px 5px 0px rgba(168, 168, 168, 0.12)", // Added the custom box-shadow value
+      },
     },
   },
   plugins: [],
