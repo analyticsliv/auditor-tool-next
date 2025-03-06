@@ -58,7 +58,7 @@ const Home = () => {
 
         <div className="relative mb-4 w-[400px]" ref={dropdownRef}>
           <div
-            className={`p-2 border border-[#7380ec] rounded-[8px] w-full flex justify-between items-center ${loadingAccounts ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            className={`pl-2.5 pr-1 py-1.5 border border-[#7380ec] rounded-[8px] w-full flex justify-between items-center bg-white ${loadingAccounts ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             onClick={() => !loadingAccounts && setDropdownOpen(!dropdownOpen)}
           >
             <span>
