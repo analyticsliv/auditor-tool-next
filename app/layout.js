@@ -1,8 +1,12 @@
+
 'use client'
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,12 +24,117 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  const menuItems = [
+    { imgUrl: "/assets/nav1.png", label: "Home", path: "/" },
+    { imgUrl: "/assets/nav2.png", label: "Audit Preview", path: "/" },
+    { imgUrl: "/assets/nav3.png", label: "Dashboard", path: "/dashboard" },
+    { imgUrl: "/assets/nav4.png", label: "Account Details", path: "/" },
+    { imgUrl: "/assets/nav5.png", label: "Previous Audits", path: "/" },
+  ];
+
+  const router = useRouter();
+
+  const userSession = JSON.parse(localStorage.getItem('session'));
+
+  const user = userSession?.user?.name;
+
+  const userImage = userSession?.user?.image;
+
+  const [loading, setLoading] = useState(true);
+  const [toggle, setToggle] = useState(false);
+  const pathname = usePathname();
+  const [currentLabel, setCurrentLabel] = useState("Connectors");
+
+  const handleSignOut = async () => {
+    setLoading(true);
+    localStorage.removeItem('userSession');
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
+  const toggleMenu = () => {
+    setToggle(!toggle);
+  }
+
+  useEffect(() => {
+    // Set the current label based on the current path
+    const currentItem = menuItems.find((item) => item.path === pathname);
+    if (currentItem) {
+      setCurrentLabel(currentItem.label);
+    } else {
+      setCurrentLabel("Connectors");
+    }
+  }, [pathname, menuItems]);
+
+  const isLoginPage = pathname === "/login";
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SessionProvider>{children}</SessionProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SessionProvider>
+          {isLoginPage ? (
+            // Only render login page content
+            <div className="">
+              {children}
+            </div>
+          ) : (
+            <main className="flex flex-col h-screen">
+              {/* Header */}
+              <div className="px-4 py-2.5 flex justify-between items-center bg-white">
+                <div className="text-xl font-semibold">GA4 Auditor Tool</div>
+                <div>Welcome, {user}</div>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col text-center">
+                    <div className="font-semibold text-sm">{user}</div>
+                    <div className="text-xs font-normal">Admin</div>
+                  </div>
+                  <img src={userImage} alt={user} className="rounded-full w-8" />
+                </div>
+              </div>
+
+              {/* Main content area */}
+              <div className="flex flex-1 overflow-hidden">
+                {/* Sidebar */}
+                <aside className={`${toggle ? "w-[50px]" : "w-[200px]"} bg-white border-r border-gray-200 transition-all duration-200`}>
+                  <nav className="flex flex-col h-full">
+                    {menuItems.map((item) => (
+                      <Link key={item.path} href={item.path}>
+                        <div className={`py-2 px-4 flex items-center gap-3 ${pathname === item.path ? "bg-custom-gradient" : "hover:bg-gray-100"}`}>
+                          <img src={item.imgUrl} className="h-8 w-8" />
+                          {!toggle && <div className="truncate">{item.label}</div>}
+                        </div>
+                      </Link>
+                    ))}
+                    <div
+                      onClick={handleSignOut}
+                      className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
+                    >
+                      <img src="/assets/icons8-logout-16.png" alt="logout" className="h-7 w-7" />
+                      {!toggle && <div>Sign Out</div>}
+                    </div>
+                    <div
+                      onClick={toggleMenu}
+                      className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    >
+                      {toggle ? ">" : "<"}
+                    </div>
+                  </nav>
+                </aside>
+
+                {/* Main content area */}
+                <main className="flex-1 overflow-auto bg-gray-50">
+                  <div className="p-6">{children}</div>
+                </main>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-white text-center text-xs font-medium py-1 border-t border-gray-200">
+                @ Powered By AnalyticsLiv
+              </div>
+            </main>
+          )}
+        </SessionProvider>
       </body>
     </html>
   );
