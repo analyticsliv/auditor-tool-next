@@ -16,7 +16,7 @@ export const useAccountStore = create((set) => ({
                 headers: { "Authorization": `Bearer ${accessToken}` }
             });
 
-            if (!response.ok) throw new Error('Failed to fetch account summaries');
+            if (!response.ok) alert('Failed to fetch account summaries');
 
             const data = await response.json();
             const accountSummaries = data?.accountSummaries || [];
@@ -24,7 +24,7 @@ export const useAccountStore = create((set) => ({
             set({ accounts: accountSummaries });
 
             if (accountSummaries.length === 0) {
-                alert(`Hey ${userData?.given_name}, no accounts associated with this email.`);
+                alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
             }
         } catch (error) {
             console.error('Error:', error);
