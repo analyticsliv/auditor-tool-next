@@ -27,10 +27,10 @@ const Home = () => {
 
   const dropdownRef = useRef(null);
 
-  const userName = getUserSession();
+  const user = getUserSession();
 
   useEffect(() => {
-    const userData = { given_name: userName?.user?.name };
+    const userData = { given_name: user };
     setLoadingAccounts(true);
     fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
   }, [fetchAccountSummaries]);
