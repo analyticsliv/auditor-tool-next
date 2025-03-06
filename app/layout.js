@@ -26,11 +26,11 @@ const metadata = {
 export default function RootLayout({ children }) {
 
   const menuItems = [
-    { imgUrl: "/assets/nav1.png", label: "Home", path: "/" },
-    { imgUrl: "/assets/nav2.png", label: "Audit Preview", path: "/" },
-    { imgUrl: "/assets/nav3.png", label: "Dashboard", path: "/dashboard" },
-    { imgUrl: "/assets/nav4.png", label: "Account Details", path: "/" },
-    { imgUrl: "/assets/nav5.png", label: "Previous Audits", path: "/" },
+    { imgUrl: "/", label: "Home", path: "/" },
+    { imgUrl: "/", label: "Audit Preview", path: "/" },
+    { imgUrl: "/", label: "Dashboard", path: "/dashboard" },
+    { imgUrl: "/", label: "Account Details", path: "/" },
+    { imgUrl: "/", label: "Previous Audits", path: "/" },
   ];
 
   const router = useRouter();
