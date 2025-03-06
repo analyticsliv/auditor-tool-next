@@ -62,7 +62,7 @@ const Home = () => {
             onClick={() => !loadingAccounts && setDropdownOpen(!dropdownOpen)}
           >
             <span>
-              {loadingAccounts ? 'Loading accounts...' : selectedAccount ? selectedAccount.displayName : '- Select an account -'}
+              {loadingAccounts ? 'Loading accounts...' : selectedAccount ? selectedAccount?.displayName : '- Select an account -'}
             </span>
             <span className="text-gray-500">▾</span>
           </div>
@@ -78,13 +78,13 @@ const Home = () => {
                   className="px-2 py-1 border-b border-b-gray-400 w-full"
                 />
               </div>
-              {accounts.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
+              {accounts?.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
                 <div
                   key={account?.account}
                   onClick={() => {
                     selectAccount(account);
                     setLoadingProperties(true);
-                    fetchPropertySummaries(account.account).finally(() => setLoadingProperties(false));
+                    fetchPropertySummaries(account?.account).finally(() => setLoadingProperties(false));
                     setDropdownOpen(false);
                   }}
                   className="p-2 hover:bg-gray-100 cursor-pointer"
@@ -103,7 +103,7 @@ const Home = () => {
             if (propertyName === "") {
               selectProperty(null);
             } else {
-              const property = properties.find(prop => prop.name === propertyName);
+              const property = properties?.find(prop => prop.name === propertyName);
               selectProperty(property);
             }
           }}
