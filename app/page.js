@@ -1,18 +1,37 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { useAccountStore } from './store/useAccountStore';
 import { signOut } from "next-auth/react";
 import AuthWrapper from "./Components/AuthWrapper";
+import { getUserSession } from './utils/user';
 
 const Home = () => {
-  // useEffect(() => {
-  //   const session = localStorage.getItem("session");
-  //   const accessToken = localStorage.getItem("accessToken");
+  const {
+    accounts,
+    properties,
+    selectedAccount,
+    selectedProperty,
+    accountSelected,
+    propertySelected,
+    fetchAccountSummaries,
+    fetchPropertySummaries,
+    selectAccount,
+    selectProperty
+  } = useAccountStore();
 
-  //   if (!session || !accessToken) {
-  //     window.location.href = "/login";
-  //   }
-  // }, []);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loadingAccounts, setLoadingAccounts] = useState(true);
+  const [loadingProperties, setLoadingProperties] = useState(false);
+
+  const userName = getUserSession();
+
+  useEffect(() => {
+    const userData = { given_name: userName?.user?.name };
+    setLoadingAccounts(true);
+    fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
+  }, [fetchAccountSummaries]);
 
   const handleSignOut = () => {
     localStorage.removeItem("session");
@@ -22,14 +41,72 @@ const Home = () => {
 
   return (
     <AuthWrapper>
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-4xl font-bold">Welcome to GA4 Auditor Tool</h1>
-        <p className="mt-4 text-lg">You are signed in!</p>
-        <button
-          onClick={handleSignOut}
-          className="mt-6 bg-red-500 text-white px-6 py-2 rounded"
+      <div className="p-6 flex flex-col items-center gap-3">
+        <h1 className="text-2xl mb-4">Select Account and Property</h1>
+
+        <div className="relative mb-4 w-[400px]">
+          <div
+            className={`p-2 border border-[#7380ec] rounded-[8px] w-full ${loadingAccounts ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={() => !loadingAccounts && setDropdownOpen(!dropdownOpen)}
+          >
+            {loadingAccounts ? 'Loading accounts...' : selectedAccount ? selectedAccount.displayName : '- Select an account -'}
+          </div>
+
+          {dropdownOpen && !loadingAccounts && (
+            <div className="absolute z-10 bg-white border rounded w-full mt-0 max-h-60 overflow-y-auto">
+              <input
+                type="text"
+                placeholder="Search account..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-2 py-1 border-b border-b-gray-500 w-full"
+              />
+              <div>
+                {accounts.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
+                  <div
+                    key={account?.account}
+                    onClick={() => {
+                      selectAccount(account);
+                      setLoadingProperties(true);
+                      fetchPropertySummaries(account.account).finally(() => setLoadingProperties(false));
+                      setDropdownOpen(false);
+                    }}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {account?.displayName}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Property Dropdown */}
+        <select
+          onChange={(e) => {
+            const property = properties.find(prop => prop.name === e.target.value);
+            selectProperty(property);
+          }}
+          disabled={!accountSelected || loadingProperties}
+          className={`p-2 border border-[#7380ec] rounded-[8px] mb-4 w-[400px] disabled:cursor-not-allowed `}
         >
-          Sign Out
+          <option value="">
+            {loadingProperties ? 'Loading properties...' : '- Select a property -'}
+          </option>
+          {properties?.map(property => (
+            <option key={property?.name} value={property?.name}>
+              {property?.displayName}
+            </option>
+          ))}
+        </select>
+
+        {/* Submit Button */}
+        <button
+          onClick={() => alert(`Account: ${selectedAccount?.displayName}\nProperty: ${selectedProperty?.displayName}`)}
+          disabled={!accountSelected || !propertySelected || loadingAccounts || loadingProperties}
+          className={`p-2 w-[400px] rounded-[8px] ${accountSelected && propertySelected && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+        >
+          Submit
         </button>
       </div>
     </AuthWrapper>

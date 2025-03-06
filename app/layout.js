@@ -7,6 +7,7 @@ import { SessionProvider, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getUserSession } from "./utils/user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +27,16 @@ const metadata = {
 export default function RootLayout({ children }) {
 
   const menuItems = [
-    { imgUrl: "/", label: "Home", path: "/" },
-    { imgUrl: "/", label: "Audit Preview", path: "/" },
-    { imgUrl: "/", label: "Dashboard", path: "/dashboard" },
-    { imgUrl: "/", label: "Account Details", path: "/" },
-    { imgUrl: "/", label: "Previous Audits", path: "/" },
+    { imgUrl: "/4", label: "Home", path: "/" },
+    { imgUrl: "/5", label: "Audit Preview", path: "/1" },
+    { imgUrl: "/1", label: "Dashboard", path: "/dashboard" },
+    { imgUrl: "/2", label: "Account Details", path: "/2" },
+    { imgUrl: "/3", label: "Previous Audits", path: "/3" },
   ];
 
   const router = useRouter();
 
-  const userSession = JSON.parse(localStorage.getItem('session'));
+  const userSession = getUserSession();
 
   const user = userSession?.user?.name;
 
