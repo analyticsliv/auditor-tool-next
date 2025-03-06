@@ -69,7 +69,7 @@ const Home = () => {
 
           {dropdownOpen && !loadingAccounts && (
             <div className="absolute z-10 border border-gray-400 bg-white rounded w-full mt-0 max-h-60 overflow-y-auto">
-              <div className="relative">
+              <div className="sticky top-0 bg-white z-10">
                 <input
                   type="text"
                   placeholder="Search account..."
@@ -77,31 +77,21 @@ const Home = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="px-2 py-1 border-b border-b-gray-400 w-full"
                 />
-                {searchTerm && (
-                  <button
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-500"
-                    onClick={() => setSearchTerm('')}
-                  >
-                    ✕
-                  </button>
-                )}
               </div>
-              <div>
-                {accounts.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
-                  <div
-                    key={account?.account}
-                    onClick={() => {
-                      selectAccount(account);
-                      setLoadingProperties(true);
-                      fetchPropertySummaries(account.account).finally(() => setLoadingProperties(false));
-                      setDropdownOpen(false);
-                    }}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {account?.displayName}
-                  </div>
-                ))}
-              </div>
+              {accounts.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
+                <div
+                  key={account?.account}
+                  onClick={() => {
+                    selectAccount(account);
+                    setLoadingProperties(true);
+                    fetchPropertySummaries(account.account).finally(() => setLoadingProperties(false));
+                    setDropdownOpen(false);
+                  }}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {account?.displayName}
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -109,8 +99,13 @@ const Home = () => {
         {/* Property Dropdown */}
         <select
           onChange={(e) => {
-            const property = properties.find(prop => prop.name === e.target.value);
-            selectProperty(property);
+            const propertyName = e.target.value;
+            if (propertyName === "") {
+              selectProperty(null);
+            } else {
+              const property = properties.find(prop => prop.name === propertyName);
+              selectProperty(property);
+            }
           }}
           disabled={!accountSelected || loadingProperties}
           className={`p-2 border border-[#7380ec] rounded-[8px] mb-4 w-[400px] disabled:cursor-not-allowed`}
@@ -128,8 +123,8 @@ const Home = () => {
         {/* Submit Button */}
         <button
           onClick={() => alert(`Account: ${selectedAccount?.displayName}\nProperty: ${selectedProperty?.displayName}`)}
-          disabled={!accountSelected || !propertySelected || loadingAccounts || loadingProperties}
-          className={`p-2 w-[400px] rounded-[8px] ${accountSelected && propertySelected && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+          disabled={!accountSelected || !selectedProperty || loadingAccounts || loadingProperties}
+          className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
         >
           Submit
         </button>
