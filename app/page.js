@@ -90,7 +90,9 @@ const Home = () => {
             <span>
               {loadingAccounts ? 'Loading accounts...' : selectedAccount ? selectedAccount?.displayName : '- Select an account -'}
             </span>
-            <span className="text-gray-500">▾</span>
+            <span className="text-gray-500">
+              <img src="/Dropdown.png" alt="DropDown arrow" className="h-2.5 w-2.5" />
+            </span>
           </div>
 
           {dropdownOpen && !loadingAccounts && (

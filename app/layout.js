@@ -87,8 +87,11 @@ export default function RootLayout({ children }) {
             <main className="flex flex-col h-screen">
               {/* Header */}
               <div className="px-4 py-2.5 flex justify-between items-center bg-white">
-                <div className="text-xl font-semibold">GA4 Auditor Tool</div>
-                <div>Welcome, {user}</div>
+                <h2 className="text-lg font-bold text-gray-900 ">
+                  GA4 <span className="text-red-600">Auditor Tool</span>
+                </h2>
+
+                <div className="font-semibold text-lg "> Welcome, {user}</div>
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col text-center">
                     <div className="font-semibold text-sm">{user}</div>
@@ -134,8 +137,9 @@ export default function RootLayout({ children }) {
               </div>
 
               {/* Footer */}
-              <div className="bg-white text-center text-xs font-medium py-1 border-t border-gray-200">
-                @ Powered By AnalyticsLiv
+              <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1 border-t border-gray-200">
+                <img src="/copyright1.png" alt="logout" className="h-4 w-4 " />
+                <p className="">Powered By AnalyticsLiv</p>
               </div>
             </main>
           )}
