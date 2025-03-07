@@ -27,11 +27,11 @@ const metadata = {
 export default function RootLayout({ children }) {
 
   const menuItems = [
-    { imgUrl: "/4", label: "Home", path: "/" },
-    { imgUrl: "/5", label: "Audit Preview", path: "/1" },
-    { imgUrl: "/1", label: "Dashboard", path: "/dashboard" },
-    { imgUrl: "/2", label: "Account Details", path: "/2" },
-    { imgUrl: "/3", label: "Previous Audits", path: "/3" },
+    { imgUrl: "/Home.png", label: "Home", path: "/" },
+    { imgUrl: "/Audit Preview.png", label: "Audit Preview", path: "/1" },
+    { imgUrl: "/Dashboard.png", label: "Dashboard", path: "/dashboard" },
+    { imgUrl: "/PROFILE.png", label: "Account Details", path: "/2" },
+    { imgUrl: "/files.svg", label: "Previous Audits", path: "/3" },
   ];
 
   const [userSession, setUserSession] = useState(null);
@@ -115,7 +115,7 @@ export default function RootLayout({ children }) {
                       onClick={handleSignOut}
                       className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
                     >
-                      <img src="/assets/icons8-logout-16.png" alt="logout" className="h-7 w-7" />
+                      <img src="/Signout.png" alt="logout" className="h-7 w-7" />
                       {!toggle && <div>Sign Out</div>}
                     </div>
                     <div
