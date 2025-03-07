@@ -34,18 +34,22 @@ export default function RootLayout({ children }) {
     { imgUrl: "/3", label: "Previous Audits", path: "/3" },
   ];
 
-  const router = useRouter();
-
-  const userSession = getUserSession();
-
-  const user = userSession?.user?.name;
-
-  const userImage = userSession?.user?.image;
-
+  const [userSession, setUserSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toggle, setToggle] = useState(false);
   const pathname = usePathname();
   const [currentLabel, setCurrentLabel] = useState("Connectors");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const session = getUserSession();
+    setUserSession(session);
+  }, []);
+
+  const user = userSession?.user?.name;
+
+  const userImage = userSession?.user?.image;
 
   const handleSignOut = async () => {
     setLoading(true);
