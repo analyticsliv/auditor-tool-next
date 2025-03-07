@@ -7,6 +7,9 @@ export const useAccountStore = create((set) => ({
     selectedProperty: null,
     accountSelected: false,
     propertySelected: false,
+    accountId: null,
+    propertyId: null,
+    auditData: null,
 
     fetchAccountSummaries: async (userData) => {
         const accessToken = localStorage.getItem('accessToken');
@@ -49,6 +52,7 @@ export const useAccountStore = create((set) => ({
 
     selectAccount: (account) => set({
         selectedAccount: account,
+        accountId: account?.account.replace('accounts/', ''),
         accountSelected: true,
         properties: [],
         selectedProperty: null,
@@ -57,14 +61,19 @@ export const useAccountStore = create((set) => ({
 
     selectProperty: (property) => set({
         selectedProperty: property,
+        propertyId: property?.name.replace('properties/', ''),
         propertySelected: true
     }),
+
+    setAuditData: (data) => set({ auditData: data }),
 
     resetSelection: () => set({
         selectedAccount: null,
         selectedProperty: null,
         accountSelected: false,
-        propertySelected: false
+        propertySelected: false,
+        accountId: null,
+        propertyId: null
     })
 
 }));

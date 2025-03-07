@@ -5,6 +5,7 @@ import { useAccountStore } from './store/useAccountStore';
 import { signOut } from "next-auth/react";
 import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from './utils/user';
+import { fetchAuditData } from './utils/endApi';
 
 const Home = () => {
   const {
@@ -17,7 +18,9 @@ const Home = () => {
     fetchAccountSummaries,
     fetchPropertySummaries,
     selectAccount,
-    selectProperty
+    selectProperty,
+    accountId,
+    propertyId
   } = useAccountStore();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,6 +54,29 @@ const Home = () => {
     signOut({ callbackUrl: "/login" });
   };
 
+  const handleAccount = (account) => {
+    selectAccount(account);
+    setLoadingProperties(true);
+    fetchPropertySummaries(account?.account).finally(() => setLoadingProperties(false));
+    setDropdownOpen(false);
+  }
+
+  const handleProperty = (e) => {
+    const propertyName = e.target.value;
+    if (propertyName === "") {
+      selectProperty(null);
+    } else {
+      const property = properties?.find(prop => prop.name === propertyName);
+      selectProperty(property);
+    }
+  }
+
+  const handleSubmit = () => {
+    alert(`Account: ${accountId}\nProperty: ${propertyId}`);
+    fetchAuditData('datastreams')
+
+  }
+
   return (
     <AuthWrapper>
       <div className="p-6 flex flex-col items-center gap-3">
@@ -81,12 +107,7 @@ const Home = () => {
               {accounts?.filter(acc => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))?.map(account => (
                 <div
                   key={account?.account}
-                  onClick={() => {
-                    selectAccount(account);
-                    setLoadingProperties(true);
-                    fetchPropertySummaries(account?.account).finally(() => setLoadingProperties(false));
-                    setDropdownOpen(false);
-                  }}
+                  onClick={() => handleAccount(account)}
                   className="p-2 hover:bg-gray-100 cursor-pointer"
                 >
                   {account?.displayName}
@@ -98,15 +119,7 @@ const Home = () => {
 
         {/* Property Dropdown */}
         <select
-          onChange={(e) => {
-            const propertyName = e.target.value;
-            if (propertyName === "") {
-              selectProperty(null);
-            } else {
-              const property = properties?.find(prop => prop.name === propertyName);
-              selectProperty(property);
-            }
-          }}
+          onChange={handleProperty}
           disabled={!accountSelected || loadingProperties}
           className={`p-2 border border-[#7380ec] rounded-[8px] mb-4 w-[400px] disabled:cursor-not-allowed`}
         >
@@ -122,7 +135,7 @@ const Home = () => {
 
         {/* Submit Button */}
         <button
-          onClick={() => alert(`Account: ${selectedAccount?.displayName}\nProperty: ${selectedProperty?.displayName}`)}
+          onClick={handleSubmit}
           disabled={!accountSelected || !selectedProperty || loadingAccounts || loadingProperties}
           className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
         >
