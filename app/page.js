@@ -5,7 +5,7 @@ import { useAccountStore } from './store/useAccountStore';
 import { signOut } from "next-auth/react";
 import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from './utils/user';
-import { fetchAuditData } from './utils/endApi';
+import { fetchAuditData, reportEndApiCall } from './utils/endApi';
 
 const Home = () => {
   const {
@@ -73,8 +73,16 @@ const Home = () => {
 
   const handleSubmit = () => {
     alert(`Account: ${accountId}\nProperty: ${propertyId}`);
-    fetchAuditData('datastreams')
-
+    
+    const endapiall = {
+      "dimensions": [{ "name": "streamId" }, { "name": "streamName" }],
+      "metrics": [{ "name": "activeUsers" }],
+      "dateRanges": [{ "startDate": '2025-02-08', "endDate": '2025-03-10' }],
+      "keepEmptyRows": true
+    };
+    
+     reportEndApiCall(endapiall)
+     fetchAuditData('dataStreams')
   }
 
   return (

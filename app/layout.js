@@ -104,8 +104,8 @@ export default function RootLayout({ children }) {
               {/* Main content area */}
               <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar */}
-                <aside className={`${toggle ? "w-[50px]" : "w-[200px]"} bg-white border-r border-gray-200 transition-all duration-200`}>
-                  <nav className="flex flex-col h-full">
+                <aside className={`${toggle ? "w-[65px]" : "w-[200px]"} bg-white transition-all duration-200`}>
+                  <nav className="flex flex-col h-full pt-5">
                     {menuItems.map((item) => (
                       <Link key={item.path} href={item.path}>
                         <div className={`py-2 px-4 flex items-center gap-3 ${pathname === item.path ? "bg-custom-gradient" : "hover:bg-gray-100"}`}>
@@ -119,7 +119,7 @@ export default function RootLayout({ children }) {
                       className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
                     >
                       <img src="/Signout.png" alt="logout" className="h-7 w-7" />
-                      {!toggle && <div>Sign Out</div>}
+                      {!toggle && <div className="truncate">Sign Out</div>}
                     </div>
                     <div
                       onClick={toggleMenu}
@@ -137,7 +137,7 @@ export default function RootLayout({ children }) {
               </div>
 
               {/* Footer */}
-              <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1 border-t border-gray-200">
+              <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1">
                 <img src="/copyright1.png" alt="logout" className="h-4 w-4 " />
                 <p className="">Powered By AnalyticsLiv</p>
               </div>
