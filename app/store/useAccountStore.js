@@ -23,12 +23,17 @@ export const useAccountStore = create(
             fetchAccountSummaries: async (userData) => {
                 const accessToken = localStorage.getItem('accessToken');
 
+                set({ loading: true })
+
                 try {
                     const response = await fetch("https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200", {
                         headers: { "Authorization": `Bearer ${accessToken}` }
                     });
 
-                    if (!response.ok) alert('Failed to fetch account summaries');
+                    if (!response.ok) {
+                        alert('Failed to fetch account summaries');
+                        set({ loading: false })
+                    };
 
                     const data = await response.json();
                     const accountSummaries = data?.accountSummaries || [];
@@ -40,6 +45,9 @@ export const useAccountStore = create(
                     }
                 } catch (error) {
                     console.error('Error:', error);
+                    set({ loading: false })
+                } finally {
+                    set({ loading: false })
                 }
             },
 

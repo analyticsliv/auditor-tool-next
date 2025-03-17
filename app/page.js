@@ -75,9 +75,9 @@ const Home = () => {
   }
 
   const handleSubmit = async () => {
-
+    setLoading(true)
     await callApis();
-
+    setLoading(false)
     window.location.href = "/auditPreview";
   }
 
@@ -142,8 +142,8 @@ const Home = () => {
         {/* Submit Button */}
         <button
           onClick={handleSubmit}
-          disabled={!accountSelected || !selectedProperty || loadingAccounts || loadingProperties}
-          className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+          disabled={!accountSelected || !selectedProperty || loadingAccounts || loadingProperties || loading}
+          className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties && !loading ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
         >
           {loading ? 'Loading...' : 'Submit'}
           {/* Submit */}
