@@ -16,8 +16,8 @@ const usersDetails = {
 
 export async function callApis() {
     await fetchAuditData('dataStreams', 'dataStreams');
-    await reportEndApiCall('dataStreams', endapiall)
+    await reportEndApiCall('generalConfig', endapiall);
     await fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
     await fetchAuditData('attributionSettings', 'attributionSettings');
-    await reportEndApiCall('usersDetails', usersDetails)
+    await reportEndApiCall('usersDetails', usersDetails);
 }

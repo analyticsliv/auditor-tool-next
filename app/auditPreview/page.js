@@ -11,13 +11,13 @@ const Page = () => {
 
   console.log("Audit Data:", auditData);
   console.log("End API Data:", endApiData);
-  
+
   console.log("Data Streams Audit:", auditData?.dataStreams);
   console.log("Data Retention Settings:", auditData?.dataRetentionSettings);
   console.log("Attribution Settings:", auditData?.attributionSettings);
   console.log("End API Data Streams:", endApiData?.dataStreams);
-  console.log("End API Users Details:", endApiData?.usersDetails);
-  
+  console.log("generalConfig", endApiData?.usersDetails);
+
   return (
     <div>
       <AuditStart />
