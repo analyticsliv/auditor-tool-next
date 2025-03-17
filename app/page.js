@@ -19,8 +19,10 @@ const Home = () => {
     fetchPropertySummaries,
     selectAccount,
     selectProperty,
-    accountId,
-    propertyId
+    auditData,
+    endApiData,
+    loading,
+    setLoading,
   } = useAccountStore();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,18 +73,25 @@ const Home = () => {
     }
   }
 
-  const handleSubmit = () => {
-    alert(`Account: ${accountId}\nProperty: ${propertyId}`);
-    
+  const handleSubmit = async () => {
     const endapiall = {
       "dimensions": [{ "name": "streamId" }, { "name": "streamName" }],
       "metrics": [{ "name": "activeUsers" }],
-      "dateRanges": [{ "startDate": '2025-02-08', "endDate": '2025-03-10' }],
+      "dateRanges": [{ "startDate": '2025-02-15', "endDate": '2025-03-17' }],
       "keepEmptyRows": true
     };
-    
-     reportEndApiCall(endapiall)
-     fetchAuditData('dataStreams')
+
+    setLoading(true);
+
+    await reportEndApiCall(endapiall)
+    await fetchAuditData('dataStreams')
+
+    console.log("auditData store-- ", auditData)
+    console.log("endApiData store-- ", endApiData)
+
+    setLoading(false);
+
+    window.location.href = "/auditPreview";
   }
 
   return (
@@ -149,7 +158,8 @@ const Home = () => {
           disabled={!accountSelected || !selectedProperty || loadingAccounts || loadingProperties}
           className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
         >
-          Submit
+          {loading ? 'Loading...' : 'Submit'}
+          {/* Submit */}
         </button>
       </div>
     </AuthWrapper>
