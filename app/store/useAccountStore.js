@@ -10,6 +10,10 @@ export const useAccountStore = create((set) => ({
     accountId: null,
     propertyId: null,
     auditData: null,
+    endApiData: null,
+    loading: false,
+
+    setLoading: (isLoading) => set({ loading: isLoading }),
 
     fetchAccountSummaries: async (userData) => {
         const accessToken = localStorage.getItem('accessToken');
@@ -66,6 +70,7 @@ export const useAccountStore = create((set) => ({
     }),
 
     setAuditData: (data) => set({ auditData: data }),
+    setEndApiData: (data) => set({ endApiData: data }),
 
     resetSelection: () => set({
         selectedAccount: null,
