@@ -10,13 +10,12 @@ const AuditStart = () => {
         accountId,
         propertyId,
     } = useAccountStore();
-    console.log("object00--",selectedAccount,selectedProperty)
 
     return (
         <div>
-            <div class="review">
+            <div>
                 <h1>In Review</h1>
-                <div class="inreview">
+                <div>
                     <h3> Account:<span><b></b>{selectedAccount?.displayName} - (<b>{accountId}</b>)</span>
                     </h3>
                     <h3>Property:<span><b>{selectedProperty?.displayName}</b> - (<b>{propertyId}</b>)</span>

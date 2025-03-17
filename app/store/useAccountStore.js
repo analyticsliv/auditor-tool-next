@@ -1,84 +1,112 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export const useAccountStore = create((set) => ({
-    accounts: [],
-    properties: [],
-    selectedAccount: null,
-    selectedProperty: null,
-    accountSelected: false,
-    propertySelected: false,
-    accountId: null,
-    propertyId: null,
-    auditData: null,
-    endApiData: null,
-    loading: false,
+// import { fetchAccountSummaries, fetchPropertySummaries } from '../utils/accountAndProperty';
 
-    setLoading: (isLoading) => set({ loading: isLoading }),
+export const useAccountStore = create(
+    persist(
+        (set) => ({
+            accounts: [],
+            properties: [],
+            selectedAccount: null,
+            selectedProperty: null,
+            accountSelected: false,
+            propertySelected: false,
+            accountId: null,
+            propertyId: null,
+            auditData: null,
+            endApiData: null,
+            loading: false,
 
-    fetchAccountSummaries: async (userData) => {
-        const accessToken = localStorage.getItem('accessToken');
+            setLoading: (isLoading) => set({ loading: isLoading }),
 
-        try {
-            const response = await fetch("https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200", {
-                headers: { "Authorization": `Bearer ${accessToken}` }
-            });
+            fetchAccountSummaries: async (userData) => {
+                const accessToken = localStorage.getItem('accessToken');
 
-            if (!response.ok) alert('Failed to fetch account summaries');
+                try {
+                    const response = await fetch("https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200", {
+                        headers: { "Authorization": `Bearer ${accessToken}` }
+                    });
 
-            const data = await response.json();
-            const accountSummaries = data?.accountSummaries || [];
+                    if (!response.ok) alert('Failed to fetch account summaries');
 
-            set({ accounts: accountSummaries });
+                    const data = await response.json();
+                    const accountSummaries = data?.accountSummaries || [];
 
-            if (accountSummaries.length === 0) {
-                alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
-            }
-        } catch (error) {
-            console.error('Error:', error);
+                    set({ accounts: accountSummaries });
+
+                    if (accountSummaries.length === 0) {
+                        alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            },
+
+            fetchPropertySummaries: async (accountName) => {
+                const accessToken = localStorage.getItem('accessToken');
+                try {
+                    const response = await fetch(`https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`, {
+                        headers: { "Authorization": `Bearer ${accessToken}` }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to fetch property summaries');
+
+                    const propertiesData = await response.json();
+                    set({ properties: propertiesData.properties || [] });
+                } catch (error) {
+                    console.error('Error fetching Property Summaries:', error);
+                }
+            },
+
+            selectAccount: (account) => set({
+                selectedAccount: account,
+                accountId: account?.account.replace('accounts/', ''),
+                accountSelected: true,
+                properties: [],
+                selectedProperty: null,
+                propertySelected: false
+            }),
+
+            selectProperty: (property) => set({
+                selectedProperty: property,
+                propertyId: property?.name.replace('properties/', ''),
+                propertySelected: true
+            }),
+
+            setAuditData: (data) => set({ auditData: data }),
+            setEndApiData: (data) => set({ endApiData: data }),
+
+            resetSelection: () => set({
+                selectedAccount: null,
+                selectedProperty: null,
+                accountSelected: false,
+                propertySelected: false,
+                accountId: null,
+                propertyId: null
+            })
+
+        }),
+        {
+            name: 'account-store', // Key for localStorage
+            getStorage: () => localStorage, // Use localStorage for persistence
         }
-    },
+    )
+);
 
-    fetchPropertySummaries: async (accountName) => {
-        const accessToken = localStorage.getItem('accessToken');
-        try {
-            const response = await fetch(`https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`, {
-                headers: { "Authorization": `Bearer ${accessToken}` }
-            });
 
-            if (!response.ok) throw new Error('Failed to fetch property summaries');
 
-            const propertiesData = await response.json();
-            set({ properties: propertiesData.properties || [] });
-        } catch (error) {
-            console.error('Error fetching Property Summaries:', error);
-        }
-    },
+// setAccountsData: (data) => set({ accountsData: data }),
+// setPropertiesData: (data) => set({ propertiesData: data }),
 
-    selectAccount: (account) => set({
-        selectedAccount: account,
-        accountId: account?.account.replace('accounts/', ''),
-        accountSelected: true,
-        properties: [],
-        selectedProperty: null,
-        propertySelected: false
-    }),
+// loadAccounts: async (token) => {
+//     set({ loading: true });
+//     const accounts = await fetchAccountSummaries(token);
+//     set({ accounts, loading: false });
+// },
 
-    selectProperty: (property) => set({
-        selectedProperty: property,
-        propertyId: property?.name.replace('properties/', ''),
-        propertySelected: true
-    }),
-
-    setAuditData: (data) => set({ auditData: data }),
-    setEndApiData: (data) => set({ endApiData: data }),
-
-    resetSelection: () => set({
-        selectedAccount: null,
-        selectedProperty: null,
-        accountSelected: false,
-        propertySelected: false,
-        accountId: null,
-        propertyId: null
-    })
-
-}));
+// loadProperties: async (accountName, token) => {
+//     set({ loading: true });
+//     const properties = await fetchPropertySummaries(accountName, token);
+//     set({ properties, loading: false });
+// },

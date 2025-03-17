@@ -20,36 +20,38 @@ const DataStreams = () => {
                     <h1>Data Streams</h1>
                     <div>
                         <table>
-                            <tr>
-                                <th></th>
-                                <th><span
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <th><span
                                     >android</span><br></br>
                                         Android Streams </th>
-                                <th><span
+                                    <th><span
                                     >language</span><br></br>
                                         Web Streams </th>
-                                <th><span
+                                    <th><span
                                     >ios</span><br></br>
                                         iOS Streams </th>
-                            </tr>
-                            <tr>
-                                <td><b># of streams</b></td>
-                                <td>Android configured streams</td>
-                                <td>Web configured stream</td>
-                                <td>iOS configured streams</td>
-                            </tr>
-                            <tr>
-                                <td><b>Active streams</b></td>
-                                <td>NA</td>
-                                <td>NA</td>
-                                <td>NA</td>
-                            </tr>
-                            <tr>
-                                <td><b>Measurement Id / App Id</b></td>
-                                <td>NA</td>
-                                <td>NA</td>
-                                <td>NA</td>
-                            </tr>
+                                </tr>
+                                <tr>
+                                    <td><b># of streams</b></td>
+                                    <td>Android configured streams</td>
+                                    <td>Web configured stream</td>
+                                    <td>iOS configured streams</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Active streams</b></td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Measurement Id / App Id</b></td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                    <td>NA</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
