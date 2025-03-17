@@ -1,6 +1,6 @@
 import { useAccountStore } from "../store/useAccountStore";
 
-export async function reportEndApiCall(endapiall) {
+export async function reportEndApiCall(key, endapiall) {
     if (typeof window === "undefined") return;
 
     try {
@@ -38,7 +38,7 @@ export async function reportEndApiCall(endapiall) {
 
         const endApiData = await response.json();
 
-        setEndApiData(endApiData);
+        setEndApiData(key, endApiData);
 
         return endApiData;
 
@@ -49,7 +49,7 @@ export async function reportEndApiCall(endapiall) {
     }
 }
 
-export async function fetchAuditData(path) {
+export async function fetchAuditData(key, path) {
     if (typeof window === "undefined") return;
 
     try {
@@ -78,7 +78,7 @@ export async function fetchAuditData(path) {
 
         const auditData = await response.json();
 
-        setAuditData(auditData);
+        setAuditData(key, auditData);
 
         return auditData;
 

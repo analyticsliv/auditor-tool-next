@@ -14,8 +14,8 @@ export const useAccountStore = create(
             propertySelected: false,
             accountId: null,
             propertyId: null,
-            auditData: null,
-            endApiData: null,
+            auditData: {},
+            endApiData: {},
             loading: false,
 
             setLoading: (isLoading) => set({ loading: isLoading }),
@@ -74,8 +74,20 @@ export const useAccountStore = create(
                 propertySelected: true
             }),
 
-            setAuditData: (data) => set({ auditData: data }),
-            setEndApiData: (data) => set({ endApiData: data }),
+            // setAuditData: (data) => set({ auditData: data }),
+            setAuditData: (key, data) => set((state) => ({
+                auditData: {
+                    ...state.auditData,
+                    [key]: data
+                }
+            })),
+            setEndApiData: (key, data) => set((state) => ({
+                endApiData: {
+                    ...state.endApiData,
+                    [key]: data
+                }
+            })),
+            // setEndApiData: (data) => set({ endApiData: data }),
 
             resetSelection: () => set({
                 selectedAccount: null,

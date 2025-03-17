@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
 
   const menuItems = [
     { imgUrl: "/Home.png", label: "Home", path: "/" },
-    { imgUrl: "/Audit Preview.png", label: "Audit Preview", path: "/1" },
+    { imgUrl: "/Audit Preview.png", label: "Audit Preview", path: "/auditPreview" },
     { imgUrl: "/Dashboard.png", label: "Dashboard", path: "/dashboard" },
     { imgUrl: "/PROFILE.png", label: "Account Details", path: "/2" },
     { imgUrl: "/files.svg", label: "Previous Audits", path: "/3" },

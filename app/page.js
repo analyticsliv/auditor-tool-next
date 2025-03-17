@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from './utils/user';
 import { fetchAuditData, reportEndApiCall } from './utils/endApi';
+import { callApis } from './utils/callApis';
 
 const Home = () => {
   const {
@@ -74,22 +75,8 @@ const Home = () => {
   }
 
   const handleSubmit = async () => {
-    const endapiall = {
-      "dimensions": [{ "name": "streamId" }, { "name": "streamName" }],
-      "metrics": [{ "name": "activeUsers" }],
-      "dateRanges": [{ "startDate": '2025-02-15', "endDate": '2025-03-17' }],
-      "keepEmptyRows": true
-    };
 
-    setLoading(true);
-
-    await reportEndApiCall(endapiall)
-    await fetchAuditData('dataStreams')
-
-    console.log("auditData store-- ", auditData)
-    console.log("endApiData store-- ", endApiData)
-
-    setLoading(false);
+    await callApis();
 
     window.location.href = "/auditPreview";
   }
@@ -167,3 +154,16 @@ const Home = () => {
 };
 
 export default Home;
+// const endapiall = {
+//   "dimensions": [{ "name": "streamId" }, { "name": "streamName" }],
+//   "metrics": [{ "name": "activeUsers" }],
+//   "dateRanges": [{ "startDate": '2025-02-15', "endDate": '2025-03-17' }],
+//   "keepEmptyRows": true
+// };
+
+// setLoading(true);
+
+// await reportEndApiCall(endapiall)
+// await fetchAuditData('dataStreams')
+
+// setLoading(false);
