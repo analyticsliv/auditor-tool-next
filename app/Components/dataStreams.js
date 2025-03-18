@@ -27,40 +27,43 @@ const DataStreams = () => {
     });
 
     return (
-        <div>
-            <h1>Tagging & Configuration</h1>
-            <h2>Data Streams</h2>
+        <div className=''>
+            <h1 className="pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem] ">Tagging & Configuration</h1>
+            <div className='bg-white rounded-3xl p-10 mt-10'>
+            <h2 className='pb-4 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Streams</h2>
 
-            <table border="1">
+            <table border="1" className='w-full'>
                 <thead>
-                    <tr>
+                    <tr className='w-full'>
                         <th></th>
-                        <th>Android Streams</th>
-                        <th>Web Streams</th>
-                        <th>iOS Streams</th>
+                        <th className='text-sm text-center'>Android Streams</th>
+                        <th className='text-sm text-center'>Web Streams</th>
+                        <th className='text-sm text-center'>iOS Streams</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><b># of streams</b></td>
-                        <td>Android configured streams</td>
-                        <td>Web configured stream</td>
-                        <td>iOS configured streams</td>
+                        
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'><b># of streams</b></td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Android configured streams</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Web configured stream</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>iOS configured streams</td>
                     </tr>
                     <tr>
-                        <td><b>Active streams</b></td>
-                        <td>{androidStreams}</td>
-                        <td>{webStreams}</td>
-                        <td>{iosStreams}</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Active streams</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{androidStreams}</td >
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{webStreams}</td >
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{iosStreams}</td>
                     </tr>
                     <tr>
-                        <td><b>Measurement Id / App Id</b></td>
-                        <td>{androidMeasurementId}</td>
-                        <td>{webMeasurementId}</td>
-                        <td>{iosMeasurementId}</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'><b>Measurement Id / App Id</b></td>
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{androidMeasurementId}</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{webMeasurementId}</td>
+                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{iosMeasurementId}</td>
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     );
 };
