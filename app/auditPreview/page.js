@@ -4,6 +4,8 @@ import React from 'react'
 import AuditStart from '../Components/auditStart'
 import DataStreams from '../Components/dataStreams'
 import { useAccountStore } from '../store/useAccountStore'
+import GeneralConfig from '../Components/generalConfig'
+import DataCollectionRetention from '../Components/dataCollectionRetention'
 
 const Page = () => {
 
@@ -22,6 +24,8 @@ const Page = () => {
     <div>
       <AuditStart />
       <DataStreams />
+      <GeneralConfig />
+      <DataCollectionRetention />
     </div>
   )
 }
