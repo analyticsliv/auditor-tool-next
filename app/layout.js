@@ -1,4 +1,3 @@
-
 'use client'
 
 import { Geist, Geist_Mono } from "next/font/google";
@@ -26,9 +25,7 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   const {
-    resetSelection,
     auditData,
     endApiData,
   } = useAccountStore();
@@ -55,7 +52,6 @@ export default function RootLayout({ children }) {
   }, []);
 
   const user = userSession?.user?.name;
-
   const userImage = userSession?.user?.image;
 
   const handleSignOut = async () => {
@@ -68,7 +64,7 @@ export default function RootLayout({ children }) {
 
   const toggleMenu = () => {
     setToggle(!toggle);
-  }
+  };
 
   useEffect(() => {
     // Set the current label based on the current path
@@ -81,25 +77,23 @@ export default function RootLayout({ children }) {
   }, [pathname, menuItems]);
 
   const isLoginPage = pathname === "/login";
+  const disableMenus = Object.keys(auditData)?.length === 0 && Object.keys(endApiData).length === 0;
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
           {isLoginPage ? (
-            // Only render login page content
-            <div className="">
-              {children}
-            </div>
+            <div>{children}</div>
           ) : (
             <main className="flex flex-col h-screen">
               {/* Header */}
               <div className="px-4 py-2.5 flex justify-between items-center bg-white">
-                <h2 className="text-lg font-bold text-gray-900 ">
+                <h2 className="text-lg font-bold text-gray-900">
                   GA4 <span className="text-red-600">Auditor Tool</span>
                 </h2>
 
-                <div className="font-semibold text-lg "> Welcome, {user}</div>
+                <div className="font-semibold text-lg">Welcome, {user}</div>
                 <div className="flex items-center gap-3">
                   <div className="flex flex-col text-center">
                     <div className="font-semibold text-sm">{user}</div>
@@ -114,14 +108,22 @@ export default function RootLayout({ children }) {
                 {/* Sidebar */}
                 <aside className={`${toggle ? "w-[65px]" : "w-[200px]"} bg-white transition-all duration-200`}>
                   <nav className="flex flex-col h-full pt-5">
-                    {menuItems.map((item) => (
-                      <Link key={item.path} href={item.path}>
-                        <div className={`py-2 px-4 flex items-center gap-3 ${pathname === item.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"}`}>
-                          <img src={item.imgUrl} className="h-8 w-8" />
-                          {!toggle && <div className="truncate">{item.label}</div>}
-                        </div>
-                      </Link>
-                    ))}
+                    {menuItems.map((item) => {
+                      const isDisabled = disableMenus && item?.label !== "Home";
+
+                      return (
+                        <Link key={item?.path} href={isDisabled ? "#" : item?.path} passHref>
+                          <div
+                            className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                          >
+                            <img src={item?.imgUrl} className="h-8 w-8" />
+                            {!toggle && <div className="truncate">{item?.label}</div>}
+                          </div>
+                        </Link>
+                      );
+                    })}
+
                     <div
                       onClick={handleSignOut}
                       className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
@@ -129,6 +131,7 @@ export default function RootLayout({ children }) {
                       <img src="/Signout.png" alt="logout" className="h-7 w-7" />
                       {!toggle && <div className="truncate">Sign Out</div>}
                     </div>
+
                     <div
                       onClick={toggleMenu}
                       className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
@@ -146,8 +149,8 @@ export default function RootLayout({ children }) {
 
               {/* Footer */}
               <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1">
-                <img src="/copyright1.png" alt="logout" className="h-4 w-4 " />
-                <p className="">Powered By AnalyticsLiv</p>
+                <img src="/copyright1.png" alt="logout" className="h-4 w-4" />
+                <p>Powered By AnalyticsLiv</p>
               </div>
             </main>
           )}
