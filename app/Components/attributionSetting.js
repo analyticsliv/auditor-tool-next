@@ -41,8 +41,8 @@ const AttributionSetting = () => {
 
     return (
         <div>
-            <div class="insights1">
-                <div class="streams">
+            <div>
+                <div>
                     <h1>Attribution Setting Details</h1>
                     <div>
                         <div className='flex justify-around'>
