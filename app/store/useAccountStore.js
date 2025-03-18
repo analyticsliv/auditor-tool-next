@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
 
 export const useAccountStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             accounts: [],
             properties: [],
             selectedAccount: null,
@@ -17,10 +17,14 @@ export const useAccountStore = create(
             auditData: {},
             endApiData: {},
             loading: false,
+            hasFetchedAccounts: false,
 
             setLoading: (isLoading) => set({ loading: isLoading }),
 
             fetchAccountSummaries: async (userData) => {
+
+                if (get().hasFetchedAccounts) return;
+
                 const accessToken = localStorage.getItem('accessToken');
 
                 set({ loading: true })
@@ -38,7 +42,7 @@ export const useAccountStore = create(
                     const data = await response.json();
                     const accountSummaries = data?.accountSummaries || [];
 
-                    set({ accounts: accountSummaries });
+                    set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
                     if (accountSummaries.length === 0) {
                         alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
@@ -98,12 +102,18 @@ export const useAccountStore = create(
             // setEndApiData: (data) => set({ endApiData: data }),
 
             resetSelection: () => set({
+                accounts: [],
+                properties: [],
                 selectedAccount: null,
                 selectedProperty: null,
                 accountSelected: false,
                 propertySelected: false,
                 accountId: null,
-                propertyId: null
+                propertyId: null,
+                hasFetchedAccounts: false,
+                auditData: {},
+                endApiData: {},
+                loading: false,
             })
 
         }),

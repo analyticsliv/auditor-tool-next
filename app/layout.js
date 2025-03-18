@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "./utils/user";
+import { useAccountStore } from "./store/useAccountStore";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,12 @@ const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  const {
+    resetSelection,
+    auditData,
+    endApiData,
+  } = useAccountStore();
 
   const menuItems = [
     { imgUrl: "/Home.png", label: "Home", path: "/" },
@@ -53,6 +60,7 @@ export default function RootLayout({ children }) {
 
   const handleSignOut = async () => {
     setLoading(true);
+    localStorage.removeItem('account-store');
     localStorage.removeItem('userSession');
     await signOut({ redirect: false });
     router.push("/login");
@@ -105,30 +113,30 @@ export default function RootLayout({ children }) {
               <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar */}
                 <aside className={`${toggle ? "w-[65px]" : "w-[200px]"} bg-white transition-all duration-200`}>
-  <nav className="flex flex-col h-full pt-5">
-    {menuItems.map((item) => (
-      <Link key={item.path} href={item.path}>
-        <div className={`py-2 px-4 flex items-center gap-3 ${pathname === item.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"}`}>
-          <img src={item.imgUrl} className="h-8 w-8" />
-          {!toggle && <div className="truncate">{item.label}</div>}
-        </div>
-      </Link>
-    ))}
-    <div
-      onClick={handleSignOut}
-      className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
-    >
-      <img src="/Signout.png" alt="logout" className="h-7 w-7" />
-      {!toggle && <div className="truncate">Sign Out</div>}
-    </div>
-    <div
-      onClick={toggleMenu}
-      className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
-    >
-      {toggle ? ">" : "<"}
-    </div>
-  </nav>
-</aside>
+                  <nav className="flex flex-col h-full pt-5">
+                    {menuItems.map((item) => (
+                      <Link key={item.path} href={item.path}>
+                        <div className={`py-2 px-4 flex items-center gap-3 ${pathname === item.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"}`}>
+                          <img src={item.imgUrl} className="h-8 w-8" />
+                          {!toggle && <div className="truncate">{item.label}</div>}
+                        </div>
+                      </Link>
+                    ))}
+                    <div
+                      onClick={handleSignOut}
+                      className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
+                    >
+                      <img src="/Signout.png" alt="logout" className="h-7 w-7" />
+                      {!toggle && <div className="truncate">Sign Out</div>}
+                    </div>
+                    <div
+                      onClick={toggleMenu}
+                      className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    >
+                      {toggle ? ">" : "<"}
+                    </div>
+                  </nav>
+                </aside>
 
                 {/* Main content area */}
                 <main className="flex-1 overflow-auto bg-gray-50">

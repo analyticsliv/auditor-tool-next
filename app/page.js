@@ -24,6 +24,7 @@ const Home = () => {
     endApiData,
     loading,
     setLoading,
+    hasFetchedAccounts,
   } = useAccountStore();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,12 +36,25 @@ const Home = () => {
 
   const user = getUserSession();
 
-  useEffect(() => {
-    const userData = { given_name: user };
-    setLoadingAccounts(true);
-    fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
-  }, [fetchAccountSummaries]);
+  // useEffect(() => {
+  //   const userData = { given_name: user };
+  //   setLoadingAccounts(true);
+  //   fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
+  // }, [fetchAccountSummaries]);
 
+
+  useEffect(() => {
+    if (!hasFetchedAccounts) {
+      // Fetch accounts only if they haven’t been fetched before
+      const userData = { given_name: user };
+      setLoadingAccounts(true);
+      fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
+    } else {
+      setLoadingAccounts(false);
+    }
+  }, [fetchAccountSummaries, hasFetchedAccounts]);
+
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -127,6 +141,7 @@ const Home = () => {
         <select
           onChange={handleProperty}
           disabled={!accountSelected || loadingProperties}
+          value={selectedProperty?.name || ""}
           className={`p-2 border border-[#7380ec] rounded-[8px] mb-4 w-[400px] disabled:cursor-not-allowed`}
         >
           <option value="">
