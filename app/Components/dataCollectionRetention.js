@@ -4,6 +4,7 @@ import { useAccountStore } from '../store/useAccountStore';
 const DataCollectionRetention = () => {
     const { auditData } = useAccountStore();
     const [dataRetentionMood, setDataRetentionMood] = useState(true);
+    const [googleSignalMood, setGoogleSignalMood] = useState(true);
     const dataretention = auditData?.dataRetentionSettings?.userDataRetention?.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'undefined';
     const googlesignaldetails = auditData?.googleSignalsSettings?.state?.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'undefined';
 
@@ -17,9 +18,9 @@ const DataCollectionRetention = () => {
 
     useEffect(() => {
         if (googlesignaldetails == "Google Signals Enabled") {
-            setDataRetentionMood(true);
+            setGoogleSignalMood(true);
         } else {
-            setDataRetentionMood(false)
+            setGoogleSignalMood(false)
         }
     }, [googlesignaldetails])
 
@@ -41,7 +42,7 @@ const DataCollectionRetention = () => {
                                 <td>Data retention is set to <b>{dataretention}</b></td>
                             </tr>
                             <tr>
-                                <td>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                <td>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
                                 <td>Google-Signal Details</td>
                                 <td><b>{googlesignaldetails}</b></td>
                             </tr>
