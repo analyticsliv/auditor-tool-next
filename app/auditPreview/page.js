@@ -6,6 +6,7 @@ import DataStreams from '../Components/dataStreams'
 import { useAccountStore } from '../store/useAccountStore'
 import GeneralConfig from '../Components/generalConfig'
 import DataCollectionRetention from '../Components/dataCollectionRetention'
+import AttributionSetting from '../Components/attributionSetting'
 
 const Page = () => {
 
@@ -26,6 +27,7 @@ const Page = () => {
       <DataStreams />
       <GeneralConfig />
       <DataCollectionRetention />
+      <AttributionSetting />
     </div>
   )
 }
