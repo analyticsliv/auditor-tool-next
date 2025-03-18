@@ -44,7 +44,7 @@ const DataStreams = () => {
                 <tbody>
                     <tr>
                         
-                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'><b># of streams</b></td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'># of streams</td>
                         <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Android configured streams</td>
                         <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Web configured stream</td>
                         <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>iOS configured streams</td>
@@ -56,7 +56,7 @@ const DataStreams = () => {
                         <td className='h-[3.8rem] border-b border-gray-800 text-center'>{iosStreams}</td>
                     </tr>
                     <tr>
-                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'><b>Measurement Id / App Id</b></td>
+                        <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>Measurement Id / App Id</td>
                         <td className='h-[3.8rem] border-b border-gray-800 text-center'>{androidMeasurementId}</td>
                         <td className='h-[3.8rem] border-b border-gray-800 text-center'>{webMeasurementId}</td>
                         <td className='h-[3.8rem] border-b border-gray-800 text-center'>{iosMeasurementId}</td>
