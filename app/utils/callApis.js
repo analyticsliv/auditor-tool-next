@@ -26,5 +26,6 @@ export async function callApis() {
     await reportEndApiCall('generalConfig', endapiall);
     await fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
     await fetchAuditData('attributionSettings', 'attributionSettings');
+    await fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
     await reportEndApiCall('usersDetails', usersDetails);
 }
