@@ -32,11 +32,11 @@ const DataStreams = () => {
         <div className=''>
             <h1 className="pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem] ">Tagging & Configuration</h1>
             <div className='bg-white rounded-3xl p-10 mt-10'>
-            <h2 className='pb-4 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Streams</h2>
+            <h2 className='pb-6 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Streams</h2>
 
             <table border="1" className='w-full'>
                 <thead>
-                    <tr className='w-full'>
+                    <tr>
                         <th></th>
                         <th className='text-sm text-center'>Android Streams</th>
                         <th className='text-sm text-center'>Web Streams</th>

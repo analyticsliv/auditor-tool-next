@@ -43,33 +43,33 @@ const GeneralConfig = () => {
     return (
         <div>
             <div>
-                <div>
-                    <h1>General Configuration</h1>
-                    <div>
-                        <table>
+                <div className='bg-white rounded-3xl p-10 mt-10'>
+                    <div className='pb-6 text-gray-800 font-extrabold text-[1.8rem] text-center'>General Configuration</div>
+                    <div >
+                        <table className='w-full'>
                             <thead>
                                 <tr>
-                                    <th>Status</th>
-                                    <th>Check</th>
-                                    <th>Description</th>
+                                    <th className='text-sm text-center'>Status</th>
+                                    <th className='text-sm text-center'>Check</th>
+                                    <th className='text-sm text-center'>Description</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td id="time">{timezoneMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                    <td>Time Zone </td>
-                                    <td>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
+                                    <td id="time" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{timezoneMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Time Zone </td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
                                 </tr>
                                 <tr>
-                                    <td id="currency">{currenyMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                    <td>Currency Code </td>
-                                    <td>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
+                                    <td id="currency" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{currenyMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Currency Code </td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td id="industry">{categorymood ? 'Mood Good' : 'Mood Bad'}</td>
-                                    <td>Industry Category </td>
-                                    <td>The industry category of the property is <b id="industrycategory">{category}</b></td>
+                                    <td id="industry" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{categorymood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Industry Category </td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
                                 </tr>
                             </tbody>
                         </table>
