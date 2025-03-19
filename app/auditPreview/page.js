@@ -7,6 +7,7 @@ import { useAccountStore } from '../store/useAccountStore'
 import GeneralConfig from '../Components/generalConfig'
 import DataCollectionRetention from '../Components/dataCollectionRetention'
 import AttributionSetting from '../Components/attributionSetting'
+import ActiveDomains from '../Components/activeDomains'
 
 const Page = () => {
 
@@ -19,7 +20,7 @@ const Page = () => {
   console.log("Data Retention Settings:", auditData?.dataRetentionSettings);
   console.log("Attribution Settings:", auditData?.attributionSettings);
   console.log("End API Data Streams:", endApiData?.dataStreams);
-  console.log("generalConfig", endApiData?.usersDetails);
+  console.log("usersDetails activedomain-", endApiData?.usersDetails);
 
   return (
     <div>
@@ -28,6 +29,7 @@ const Page = () => {
       <GeneralConfig />
       <DataCollectionRetention />
       <AttributionSetting />
+      <ActiveDomains />
     </div>
   )
 }
