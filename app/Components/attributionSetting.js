@@ -42,36 +42,36 @@ const AttributionSetting = () => {
     return (
         <div>
             <div>
-                <div>
-                    <h1>Attribution Setting Details</h1>
+                <div className='bg-white rounded-3xl p-10 mt-10'>
+                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>Attribution Setting Details</h1>
                     <div>
                         <div className='flex justify-around'>
-                            <div className='flex flex-col'>
+                            <div className='bg-red-200 text-center rounded-3xl p-10  flex justify-around flex-col'>
                                 <span>{modelMood ? 'Mood Good' : 'Mood Bad'}</span>
                                 <div>
                                     <div>
-                                        <h2>Model</h2>
+                                        <h2 className='font-extrabold text-[1.8rem]'>Model</h2>
                                         <h3>Your attribution model is set to <b>{model}</b></h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className='flex flex-col'>
+                            <div className='flex flex-col text-center bg-red-200 rounded-3xl p-10  justify-around'>
                                 <span>{acquisitionWindowMood ? 'Mood Good' : 'Mood Bad'}</span>
                                 <div>
                                     <div>
-                                        <h2>Acquisition Window
+                                        <h2 className='font-extrabold text-[1.8rem]'>Acquisition Window
                                         </h2>
                                         <h3>Your <b>{acquisitionWindow}</b></h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className='flex flex-col'>
+                            <div className='flex flex-col text-center bg-red-200 rounded-3xl p-10  justify-around'>
                                 <span>{conversionWindowMood ? 'Mood Good' : 'Mood Bad'}</span>
                                 <div>
                                     <div>
-                                        <h2>Conversion Window</h2>
+                                        <h2 className='font-extrabold text-[1.8rem]'>Conversion Window</h2>
                                         <h3>Your <b>{conversionWindow}</b></h3>
                                     </div>
                                 </div>

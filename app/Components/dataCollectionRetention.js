@@ -29,24 +29,24 @@ const DataCollectionRetention = () => {
     return (
         <div>
             <div>
-                <div>
-                    <h1>Data Collection & Retention</h1>
+                <div className='bg-white rounded-3xl p-10 mt-10'>
+                    <h1 className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Collection & Retention</h1>
                     <div>
-                        <table>
+                        <table className='w-full'>
                             <tr>
-                                <th>Status</th>
-                                <th>Check</th>
-                                <th>Description</th>
+                                <th className='text-sm text-center'>Status</th>
+                                <th className='text-sm text-center'>Check</th>
+                                <th className='text-sm text-center'>Description</th>
                             </tr>
                             <tr>
-                                <td>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                <td>Data Retention </td>
-                                <td>Data retention is set to <b>{dataretention}</b></td>
+                                <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
                             </tr>
                             <tr>
-                                <td>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                <td>Google-Signal Details</td>
-                                <td><b>{googlesignaldetails}</b></td>
+                                <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
                             </tr>
                         </table>
                     </div>
