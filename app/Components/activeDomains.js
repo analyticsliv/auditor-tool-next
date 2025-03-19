@@ -98,13 +98,13 @@ const ActiveDomains = () => {
                         <br></br>traffic and best practices. Ideally, you should use only one root domain per
                         property.
                     </h3>
-                    <div className='flex items-center justify-between 2xl:justify-evenly'>
+                    <div className='flex items-center justify-between gap-10 2xl:justify-evenly'>
                         <div className='max-w-[40%] flex justify-center items-center'>
                             <h3 className='text-center'>
                                 {text}
                             </h3>
                         </div>
-                        <div className=''>
+                        <div className='flex flex-col justify-center items-center'>
                             <ResponsiveContainer width={400} height={400}>
                                 <PieChart width={400} height={400}>
                                     <Pie
@@ -128,7 +128,7 @@ const ActiveDomains = () => {
                                     <Tooltip />
                                 </PieChart>
                             </ResponsiveContainer>
-                            <div className="flex flex-wrap gap-3 mt-4">
+                            <div className="flex flex-wrap gap-4 mt-4">
                                 {domain?.map((name) => (
                                     <div
                                         key={name}
