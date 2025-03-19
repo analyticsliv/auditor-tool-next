@@ -49,9 +49,9 @@ const GeneralConfig = () => {
                         <table className='w-full'>
                             <thead>
                                 <tr>
-                                    <th className='text-sm text-center'>Status</th>
-                                    <th className='text-sm text-center'>Check</th>
-                                    <th className='text-sm text-center'>Description</th>
+                                    <th className='text-sm text-center w-[15%] xl:w-[20%]'>Status</th>
+                                    <th className='text-sm text-center w-[15%] xl:w-[20%]'>Check</th>
+                                    <th className='text-sm text-center w-[70%] xl:w-[50%]'>Description</th>
                                 </tr>
                             </thead>
                             <tbody>

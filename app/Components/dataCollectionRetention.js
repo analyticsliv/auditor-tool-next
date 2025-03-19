@@ -33,21 +33,25 @@ const DataCollectionRetention = () => {
                     <h1 className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Collection & Retention</h1>
                     <div>
                         <table className='w-full'>
-                            <tr>
-                                <th className='text-sm text-center'>Status</th>
-                                <th className='text-sm text-center'>Check</th>
-                                <th className='text-sm text-center'>Description</th>
-                            </tr>
-                            <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
-                            </tr>
-                            <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th className='text-sm text-center'>Status</th>
+                                    <th className='text-sm text-center'>Check</th>
+                                    <th className='text-sm text-center'>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
+                                </tr>
+                                <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
