@@ -7,6 +7,7 @@ import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from './utils/user';
 import { fetchAuditData, reportEndApiCall } from './utils/endApi';
 import { callApis } from './utils/callApis';
+import { useRouter } from 'next/navigation';
 
 const Home = () => {
   const {
@@ -35,6 +36,7 @@ const Home = () => {
   const dropdownRef = useRef(null);
 
   const user = getUserSession();
+  const router = useRouter();
 
   // useEffect(() => {
   //   const userData = { given_name: user };
@@ -54,7 +56,7 @@ const Home = () => {
     }
   }, [fetchAccountSummaries, hasFetchedAccounts]);
 
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -92,7 +94,7 @@ const Home = () => {
     setLoading(true)
     await callApis();
     setLoading(false)
-    window.location.href = "/auditPreview";
+    router.push("/auditPreview");
   }
 
   return (
