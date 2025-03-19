@@ -106,7 +106,7 @@ export default function RootLayout({ children }) {
               {/* Main content area */}
               <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar */}
-                <aside className={`${toggle ? "w-[65px]" : "w-[200px]"} bg-white transition-all duration-200`}>
+                <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white transition-all duration-200`}>
                   <nav className="flex flex-col h-full pt-5">
                     {menuItems.map((item) => {
                       const isDisabled = disableMenus && item?.label !== "Home";
@@ -117,8 +117,8 @@ export default function RootLayout({ children }) {
                             className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                           >
-                            <img src={item?.imgUrl} className="h-8 w-8" />
-                            {!toggle && <div className="truncate">{item?.label}</div>}
+                            <img src={item?.imgUrl} className="h-5 2xl:h-8 w-5 2xl:w-8" />
+                            {!toggle && <div className="truncate text-xs xl:text-sm 2xl:text-base">{item?.label}</div>}
                           </div>
                         </Link>
                       );
