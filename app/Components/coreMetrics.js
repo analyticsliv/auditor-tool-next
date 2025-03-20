@@ -177,7 +177,7 @@ const CoreMetrics = () => {
                                                     const { cx, cy, payload } = props;
 
                                                     // Check if the current data point is an anomaly
-                                                    const isAnomaly = sessionsAnomalies?.some(anomaly => anomaly.formattedDate === payload.formattedDate);
+                                                    const isAnomaly = sessionsAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
 
                                                     return (
                                                         <circle
