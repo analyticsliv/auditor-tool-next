@@ -160,8 +160,8 @@ const CoreMetrics = () => {
                         <div id="" className='flex flex-col gap-10'>
                             <div className='flex justify-between 2xl:justify-around items-center'>
                                 <div className='w-[65%]'>
-                                    <ResponsiveContainer height={200}>
-                                        <LineChart data={sessionsChartData}>
+                                    <ResponsiveContainer height={230}>
+                                        <LineChart data={sessionsChartData} height={230}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="formattedDate" />
                                             <YAxis />
@@ -204,8 +204,8 @@ const CoreMetrics = () => {
                             <div className='flex justify-between 2xl:justify-around items-center'>
                                 <div className='w-[65%]'>
 
-                                    <ResponsiveContainer height={200}>
-                                        <LineChart data={userChartData} height={200}>
+                                    <ResponsiveContainer height={230}>
+                                        <LineChart data={userChartData} height={230}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="formattedDate" />
                                             <YAxis />
@@ -248,8 +248,8 @@ const CoreMetrics = () => {
                             <div className='flex justify-between 2xl:justify-around items-center'>
                                 <div className='w-[65%]'>
 
-                                    <ResponsiveContainer height={200}>
-                                        <LineChart data={viewChartData} height={200}>
+                                    <ResponsiveContainer height={230}>
+                                        <LineChart data={viewChartData} height={230}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="formattedDate" />
                                             <YAxis />
