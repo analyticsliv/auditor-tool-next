@@ -8,6 +8,7 @@ import GeneralConfig from '../Components/generalConfig'
 import DataCollectionRetention from '../Components/dataCollectionRetention'
 import AttributionSetting from '../Components/attributionSetting'
 import ActiveDomains from '../Components/activeDomains'
+import CoreMetrics from '../Components/coreMetrics'
 
 const Page = () => {
 
@@ -30,6 +31,8 @@ const Page = () => {
       <DataCollectionRetention />
       <AttributionSetting />
       <ActiveDomains />
+
+      <CoreMetrics />
     </div>
   )
 }
