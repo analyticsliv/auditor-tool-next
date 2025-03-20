@@ -6,21 +6,63 @@ import moment from 'moment';
 const CoreMetrics = () => {
 
     const { endApiData } = useAccountStore();
+
     const [userChartData, setUserChartData] = useState([]);
+    const [userAnomalies, setUserAnomalies] = useState([]);
+
     const [sessionsChartData, setSessionsChartData] = useState([]);
+    const [sessionsAnomalies, setSessionsAnomalies] = useState([]);
+
     const [viewChartData, setViewChartData] = useState([]);
+    const [viewAnomalies, setViewAnomalies] = useState([]);
 
     const totaluserData = endApiData?.totaluserCore;
     const sessionData = endApiData?.sessionsCore;
     const viewData = endApiData?.viewCore;
 
-    console.log('totaluserData', totaluserData, 'sessionData', sessionData, 'viewData', viewData)
 
+    // sessions
+    useEffect(() => {
+        const dates = sessionData?.rows?.map(item => item?.dimensionValues[0]?.value);
+        const sessions = sessionData?.rows?.map(item => (item?.metricValues[0]?.value
+        ));
+        const formattedDates = dates?.map(date => moment(date, "YYYYMMDD").format("YYYY-MM-DD"));
+
+        const formattedData = formattedDates?.map((date, index) => ({
+            formattedDate: date,
+            sessions: Number(sessions[index])
+        }));
+        setSessionsChartData(formattedData)
+
+        //anomaly
+        const windowSize = 14;
+        let sum = 0;
+        let detectedAnomalies = [];
+
+        for (let i = 0; i < formattedData?.length; i++) {
+            if (i <= windowSize) {
+                sum += formattedData[i]?.sessions;
+            } else {
+                sum -= formattedData[i - windowSize - 1]?.sessions;
+                sum += formattedData[i - 1]?.sessions;
+                let avg = sum / windowSize;
+
+                if (avg * 3 < formattedData[i]?.sessions) {
+                    detectedAnomalies?.push({ formattedDate: formattedData[i]?.formattedDate, sessions: formattedData[i]?.sessions });
+                }
+            }
+        }
+
+        setSessionsAnomalies(detectedAnomalies);
+
+    }, [sessionData]);
+
+
+    //users
     useEffect(() => {
         const dates = totaluserData?.rows?.map(item => item?.dimensionValues[0]?.value);
         const users = totaluserData?.rows?.map(item => (item?.metricValues[0]?.value
         ));
-        // dates = moment(dates).format('YYYY-MM-DD');
         const formattedDates = dates?.map(date => moment(date, "YYYYMMDD").format("YYYY-MM-DD"));
 
         const formattedData = formattedDates?.map((date, index) => ({
@@ -29,50 +71,68 @@ const CoreMetrics = () => {
         }));
         setUserChartData(formattedData)
 
+
+        //anomaly
+        const windowSize = 14;
+        let sum = 0;
+        let detectedAnomalies = [];
+
+        for (let i = 0; i < formattedData?.length; i++) {
+            if (i <= windowSize) {
+                sum += formattedData[i]?.users;
+            } else {
+                sum -= formattedData[i - windowSize - 1]?.users;
+                sum += formattedData[i - 1]?.users;
+                let avg = sum / windowSize;
+
+                if (avg * 3 < formattedData[i]?.users) {
+                    detectedAnomalies?.push({ formattedDate: formattedData[i]?.formattedDate, users: formattedData[i]?.users });
+                }
+            }
+        }
+
+        setUserAnomalies(detectedAnomalies);
+
     }, [totaluserData]);
 
-    useEffect(() => {
-        console.log("Updated userChartData:", userChartData);
-    }, [userChartData]);
 
-    useEffect(() => {
-        const dates = sessionData?.rows?.map(item => item?.dimensionValues[0]?.value);
-        const sessions = sessionData?.rows?.map(item => (item?.metricValues[0]?.value
-        ));
-        console.log("datre sessu", dates, sessions)
-        // dates = moment(dates).format('YYYY-MM-DD');
-        const formattedDates = dates?.map(date => moment(date, "YYYYMMDD").format("YYYY-MM-DD"));
-
-        const formattedData = formattedDates?.map((date, index) => ({
-            formattedDate: date,
-            sessions: Number(sessions[index]) // Convert to number if needed
-        }));
-        setSessionsChartData(formattedData)
-    }, [sessionData]);
-
-    useEffect(() => {
-        console.log("Updated sessch:", sessionsChartData);
-    }, [sessionsChartData]);
-
+    //views
     useEffect(() => {
         const dates = viewData?.rows?.map(item => item?.dimensionValues[0]?.value);
         const views = viewData?.rows?.map(item => (item?.metricValues[0]?.value
         ));
-        // dates = moment(dates).format('YYYY-MM-DD');
         const formattedDates = dates?.map(date => moment(date, "YYYYMMDD").format("YYYY-MM-DD"));
 
-        // console.log("dates chart", formattedDates, chartValues)
         const formattedData = formattedDates?.map((date, index) => ({
             formattedDate: date,
-            views: Number(views[index]) // Convert to number if needed
+            views: Number(views[index])
         }));
         setViewChartData(formattedData)
 
+
+        //anomaly
+        const windowSize = 14;
+        let sum = 0;
+        let detectedAnomalies = [];
+
+        for (let i = 0; i < formattedData?.length; i++) {
+            if (i <= windowSize) {
+                sum += formattedData[i]?.views;
+            } else {
+                sum -= formattedData[i - windowSize - 1]?.views;
+                sum += formattedData[i - 1]?.views;
+                let avg = sum / windowSize;
+
+                if (avg * 3 < formattedData[i]?.views) {
+                    detectedAnomalies?.push({ formattedDate: formattedData[i]?.formattedDate, views: formattedData[i]?.views });
+                }
+            }
+        }
+
+        setViewAnomalies(detectedAnomalies);
+
     }, [viewData]);
 
-    useEffect(() => {
-        console.log("viewChartData", viewChartData);
-    }, [viewChartData]);
 
     return (
         <div className='bg-white rounded-3xl p-10 mt-10'>
@@ -98,83 +158,131 @@ const CoreMetrics = () => {
                 <div id="">
                     <div>
                         <div id="" className='flex flex-col gap-10'>
-                            <div className='h- w- flex justify-around items-center'>
-                                <ResponsiveContainer height={200} width={700}>
-                                    <LineChart
-                                        width={700}
-                                        height={200}
-                                        data={sessionsChartData}
-                                        margin={{
-                                            top: 5,
-                                            right: 30,
-                                            left: 20,
-                                            bottom: 5,
-                                        }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="formattedDate" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Line type="monotone" dataKey="sessions" stroke="#8884d8" activeDot={{ r: 8 }} /> {/* Corrected */}
-                                    </LineChart>
-                                </ResponsiveContainer>
-                                <h3 className='w-[300px]' id="">
-                                    <span>No anomalies detected</span> in Total
-                                    user. Data trends are stable and
+                            <div className='flex justify-between 2xl:justify-around items-center'>
+                                <div className='w-[65%]'>
+                                    <ResponsiveContainer height={200}>
+                                        <LineChart data={sessionsChartData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="formattedDate" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+
+                                            <Line
+                                                type="monotone"
+                                                dataKey="sessions"
+                                                stroke="#8884d8"
+                                                strokeWidth={2}
+                                                dot={(props) => {
+                                                    const { cx, cy, payload } = props;
+
+                                                    // Check if the current data point is an anomaly
+                                                    const isAnomaly = sessionsAnomalies?.some(anomaly => anomaly.formattedDate === payload.formattedDate);
+
+                                                    return (
+                                                        <circle
+                                                            cx={cx}
+                                                            cy={cy}
+                                                            r={3}
+                                                            fill={isAnomaly ? "red" : "white"}
+                                                            stroke={isAnomaly ? "red" : "#8884d8"}
+                                                            strokeWidth={1}
+                                                        />
+                                                    );
+                                                }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <h3 className='w-[30%]' id="">
+                                    <span>No anomalies detected</span> in Session. Data trends are stable and
                                     within
                                     expected ranges in Total user pattern.
                                 </h3>
                             </div>
-                            <div className='h- w- flex justify-around items-center'>
-                                <ResponsiveContainer height={200} width={700}>
-                                    <LineChart
-                                        width={500}
-                                        height={200}
-                                        data={userChartData}
-                                        margin={{
-                                            top: 5,
-                                            right: 30,
-                                            left: 20,
-                                            bottom: 5,
-                                        }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="formattedDate" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Line type="monotone" dataKey="users" stroke="green" activeDot={{ r: 8 }} /> {/* Corrected */}
-                                    </LineChart>
-                                </ResponsiveContainer>
-                                <h3 className='w-[300px]' id="">
+
+                            <div className='flex justify-between 2xl:justify-around items-center'>
+                                <div className='w-[65%]'>
+
+                                    <ResponsiveContainer height={200}>
+                                        <LineChart data={userChartData} height={200}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="formattedDate" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+
+                                            <Line
+                                                type="monotone"
+                                                dataKey="users"
+                                                stroke="green"
+                                                strokeWidth={2}
+                                                dot={(props) => {
+                                                    const { cx, cy, payload } = props;
+
+                                                    // Check if the current data point is an anomaly
+                                                    const isAnomaly = userAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
+
+                                                    return (
+                                                        <circle
+                                                            cx={cx}
+                                                            cy={cy}
+                                                            r={3}
+                                                            fill={isAnomaly ? "red" : "white"}
+                                                            stroke={isAnomaly ? "red" : "green"}
+                                                            strokeWidth={1}
+                                                        />
+                                                    );
+                                                }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <h3 className='w-[30%]' id="">
                                     <span>No anomalies detected</span> in
-                                    Session. Data trends are stable and within
-                                    expected ranges in Sessions Per User pattern.
+                                    Total Users. Data trends are stable and within
+                                    expected ranges in Total Users Per User pattern.
                                 </h3>
                             </div>
-                            <div className='h- w- flex justify-around items-center'>
-                                <ResponsiveContainer height={200} width={700}>
-                                    <LineChart
-                                        width={500}
-                                        height={200}
-                                        data={viewChartData}
-                                        margin={{
-                                            top: 5,
-                                            right: 30,
-                                            left: 20,
-                                            bottom: 5,
-                                        }}
-                                    >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="formattedDate" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Line type="monotone" dataKey="views" stroke="red" activeDot={{ r: 8 }} /> {/* Corrected */}
-                                    </LineChart>
-                                </ResponsiveContainer>
-                                <h3 className='w-[300px]' id="">
+
+                            <div className='flex justify-between 2xl:justify-around items-center'>
+                                <div className='w-[65%]'>
+
+                                    <ResponsiveContainer height={200}>
+                                        <LineChart data={viewChartData} height={200}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="formattedDate" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+
+                                            <Line
+                                                type="monotone"
+                                                dataKey="views"
+                                                stroke="orange"
+                                                strokeWidth={2}
+                                                dot={(props) => {
+                                                    const { cx, cy, payload } = props;
+
+                                                    // Check if the current data point is an anomaly
+                                                    const isAnomaly = userAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
+
+                                                    return (
+                                                        <circle
+                                                            cx={cx}
+                                                            cy={cy}
+                                                            r={3}
+                                                            fill={isAnomaly ? "red" : "white"}
+                                                            stroke={isAnomaly ? "red" : "orange"}
+                                                            strokeWidth={1}
+                                                        />
+                                                    );
+                                                }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <h3 className='w-[30%]' id="">
                                     <span>No anomalies detected</span> in View.
                                     Data trends are stable and within
                                     expected ranges in Screen Page View Per user pattern.

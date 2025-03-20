@@ -99,7 +99,7 @@ const ActiveDomains = () => {
                         property.
                     </h3>
                     <div className='flex items-center justify-between gap-10 2xl:justify-evenly'>
-                        <div className='max-w-[40%] flex justify-center items-center'>
+                        <div className='max-w-[40%] min-w-[25%] flex justify-center items-center'>
                             <h3 className='text-center'>
                                 {text}
                             </h3>
