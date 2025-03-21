@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAccountStore } from './store/useAccountStore';
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from './utils/user';
-import { fetchAuditData, reportEndApiCall } from './utils/endApi';
 import { callApis } from './utils/callApis';
 import { useRouter } from 'next/navigation';
 
@@ -28,6 +27,13 @@ const Home = () => {
     hasFetchedAccounts,
   } = useAccountStore();
 
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status]);
   const [searchTerm, setSearchTerm] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
@@ -50,7 +56,7 @@ const Home = () => {
       // Fetch accounts only if they haven’t been fetched before
       const userData = { given_name: user };
       setLoadingAccounts(true);
-      fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
+      fetchAccountSummaries(userData, router).finally(() => setLoadingAccounts(false));
     } else {
       setLoadingAccounts(false);
     }
