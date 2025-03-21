@@ -183,7 +183,7 @@ const CoreMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={3}
+                                                            r={isAnomaly ? 7 : 5}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "#8884d8"}
                                                             strokeWidth={1}
@@ -192,13 +192,29 @@ const CoreMetrics = () => {
                                                 }}
                                             />
                                         </LineChart>
+                                        {sessionsAnomalies?.length > 0 && (
+                                            <Line
+                                                type="monotone"
+                                                dataKey="Anomalies"
+                                                stroke="red"
+                                                strokeWidth={2}
+                                                dot={{ fill: "red", stroke: "red", r: 7 }}
+                                            />
+                                        )}
                                     </ResponsiveContainer>
                                 </div>
-                                <h3 className='w-[30%]' id="">
-                                    <span>No anomalies detected</span> in Session. Data trends are stable and
-                                    within
-                                    expected ranges in Total user pattern.
-                                </h3>
+                                <div className='w-[30%]' id="">
+                                    {sessionsAnomalies?.length > 0 ?
+                                        <div>
+                                            <span className='font-bold'>Detected deviation</span> from expected normal behaviour in Session pattern.
+                                        </div>
+                                        :
+                                        <div>
+                                            <span className='font-bold'>No anomalies detected</span> in Session. Data trends are stable and within
+                                            expected ranges in Sessions Per User pattern.
+                                        </div>
+                                    }
+                                </div>
                             </div>
 
                             <div className='flex justify-between 2xl:justify-around items-center'>
@@ -227,7 +243,7 @@ const CoreMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={3}
+                                                            r={isAnomaly ? 7 : 5}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "green"}
                                                             strokeWidth={1}
@@ -235,14 +251,31 @@ const CoreMetrics = () => {
                                                     );
                                                 }}
                                             />
+                                            {userAnomalies?.length > 0 && (
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="Anomalies"
+                                                    stroke="red"
+                                                    strokeWidth={2}
+                                                    dot={{ fill: "red", stroke: "red", r: 7 }}
+                                                />
+                                            )}
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </div>
-                                <h3 className='w-[30%]' id="">
-                                    <span>No anomalies detected</span> in
-                                    Total Users. Data trends are stable and within
-                                    expected ranges in Total Users Per User pattern.
-                                </h3>
+                                <div className='w-[30%]' id="">
+                                    {userAnomalies?.length > 0 ?
+                                        <div>
+                                            <span className='font-bold'>Detected deviation</span> from expected normal behaviour in Total User pattern.
+                                        </div>
+                                        :
+                                        <div>
+                                            <span className='font-bold'>No anomalies detected</span> in
+                                            Total Users. Data trends are stable and within
+                                            expected ranges in Total User pattern.
+                                        </div>
+                                    }
+                                </div>
                             </div>
 
                             <div className='flex justify-between 2xl:justify-around items-center'>
@@ -265,13 +298,13 @@ const CoreMetrics = () => {
                                                     const { cx, cy, payload } = props;
 
                                                     // Check if the current data point is an anomaly
-                                                    const isAnomaly = userAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
+                                                    const isAnomaly = viewAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
 
                                                     return (
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={3}
+                                                            r={isAnomaly ? 7 : 5}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "orange"}
                                                             strokeWidth={1}
@@ -279,14 +312,31 @@ const CoreMetrics = () => {
                                                     );
                                                 }}
                                             />
+                                            {viewAnomalies?.length > 0 && (
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="Anomalies"
+                                                    stroke="red"
+                                                    strokeWidth={2}
+                                                    dot={{ fill: "red", stroke: "red", r: 7 }}
+                                                />
+                                            )}
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </div>
-                                <h3 className='w-[30%]' id="">
-                                    <span>No anomalies detected</span> in View.
-                                    Data trends are stable and within
-                                    expected ranges in Screen Page View Per user pattern.
-                                </h3>
+                                <div className='w-[30%]' id="">
+                                    {viewAnomalies?.length > 0 ?
+                                        <div>
+                                            <span className='font-bold'>Detected deviation</span> from expected normal behaviour in View pattern.
+                                        </div>
+                                        :
+                                        <div>
+                                            <span className='font-bold'>No anomalies detected</span> in View.
+                                            Data trends are stable and within
+                                            expected ranges in Screen Page View Per user pattern.
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
