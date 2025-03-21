@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
