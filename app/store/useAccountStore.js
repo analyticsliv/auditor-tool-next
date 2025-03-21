@@ -20,7 +20,7 @@ export const useAccountStore = create(
 
         setLoading: (isLoading) => set({ loading: isLoading }),
 
-        fetchAccountSummaries: async (userData) => {
+        fetchAccountSummaries: async (userData, router) => {
 
             if (get().hasFetchedAccounts) return;
 
@@ -45,6 +45,7 @@ export const useAccountStore = create(
 
                 if (accountSummaries.length === 0) {
                     alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
+                    router.push("/login");
                 }
             } catch (error) {
                 console.error('Error:', error);
