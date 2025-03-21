@@ -8,7 +8,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "./utils/user";
 import { useAccountStore } from "./store/useAccountStore";
-
+import { IoHomeOutline } from "react-icons/io5";
+import { TbReportAnalytics } from "react-icons/tb";
+import { GoPerson } from "react-icons/go";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { RxDashboard } from "react-icons/rx";
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,11 +37,11 @@ export default function RootLayout({ children }) {
   } = useAccountStore();
 
   const menuItems = [
-    { imgUrl: "/Home.png", label: "Home", path: "/" },
-    { imgUrl: "/Audit Preview.png", label: "Audit Preview", path: "/auditPreview" },
-    { imgUrl: "/Dashboard.png", label: "Dashboard", path: "/dashboard" },
-    { imgUrl: "/PROFILE.png", label: "Account Details", path: "/2" },
-    { imgUrl: "/files.svg", label: "Previous Audits", path: "/3" },
+    { image: <IoHomeOutline size={18} />, label: "Home", path: "/" },
+    { image: <TbReportAnalytics size={18} />, label: "Audit Preview", path: "/auditPreview" },
+    { image: <RxDashboard size={18} />, label: "Dashboard", path: "/dashboard" },
+    { image: <GoPerson size={18} />, label: "Account Details", path: "/2" },
+    { image: <HiOutlineDocumentReport size={18} />, label: "Previous Audits", path: "/3" },
   ];
 
   const [userSession, setUserSession] = useState(null);
@@ -112,12 +118,14 @@ export default function RootLayout({ children }) {
                       const isDisabled = disableMenus && item?.label !== "Home";
 
                       return (
+
                         <Link key={item?.path} href={isDisabled ? "#" : item?.path} passHref>
                           <div
                             className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                           >
-                            <img src={item?.imgUrl} className="h-5 2xl:h-8 w-5 2xl:w-8" />
+                            {item?.image}
+
                             {!toggle && <div className="truncate text-xs xl:text-sm 2xl:text-base">{item?.label}</div>}
                           </div>
                         </Link>
@@ -136,7 +144,9 @@ export default function RootLayout({ children }) {
                       onClick={toggleMenu}
                       className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
                     >
-                      {toggle ? ">" : "<"}
+                      <div className="flex justify-center items-center">
+                        {toggle ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
+                      </div>
                     </div>
                   </nav>
                 </aside>
