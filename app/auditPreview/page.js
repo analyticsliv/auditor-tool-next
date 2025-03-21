@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import AuditStart from '../Components/auditStart'
 import DataStreams from '../Components/dataStreams'
 import { useAccountStore } from '../store/useAccountStore'
@@ -9,10 +9,21 @@ import DataCollectionRetention from '../Components/dataCollectionRetention'
 import AttributionSetting from '../Components/attributionSetting'
 import ActiveDomains from '../Components/activeDomains'
 import CoreMetrics from '../Components/coreMetrics'
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
 
   const { auditData, endApiData } = useAccountStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (
+      Object.keys(auditData)?.length === 0 &&
+      Object.keys(endApiData)?.length === 0
+    ) {
+      router.push("/");
+    }
+  }, [auditData, endApiData, router]);
 
   console.log("Audit Data:", auditData);
   console.log("End API Data:", endApiData);
