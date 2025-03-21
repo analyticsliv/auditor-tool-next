@@ -53,6 +53,30 @@ const viewCore = {
     "keepEmptyRows": true
 };
 
+const totaluserEng = {
+    "dimensions": [{ "name": "date" }],
+    "metrics": [{ "name": "sessionsPerUser" }],
+    "dateRanges": [{ "startDate": formattedStartDate90, "endDate": formattedEndDate90 }],
+    "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }],
+    "keepEmptyRows": true
+};
+
+const viewEng = {
+    "dimensions": [{ "name": "date" }],
+    "metrics": [{ "name": "screenPageViewsPerUser" }],
+    "dateRanges": [{ "startDate": formattedStartDate90, "endDate": formattedEndDate90 }],
+    "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }],
+    "keepEmptyRows": true
+};
+
+const sessionsEng = {
+    "dimensions": [{ "name": "date" }],
+    "metrics": [{ "name": "engagedSessions" }],
+    "dateRanges": [{ "startDate": formattedStartDate90, "endDate": formattedEndDate90 }],
+    "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }],
+    "keepEmptyRows": true
+};
+
 export async function callApis() {
     await fetchAuditData('dataStreams', 'dataStreams');
     await reportEndApiCall('generalConfig', endapiall);
@@ -64,4 +88,8 @@ export async function callApis() {
     await reportEndApiCall('totaluserCore', totaluserCore);
     await reportEndApiCall('sessionsCore', sessionsCore);
     await reportEndApiCall('viewCore', viewCore);
+
+    await reportEndApiCall('totaluserEng', totaluserEng);
+    await reportEndApiCall('viewEng', viewEng);
+    await reportEndApiCall('sessionsEng', sessionsEng);
 }

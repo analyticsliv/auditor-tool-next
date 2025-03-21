@@ -10,6 +10,7 @@ import AttributionSetting from '../Components/attributionSetting'
 import ActiveDomains from '../Components/activeDomains'
 import CoreMetrics from '../Components/coreMetrics'
 import { useRouter } from 'next/navigation';
+import EngagementMetrics from '../Components/engagementMetrics'
 
 const Page = () => {
 
@@ -44,6 +45,7 @@ const Page = () => {
       <ActiveDomains />
 
       <CoreMetrics />
+      <EngagementMetrics />
     </div>
   )
 }
