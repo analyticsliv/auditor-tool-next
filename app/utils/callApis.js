@@ -27,6 +27,14 @@ const usersDetails = {
     "keepEmptyRows": true
 };
 
+const engagementRate = {
+    "dimensions": [{ "name": "date" }],
+    "metrics": [{ "name": "engagementRate" }, { "name": "totalusers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }],
+    "keepEmptyRows": true
+};
+
 // 90 days
 
 const totaluserCore = {
@@ -88,7 +96,7 @@ export async function callApis() {
     await reportEndApiCall('totaluserCore', totaluserCore);
     await reportEndApiCall('sessionsCore', sessionsCore);
     await reportEndApiCall('viewCore', viewCore);
-
+    await reportEndApiCall('engagementRate', engagementRate);
     await reportEndApiCall('totaluserEng', totaluserEng);
     await reportEndApiCall('viewEng', viewEng);
     await reportEndApiCall('sessionsEng', sessionsEng);

@@ -11,6 +11,7 @@ import ActiveDomains from '../Components/activeDomains'
 import CoreMetrics from '../Components/coreMetrics'
 import { useRouter } from 'next/navigation';
 import EngagementMetrics from '../Components/engagementMetrics'
+import EngagementRate from '../Components/engagementRate'
 
 const Page = () => {
 
@@ -45,6 +46,7 @@ const Page = () => {
       <ActiveDomains />
 
       <CoreMetrics />
+      <EngagementRate />
       <EngagementMetrics />
     </div>
   )
