@@ -12,6 +12,7 @@ import CoreMetrics from '../Components/coreMetrics'
 import { useRouter } from 'next/navigation';
 import EngagementMetrics from '../Components/engagementMetrics'
 import EngagementRate from '../Components/engagementRate'
+import EventsTracking from '../Components/eventsTracking'
 
 const Page = () => {
 
@@ -27,15 +28,6 @@ const Page = () => {
     }
   }, [auditData, endApiData, router]);
 
-  console.log("Audit Data:", auditData);
-  console.log("End API Data:", endApiData);
-
-  console.log("Data Streams Audit:", auditData?.dataStreams);
-  console.log("Data Retention Settings:", auditData?.dataRetentionSettings);
-  console.log("Attribution Settings:", auditData?.attributionSettings);
-  console.log("End API Data Streams:", endApiData?.dataStreams);
-  console.log("usersDetails activedomain-", endApiData?.usersDetails);
-
   return (
     <div>
       <AuditStart />
@@ -48,6 +40,7 @@ const Page = () => {
       <CoreMetrics />
       <EngagementRate />
       <EngagementMetrics />
+      <EventsTracking />
     </div>
   )
 }

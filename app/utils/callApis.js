@@ -35,6 +35,13 @@ const engagementRate = {
     "keepEmptyRows": true
 };
 
+const eventsTracking = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "conversions" }, { "name": "eventCount" }, { "name": "eventCountPerUser" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "keepEmptyRows": true
+};
+
 // 90 days
 
 const totaluserCore = {
@@ -100,4 +107,5 @@ export async function callApis() {
     await reportEndApiCall('totaluserEng', totaluserEng);
     await reportEndApiCall('viewEng', viewEng);
     await reportEndApiCall('sessionsEng', sessionsEng);
+    await reportEndApiCall('eventsTracking', eventsTracking);
 }
