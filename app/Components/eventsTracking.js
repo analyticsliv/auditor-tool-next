@@ -153,19 +153,23 @@ const EventsTracking = () => {
                         </h3>
                         <div>
                             <table className='w-full'>
-                                <tr>
-                                    <th className='text-sm text-center'>Status</th>
-                                    <th className='text-sm text-center'>Check</th>
-                                    <th className='text-sm text-center'>Description</th>
-                                </tr>
-                                <tr>
-                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
-                                    </td>
-                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
-                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
-                                        {eventstatus}
-                                    </td>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th className='text-sm text-center'>Status</th>
+                                        <th className='text-sm text-center'>Check</th>
+                                        <th className='text-sm text-center'>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
+                                        </td>
+                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
+                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
+                                            {eventstatus}
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -42,6 +42,12 @@ const eventsTracking = {
     "keepEmptyRows": true
 };
 
+const keyeventdetails = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "keyEvents" }, { "name": "eventvalue" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }]
+};
+
 // 90 days
 
 const totaluserCore = {
@@ -92,6 +98,13 @@ const sessionsEng = {
     "keepEmptyRows": true
 };
 
+const ConversionAnomaly = {
+    "dimensions": [{ "name": "date" }],
+    "metrics": [{ "name": "conversions:purchase" }],
+    "dateRanges": [{ "startDate": formattedStartDate90, "endDate": formattedEndDate90 }],
+    "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }]
+};
+
 export async function callApis() {
     await fetchAuditData('dataStreams', 'dataStreams');
     await reportEndApiCall('generalConfig', endapiall);
@@ -108,4 +121,7 @@ export async function callApis() {
     await reportEndApiCall('viewEng', viewEng);
     await reportEndApiCall('sessionsEng', sessionsEng);
     await reportEndApiCall('eventsTracking', eventsTracking);
+    await fetchAuditData('keyEvents', 'keyEvents');
+    await reportEndApiCall('keyeventdetails', keyeventdetails);
+    await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
 }

@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation';
 import EngagementMetrics from '../Components/engagementMetrics'
 import EngagementRate from '../Components/engagementRate'
 import EventsTracking from '../Components/eventsTracking'
+import KeyEvents from '../Components/keyEvents'
+import ConversionAnomaly from '../Components/conversionAnomaly'
 
 const Page = () => {
 
@@ -41,6 +43,8 @@ const Page = () => {
       <EngagementRate />
       <EngagementMetrics />
       <EventsTracking />
+      <KeyEvents />
+      <ConversionAnomaly />
     </div>
   )
 }
