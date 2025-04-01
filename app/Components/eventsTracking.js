@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { useAccountStore } from '../store/useAccountStore';
@@ -7,6 +9,8 @@ const EventsTracking = () => {
 
     const [eventChartData, setEventChartData] = useState([]);
     const [eventAnomalies, setEventAnomalies] = useState([]);
+    const [eventstatus, setEventstatus] = useState([]);
+    const [caseSensitiveMood, setCaseSensitiveMood] = useState(true);
 
     const { endApiData } = useAccountStore();
     const eventData = endApiData?.eventsTracking;
@@ -49,6 +53,13 @@ const EventsTracking = () => {
             });
         });
 
+        if (notFollowingNamingConventionEvents?.length === 0) {
+            setEventstatus("All the events are following the naming convention.");
+            setCaseSensitiveMood(true);
+        } else {
+            setEventstatus(`Few events are not following naming convention. (Some of them are : ${notFollowingNamingConventionEvents.slice(0, 3)})`);
+            setCaseSensitiveMood(false);
+        }
         eventlength.push(automaticallyCollectedEvents1?.length, enhancedMeasurementEvents1?.length, recommendedEvents1?.length, customEvents?.length);
 
 
@@ -81,56 +92,88 @@ const EventsTracking = () => {
         setEventAnomalies(detectedAnomalies);
     }, [eventData]);
 
-
     useEffect(() => {
         console.log("eventChartData", eventChartData)
     }, [eventChartData])
 
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
-            <div>
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
-                    Events Tracking
-                </h1>
-                <div className='flex justify-between items-center'>
-                    <div className='w-[40%] content-center text-sm 2xl:text-base text-center'>
-                        <h3><b>Automatically collected
-                            events</b> are events
-                            that are collected by default i.e page_view, app_update. You&apos;re
-                            tracking <b>{eventChartData?.[0]?.count}</b> events
-                            from this type.</h3>
-                        <h3 className='pt-3'><b>Enhanced measurement
-                            events</b> are events
-                            that are collected when enhanced measurement is enabled i.e file_download,
-                            scroll. You&apos;re
-                            tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
-                        <h3 className='pt-3'><b>Recommended events</b> are
-                            events
-                            that you
-                            implement, but that have predefined names i.e purchase, sign_up. You&apos;re
-                            tracking <b>{eventChartData?.[2]?.count}</b> events from this type.
-                        </h3>
-                        <h3 className='pt-3'><b>Custom events</b> are events
-                            that
-                            you define
-                            and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this
-                            type.</h3>
-                    </div>
-                    <div className='min-w-[55%] content-center'>
-                        <ResponsiveContainer height={400}>
-                            <BarChart height={400} data={eventChartData}>
-                                <XAxis dataKey="category" />
-                                <YAxis />
-                                <Tooltip />
-                                <Bar dataKey="count" fill="#8884d8" />
-                            </BarChart>
-                        </ResponsiveContainer>
+        <>
+            <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div>
+                    <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                        Events Tracking
+                    </h1>
+                    <div className='flex justify-between items-center'>
+                        <div className='w-[40%] content-center text-sm 2xl:text-base text-center'>
+                            <h3><b>Automatically collected
+                                events</b> are events
+                                that are collected by default i.e page_view, app_update. You&apos;re
+                                tracking <b>{eventChartData?.[0]?.count}</b> events
+                                from this type.</h3>
+                            <h3 className='pt-3'><b>Enhanced measurement
+                                events</b> are events
+                                that are collected when enhanced measurement is enabled i.e file_download,
+                                scroll. You&apos;re
+                                tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
+                            <h3 className='pt-3'><b>Recommended events</b> are
+                                events
+                                that you
+                                implement, but that have predefined names i.e purchase, sign_up. You&apos;re
+                                tracking <b>{eventChartData?.[2]?.count}</b> events from this type.
+                            </h3>
+                            <h3 className='pt-3'><b>Custom events</b> are events
+                                that
+                                you define
+                                and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this
+                                type.</h3>
+                        </div>
+                        <div className='min-w-[55%] content-center'>
+                            <ResponsiveContainer height={400}>
+                                <BarChart height={400} data={eventChartData}>
+                                    <XAxis dataKey="category" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Bar dataKey="count" fill="#8884d8" />
+                                </BarChart>
+                            </ResponsiveContainer>
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div>
+                    <div>
+                        <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Events Naming Convention</h1>
+                        <h3>The best practice for naming your events
+                            is
+                            to follow the
+                            <b>&apos;Snake Case&apos;</b> rule, where yo can use event names in lowercase and spenated
+                            with underscore(&apos;_&apos;).
+                        </h3>
+                        <div>
+                            <table>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Check</th>
+                                    <th>Description</th>
+                                </tr>
+                                <tr>
+                                    <td>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
+                                    </td>
+                                    <td>Case Sensitivity </td>
+                                    <td>
+                                        {eventstatus}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
 
