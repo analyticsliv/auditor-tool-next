@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { useAccountStore } from '../store/useAccountStore';
-import moment from 'moment';
 
 const EventsTracking = () => {
 

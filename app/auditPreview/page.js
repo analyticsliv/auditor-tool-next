@@ -15,6 +15,7 @@ import EngagementRate from '../Components/engagementRate'
 import EventsTracking from '../Components/eventsTracking'
 import KeyEvents from '../Components/keyEvents'
 import ConversionAnomaly from '../Components/conversionAnomaly'
+import EcommerceTracking from '../Components/ecommerceTracking'
 
 const Page = () => {
 
@@ -45,6 +46,7 @@ const Page = () => {
       <EventsTracking />
       <KeyEvents />
       <ConversionAnomaly />
+      <EcommerceTracking />
     </div>
   )
 }

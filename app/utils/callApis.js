@@ -48,6 +48,13 @@ const keyeventdetails = {
     "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }]
 };
 
+const ecomTracking = {
+    "dimensions": [{ "name": "transactionId" }],
+    "metrics": [{ "name": "transactions" }, { "name": "totalRevenue" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "keepEmptyRows": true
+};
+
 // 90 days
 
 const totaluserCore = {
@@ -124,4 +131,5 @@ export async function callApis() {
     await fetchAuditData('keyEvents', 'keyEvents');
     await reportEndApiCall('keyeventdetails', keyeventdetails);
     await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
+    await reportEndApiCall('ecomTracking', ecomTracking);
 }
