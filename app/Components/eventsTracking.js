@@ -147,24 +147,24 @@ const EventsTracking = () => {
                 <div>
                     <div>
                         <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Events Naming Convention</h1>
-                        <h3>The best practice for naming your events
+                        <h3 className='text-sm pb-14 text-center'>The best practice for naming your events
                             is
                             to follow the
                             <b>&apos;Snake Case&apos;</b> rule, where yo can use event names in lowercase and spenated
                             with underscore(&apos;_&apos;).
                         </h3>
                         <div>
-                            <table>
+                            <table className='w-full'>
                                 <tr>
-                                    <th>Status</th>
-                                    <th>Check</th>
-                                    <th>Description</th>
+                                    <th className='text-sm text-center'>Status</th>
+                                    <th className='text-sm text-center'>Check</th>
+                                    <th className='text-sm text-center'>Description</th>
                                 </tr>
                                 <tr>
-                                    <td>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
+                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
                                     </td>
-                                    <td>Case Sensitivity </td>
-                                    <td>
+                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
+                                    <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
                                         {eventstatus}
                                     </td>
                                 </tr>
