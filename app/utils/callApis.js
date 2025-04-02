@@ -119,7 +119,11 @@ export async function callApis() {
     await fetchAuditData('attributionSettings', 'attributionSettings');
     await fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
     await reportEndApiCall('usersDetails', usersDetails);
-
+    await fetchAuditData('googleAdsLinks', 'googleAdsLinks');
+    await fetchAuditData('bigQueryLinks', 'bigQueryLinks');
+    await fetchAuditData('firebaseLinks', 'firebaseLinks');
+    await fetchAuditData('searchAds360Links', 'searchAds360Links');
+    await fetchAuditData('displayVideo360AdvertiserLinks', 'displayVideo360AdvertiserLinks');
     await reportEndApiCall('totaluserCore', totaluserCore);
     await reportEndApiCall('sessionsCore', sessionsCore);
     await reportEndApiCall('viewCore', viewCore);

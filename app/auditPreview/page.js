@@ -16,6 +16,7 @@ import EventsTracking from '../Components/eventsTracking'
 import KeyEvents from '../Components/keyEvents'
 import ConversionAnomaly from '../Components/conversionAnomaly'
 import EcommerceTracking from '../Components/ecommerceTracking'
+import ProductLinks from '../Components/productLinks'
 
 const Page = () => {
 
@@ -39,7 +40,7 @@ const Page = () => {
       <DataCollectionRetention />
       <AttributionSetting />
       <ActiveDomains />
-
+      <ProductLinks/>
       <CoreMetrics />
       <EngagementRate />
       <EngagementMetrics />
