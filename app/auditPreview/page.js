@@ -17,6 +17,10 @@ import KeyEvents from '../Components/keyEvents'
 import ConversionAnomaly from '../Components/conversionAnomaly'
 import EcommerceTracking from '../Components/ecommerceTracking'
 import ProductLinks from '../Components/productLinks'
+import EcomFunnels from '../Components/ecomFunnels'
+import EcomItemDetails from '../Components/ecomItemDetails'
+import Acquisitions from '../Components/acquisitions'
+import CustomDimensionMetrics from '../Components/CustomDimensionMetrics'
 
 const Page = () => {
 
@@ -48,6 +52,10 @@ const Page = () => {
       <KeyEvents />
       <ConversionAnomaly />
       <EcommerceTracking />
+      <EcomFunnels />
+      <EcomItemDetails />
+      <Acquisitions />
+      <CustomDimensionMetrics />
     </div>
   )
 }

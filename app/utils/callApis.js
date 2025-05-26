@@ -55,6 +55,85 @@ const ecomTracking = {
     "keepEmptyRows": true
 };
 
+const itemView = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "view_item" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const addToCart = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_to_cart" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const checkout = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "begin_checkout" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const purchase = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "purchase" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const beginCheckout = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "begin_checkout" }, "fieldName": "eventName" } }
+};
+
+const shipingInfo = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_shipping_info" }, "fieldName": "eventName" } }
+};
+
+const paymentInfo = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_payment_info" }, "fieldName": "eventName" } }
+};
+
+
+
+const userAcquisition = {
+    "dimensions": [{ "name": "sessionSourceMedium" }],
+    "metrics": [{ "name": "sessions" }, { "name": "totalUsers" }, { "name": "newUsers" }],
+    // , { "name": "returningUsers"}
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "limit": "5",
+    "orderBys": [{
+        "metric": { "metricName": "sessions" },
+        "desc": true
+    }]
+}
+
+const trafficAcquisition = {
+    "dimensions": [{ "name": "sessionDefaultChannelGroup" }],
+    "metrics": [{ "name": "sessions" }, { "name": "engagedSessions" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "limit": "5",
+    "orderBys": [{
+        "metric": { "metricName": "sessions" },
+        "desc": true
+    }],
+    "metricAggregations": ["TOTAL"]
+}
+
 // 90 days
 
 const totaluserCore = {
@@ -112,6 +191,39 @@ const ConversionAnomaly = {
     "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }]
 };
 
+async function runEcomItemsDetailsWithMultipleMetrics() {
+    const extraMetrics = [
+        { key: 'ecomItems_addToCart', metric: 'itemsAddedToCart' },
+        { key: 'ecomItems_itemIVL', metric: 'itemsViewedInList' },
+        { key: 'ecomItems_purchase', metric: 'itemsPurchased' },
+        { key: 'ecomItems_itemIV', metric: 'itemsViewed' },
+        { key: 'ecomItems_checkout', metric: 'itemsCheckedOut' }
+    ];
+
+    const ecomDimensions = [
+        { name: "itemId" },
+        { name: "itemName" },
+        { name: "itemCategory" },
+        { name: "itemBrand" },
+        { name: "itemListName" },
+    ];
+
+    const dateRange = [{ startDate: formattedStartDate, endDate: formattedEndDate }];
+
+    for (const { key, metric } of extraMetrics) {
+        const payload = {
+            dimensions: ecomDimensions,
+            metrics: [{ name: metric }],
+            dateRanges: dateRange,
+            limit: "10000"
+        };
+
+        console.log("objectobjectobjectobject---", key, payload)
+
+        await reportEndApiCall(key, payload);
+    }
+}
+
 export async function callApis() {
     await fetchAuditData('dataStreams', 'dataStreams');
     await reportEndApiCall('generalConfig', endapiall);
@@ -136,4 +248,16 @@ export async function callApis() {
     await reportEndApiCall('keyeventdetails', keyeventdetails);
     await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
     await reportEndApiCall('ecomTracking', ecomTracking);
+    await reportEndApiCall('itemView', itemView);
+    await reportEndApiCall('addToCart', addToCart);
+    await reportEndApiCall('checkout', checkout);
+    await reportEndApiCall('purchase', purchase);
+    await reportEndApiCall('beginCheckout', beginCheckout);
+    await reportEndApiCall('shipingInfo', shipingInfo);
+    await reportEndApiCall('paymentInfo', paymentInfo);
+    await runEcomItemsDetailsWithMultipleMetrics();
+    await reportEndApiCall('userAcquisition', userAcquisition);
+    await reportEndApiCall('trafficAcquisition', trafficAcquisition);
+    await fetchAuditData('customDimensions', 'customDimensions');
+    await fetchAuditData('customMetrics', 'customMetrics');
 }

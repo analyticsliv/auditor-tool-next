@@ -25,7 +25,6 @@ export async function POST(req) {
                 body: JSON.stringify(data),
             }
         );
-        console.log("response report end--",response, 'data--',data)
 
         if (!response.ok) {
             return NextResponse.json({ error: "Failed to fetch report" }, { status: response.status });

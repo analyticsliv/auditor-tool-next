@@ -62,7 +62,6 @@ const EventsTracking = () => {
         eventlength.push(automaticallyCollectedEvents1?.length, enhancedMeasurementEvents1?.length, recommendedEvents1?.length, customEvents?.length);
 
 
-        console.log("event length ", eventlength)
 
         const formattedData = labels.map((label, index) => ({
             category: label,
@@ -90,10 +89,6 @@ const EventsTracking = () => {
         }
         setEventAnomalies(detectedAnomalies);
     }, [eventData]);
-
-    useEffect(() => {
-        console.log("eventChartData", eventChartData)
-    }, [eventChartData])
 
 
     return (

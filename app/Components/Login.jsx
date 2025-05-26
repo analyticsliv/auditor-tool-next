@@ -17,9 +17,9 @@ const Login = () => {
     }
   }, [session]);
 
-    const singout1 = async () => {
+  const singout1 = async () => {
     let accessToken = localStorage.getItem('accessToken');
-    console.log("acc object",accessToken)
+
     const response = await fetch("https://analyticsadmin.googleapis.com/v1alpha/" + 'properties/258424009' + "/attributionSettings", {
       headers: { "Authorization": `Bearer ${accessToken}` }
     });
@@ -30,9 +30,8 @@ const Login = () => {
 
     const attSettings1 = await response.json();
 
-    console.log("object aattsetting", attSettings1)
   }
-  
+
   return (
     <div className="login-container">
       {session ? (
@@ -69,7 +68,7 @@ export default Login;
 // import LoginPage from "./Components/Login";
 
 // const GA4AuditorTool = () => {
-//   const { data: session } = useSession(); 
+//   const { data: session } = useSession();
 
 // "use client";
 

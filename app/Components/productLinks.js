@@ -92,7 +92,7 @@ const ProductLinks = () => {
 
     return (
         <div>
-            <div class="insights1">
+            <div>
                 <h1 className='pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem]' >Insight Activation
                     & Integration
                 </h1>

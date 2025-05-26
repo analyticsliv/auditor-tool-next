@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -15,8 +15,6 @@ const ConversionAnomaly = () => {
     const [endDate, setEndDate] = useState();
 
     const totalConvData = endApiData?.ConversionAnomaly;
-
-    console.log("totalConvData", totalConvData)
 
     useEffect(() => {
         const dates = totalConvData?.rows?.map(item => item?.dimensionValues[0]?.value);
@@ -64,74 +62,75 @@ const ConversionAnomaly = () => {
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                     Conversions - Anomaly Detection
                 </h1>
-
-                <div className='flex justify-between 2xl:justify-around items-center'>
-
-                    <div className='w-[40%] text-center text-sm 2xl:text-base' id="">
-                        <h3 className='pb-5'>
-                            Presented
-                            graph highlights your core conversions.
-                            Abnormality in this graph depicts issues that need immediate attention as
-                            conversions from <br></br><span className='font-bold'>{startDate} </span>to <span className='font-bold'> {endDate} </span>have abnormal patterns.
-                        </h3>
-                        {convAnomalies?.length > 0 ?
-                            <div>
-                                <span className='font-bold'>Detected deviation</span> from expected normal behaviour in Purchase pattern.
-                            </div>
-                            :
-                            <div>
-                                <span className='font-bold'>No anomalies detected</span> in Purchase. Data trends are stable and within
-                                expected ranges in Purchases Per User pattern.
-                            </div>
-                        }
+                {(!totalConvData?.rows || totalConvData?.rows?.length === 0) ?
+                    <div className='text-red-400 text-center text-base'>
+                        There is some issue to fetching data related to this section or data not present sorry for inconvenience
                     </div>
-
-                    <div className='w-[60%]'>
-                        <ResponsiveContainer height={280}>
-                            <LineChart data={convChartData} height={280}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="formattedDate" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-
-                                <Line
-                                    type="monotone"
-                                    dataKey="purchases"
-                                    stroke="green"
-                                    strokeWidth={2}
-                                    dot={(props) => {
-                                        const { cx, cy, payload } = props;
-
-                                        // Check if the current data point is an anomaly
-                                        const isAnomaly = convAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
-
-                                        return (
-                                            <circle
-                                                cx={cx}
-                                                cy={cy}
-                                                r={isAnomaly ? 7 : 5}
-                                                fill={isAnomaly ? "red" : "white"}
-                                                stroke={isAnomaly ? "red" : "green"}
-                                                strokeWidth={1}
-                                            />
-                                        );
-                                    }}
-                                />
-                                {convAnomalies?.length > 0 && (
+                    :
+                    <div className='flex justify-between 2xl:justify-around items-center'>
+                        <div className='w-[40%] text-center text-sm 2xl:text-base' id="">
+                            <h3 className='pb-5'>
+                                Presented
+                                graph highlights your core conversions.
+                                Abnormality in this graph depicts issues that need immediate attention as
+                                conversions from <br></br><span className='font-bold'>{startDate} </span>to <span className='font-bold'> {endDate} </span>have abnormal patterns.
+                            </h3>
+                            {convAnomalies?.length > 0 ?
+                                <div>
+                                    <span className='font-bold'>Detected deviation</span> from expected normal behaviour in Purchase pattern.
+                                </div>
+                                :
+                                <div>
+                                    <span className='font-bold'>No anomalies detected</span> in Purchase. Data trends are stable and within
+                                    expected ranges in Purchases Per User pattern.
+                                </div>
+                            }
+                        </div>
+                        <div className='w-[60%]'>
+                            <ResponsiveContainer height={280}>
+                                <LineChart data={convChartData} height={280}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="formattedDate" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
                                     <Line
                                         type="monotone"
                                         dataKey="purchases"
-                                        stroke="red"
+                                        stroke="green"
                                         strokeWidth={2}
-                                        dot={{ fill: "red", stroke: "red", r: 7 }}
-                                    />
-                                )}
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
+                                        dot={(props) => {
+                                            const { cx, cy, payload } = props;
 
-                </div>
+                                            // Check if the current data point is an anomaly
+                                            const isAnomaly = convAnomalies?.some(anomaly => anomaly?.formattedDate === payload?.formattedDate);
+
+                                            return (
+                                                <circle
+                                                    cx={cx}
+                                                    cy={cy}
+                                                    r={isAnomaly ? 7 : 5}
+                                                    fill={isAnomaly ? "red" : "white"}
+                                                    stroke={isAnomaly ? "red" : "green"}
+                                                    strokeWidth={1}
+                                                />
+                                            );
+                                        }}
+                                    />
+                                    {convAnomalies?.length > 0 && (
+                                        <Line
+                                            type="monotone"
+                                            dataKey="purchases"
+                                            stroke="red"
+                                            strokeWidth={2}
+                                            dot={{ fill: "red", stroke: "red", r: 7 }}
+                                        />
+                                    )}
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     )
