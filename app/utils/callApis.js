@@ -108,8 +108,6 @@ const paymentInfo = {
     "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_payment_info" }, "fieldName": "eventName" } }
 };
 
-
-
 const userAcquisition = {
     "dimensions": [{ "name": "sessionSourceMedium" }],
     "metrics": [{ "name": "sessions" }, { "name": "totalUsers" }, { "name": "newUsers" }],

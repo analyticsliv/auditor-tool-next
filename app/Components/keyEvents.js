@@ -20,11 +20,9 @@ const KeyEvents = () => {
     const { endApiData } = useAccountStore();
     const keyEventData = endApiData?.keyeventdetails;
 
-    // const []
-
     let nameofkeyevents = []
-    for (var i = 0; i < data?.rows?.length; i++) {
-        const obj = data?.rows?.[i];
+    for (var i = 0; i < keyEventData?.rows?.length; i++) {
+        const obj = keyEventData?.rows?.[i];
         const keyeventname = obj?.dimensionValues?.[0]?.value;
         const value = obj?.metricValues?.[1]?.value;
         if (value != 0) {
@@ -74,3 +72,89 @@ const KeyEvents = () => {
 }
 
 export default KeyEvents
+// {
+//     "dimensionHeaders": [
+//         {
+//             "name": "eventName"
+//         }
+//     ],
+//     "metricHeaders": [
+//         {
+//             "name": "keyEvents",
+//             "type": "TYPE_FLOAT"
+//         },
+//         {
+//             "name": "eventvalue",
+//             "type": "TYPE_FLOAT"
+//         }
+//     ],
+//     "rows": [
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "purchase"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "142"
+//                 },
+//                 {
+//                     "value": "79002.31"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "call_click"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "124"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "create_account"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "100"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "subscribe"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "26"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         }
+//     ],
+//     "rowCount": 4,
+//     "metadata": {
+//         "schemaRestrictionResponse": {},
+//         "currencyCode": "USD",
+//         "timeZone": "America/New_York"
+//     },
+//     "kind": "analyticsData#runReport"
+// }
