@@ -20,7 +20,8 @@ import ProductLinks from '../Components/productLinks'
 import EcomFunnels from '../Components/ecomFunnels'
 import EcomItemDetails from '../Components/ecomItemDetails'
 import Acquisitions from '../Components/acquisitions'
-import CustomDimensionMetrics from '../Components/CustomDimensionMetrics'
+import DownloadPdf from '../Components/downloadPdf'
+import CustomDimensionMetrics from '../Components/customDimensionMetrics'
 
 const Page = () => {
 
@@ -44,7 +45,7 @@ const Page = () => {
       <DataCollectionRetention />
       <AttributionSetting />
       <ActiveDomains />
-      <ProductLinks/>
+      <ProductLinks />
       <CoreMetrics />
       <EngagementRate />
       <EngagementMetrics />
@@ -56,6 +57,7 @@ const Page = () => {
       <EcomItemDetails />
       <Acquisitions />
       <CustomDimensionMetrics />
+      <DownloadPdf />
     </div>
   )
 }

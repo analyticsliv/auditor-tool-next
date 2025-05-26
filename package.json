@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "html2pdf.js": "^0.10.3",
     "moment": "^2.30.1",
     "next": "^15.1.6",
     "next-auth": "^4.24.11",

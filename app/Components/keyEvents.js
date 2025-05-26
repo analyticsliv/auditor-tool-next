@@ -47,7 +47,7 @@ const KeyEvents = () => {
                     <div className='flex justify-evenly gap-10'>
                         <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
                             <h2 className='font-bold text-2xl pb-2'>Configured <br></br>Conversions</h2>
-                            <h3 className='text-center text-sm'>You have configured <b id="keyeventcount">{eventNames.length}</b> conversion events which is
+                            <h3 className='text-center text-sm'>You have configured <b id="keyeventcount">{eventNames?.length}</b> conversion events which is
                                 great! At least <b>3</b> conversions are generally recommended in addition to default conversions
                             </h3>
                         </div>
@@ -60,7 +60,7 @@ const KeyEvents = () => {
 
                         <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
                             <h2 className='font-bold text-2xl pb-2'>Conversions <br></br>Value</h2>
-                            <h3 className='text-center text-sm'>You have <b id="activekeyeventvalue">{nameofkeyevents.length}</b> conversions out of <b
+                            <h3 className='text-center text-sm'>You have <b id="activekeyeventvalue">{nameofkeyevents?.length}</b> conversions out of <b
                                 id="activekeyeventcount1">{keyEventData?.rows?.length}</b> active conversions have a value assigned to them.
                             </h3>
                         </div>

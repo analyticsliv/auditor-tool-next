@@ -57,7 +57,7 @@ const ConversionAnomaly = () => {
     }, [totalConvData, convChartData, startDate, endDate])
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
+        <div className='bg-white rounded-3xl px-4 py-10 mt-10'>
             <div>
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                     Conversions - Anomaly Detection
@@ -68,7 +68,7 @@ const ConversionAnomaly = () => {
                     </div>
                     :
                     <div className='flex justify-between 2xl:justify-around items-center'>
-                        <div className='w-[40%] text-center text-sm 2xl:text-base' id="">
+                        <div className='w-[35%] text-center text-sm 2xl:text-base' id="">
                             <h3 className='pb-5'>
                                 Presented
                                 graph highlights your core conversions.
@@ -86,7 +86,7 @@ const ConversionAnomaly = () => {
                                 </div>
                             }
                         </div>
-                        <div className='w-[60%]'>
+                        <div className='w-[65%]'>
                             <ResponsiveContainer height={280}>
                                 <LineChart data={convChartData} height={280}>
                                     <CartesianGrid strokeDasharray="3 3" />

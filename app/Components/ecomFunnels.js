@@ -62,28 +62,31 @@ const EcomFunnels = () => {
   }, [endApiData])
 
   return (
-    <div>
-      {/* Purchase Funnel */}
-      <div className='bg-white rounded-3xl p-10 mt-10'>
-        <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Purchase Funnel</h1>
-        <div className='grid grid-cols-4 gap-6'>
-          <FunnelCard title="Item View" count={purchaseFunnel.itemView} />
-          <FunnelCard title="Add to Cart" count={purchaseFunnel.addToCart} />
-          <FunnelCard title="Checkout" count={purchaseFunnel.checkout} />
-          <FunnelCard title="Purchase" count={purchaseFunnel.purchase} />
-        </div>
-      </div>
 
-      {/* Checkout Funnel */}
-      <div className='bg-white rounded-3xl p-10 mt-10'>
-        <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Checkout Funnel</h1>
-        <div className='grid grid-cols-4 gap-6'>
-          <FunnelCard title="Begin Checkout" count={checkoutFunnel.beginCheckout} />
-          <FunnelCard title="Add Shipping Info" count={checkoutFunnel.shippingInfo} />
-          <FunnelCard title="Add Payment Info" count={checkoutFunnel.paymentInfo} />
-          <FunnelCard title="Purchase" count={checkoutFunnel.purchase} />
+    <div>
+      {purchaseFunnel?.addToCart && purchaseFunnel.addToCart !== '0' && (
+        <div>
+          <div className='bg-white rounded-3xl p-10 mt-10'>
+            <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Purchase Funnel</h1>
+            <div className='grid grid-cols-4 gap-6'>
+              <FunnelCard title="Item View" count={purchaseFunnel.itemView} />
+              <FunnelCard title="Add to Cart" count={purchaseFunnel.addToCart} />
+              <FunnelCard title="Checkout" count={purchaseFunnel.checkout} />
+              <FunnelCard title="Purchase" count={purchaseFunnel.purchase} />
+            </div>
+          </div>
+
+          <div className='bg-white rounded-3xl p-10 mt-10'>
+            <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Checkout Funnel</h1>
+            <div className='grid grid-cols-4 gap-6'>
+              <FunnelCard title="Begin Checkout" count={checkoutFunnel.beginCheckout} />
+              <FunnelCard title="Add Shipping Info" count={checkoutFunnel.shippingInfo} />
+              <FunnelCard title="Add Payment Info" count={checkoutFunnel.paymentInfo} />
+              <FunnelCard title="Purchase" count={checkoutFunnel.purchase} />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
