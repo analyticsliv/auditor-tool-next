@@ -24,7 +24,7 @@ const MoodIcon = ({ type }) => {
 
 const CustomDimensionMetrics = () => {
     const { auditData } = useAccountStore();
-    console.log("objectobjectobjectobjectdjkdinasdcnasc-----", auditData, auditData?.customDimensions, auditData?.customMetrics)
+
     const dimensions = auditData?.customDimensions?.customDimensions || [];
     const metrics = auditData?.customMetrics || [];
 
