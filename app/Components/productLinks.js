@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
+import { HiEmojiSad } from 'react-icons/hi';
+import { FaLaugh } from 'react-icons/fa';
 
 const ProductLinks = () => {
 
@@ -117,27 +119,27 @@ const ProductLinks = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{gaLinkMood ? "mood_good" : "mood_bad"}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{gaLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google Ads Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{gaLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{bqLinkMood ? "mood_good" : "mood_bad"}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{bqLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>BigQuery Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{bqLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{firebaseLinkMood ? "mood_good" : "mood_bad"}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{firebaseLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Firebase Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{firebaseLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{sa360LinkMood ? "mood_good" : "mood_bad"}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{sa360LinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Search Ads 360 Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{sa360LinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dv360LinkMood ? "mood_good" : "mood_bad"}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dv360LinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Display & Video 360 links</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{dv360LinkText}</td>
                                 </tr>

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from "react-icons/fa";
+import { HiEmojiSad } from 'react-icons/hi';
 
 const DataCollectionRetention = () => {
     const { auditData } = useAccountStore();
@@ -42,12 +44,12 @@ const DataCollectionRetention = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{googleSignalMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{googleSignalMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
                                 </tr>

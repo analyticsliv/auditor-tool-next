@@ -1,9 +1,12 @@
 'use client';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from 'react-icons/fa';
+import { HiEmojiSad } from 'react-icons/hi';
 
 const EcomItemDetails = () => {
     const { endApiData } = useAccountStore();
+    const [emojiMap, setEmojiMap] = useState({});
 
     useEffect(() => {
         if (!endApiData) return;
@@ -24,7 +27,10 @@ const EcomItemDetails = () => {
             "itemListName",
         ];
 
-        const processData = (data, keyPrefix) => {
+        const tempMap = {};
+
+        Object.entries(metricKeysMap).forEach(([shortKey, storeKey]) => {
+            const data = endApiData[storeKey];
             const rows = data?.rows || [];
             const dimMap = new Set();
 
@@ -37,63 +43,63 @@ const EcomItemDetails = () => {
             });
 
             dimensionHeaders?.forEach((dimName, index) => {
-                const elementId = `${keyPrefix}${index + 1}`;
-                const cell = document.getElementById(elementId);
-                if (cell) {
-                    cell.textContent = dimMap?.has(dimName) ? 'mood_bad' : 'mood';
-                }
+                const key = `${shortKey}${index + 1}`;
+                tempMap[key] = dimMap?.has(dimName) ? 'sad' : 'laugh';
             });
-        };
-
-        Object?.entries(metricKeysMap)?.forEach(([shortKey, storeKey]) => {
-            const metricData = endApiData[storeKey];
-            if (metricData) {
-                processData(metricData, shortKey);
-            }
         });
 
+        setEmojiMap(tempMap);
     }, [endApiData]);
 
+    const renderEmoji = (key) => {
+        if (emojiMap[key] === 'laugh') {
+            return <FaLaugh className='h-8 w-14 mx-auto fill-green-600' />;
+        } else if (emojiMap[key] === 'sad') {
+            return <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />;
+        } else {
+            return <span>-</span>;
+        }
+    };
 
     return (
         <div className='bg-white rounded-3xl p-10 mt-10'>
             <div id="ecommerce-section">
-                <div>
-                    <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>E-Commerce Item Details</h1>
-                    <h3 className='text-center'>
-                        Ensuring complete capture of item details in all ecommerce events. Item details are crucial in<br />
-                        understanding user behavior and shopping experience on your store.
-                    </h3>
-                    <div className='mt-10'>
-                        <table className='w-full'>
-                            <thead className='text-center'>
-                                <tr className=''>
-                                    <th>Event</th>
-                                    <th>Item ID</th>
-                                    <th>Item Name</th>
-                                    <th>Item Category</th>
-                                    <th>Item Brand</th>
-                                    <th>Item List</th>
+                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>E-Commerce Item Details</h1>
+                <h3 className='text-center'>
+                    Ensuring complete capture of item details in all ecommerce events. Item details are crucial in<br />
+                    understanding user behavior and shopping experience on your store.
+                </h3>
+                <div className='mt-10'>
+                    <table className='w-full'>
+                        <thead className='text-center'>
+                            <tr>
+                                <th>Event</th>
+                                <th>Item ID</th>
+                                <th>Item Name</th>
+                                <th>Item Category</th>
+                                <th>Item Brand</th>
+                                <th>Item List</th>
+                            </tr>
+                        </thead>
+                        <tbody className='text-center'>
+                            {[
+                                { label: 'View Item List', key: 'itemIVL' },
+                                { label: 'View Item Details', key: 'itemIV' },
+                                { label: 'Add to Cart', key: 'addtocart' },
+                                { label: 'Checkout', key: 'checkout' },
+                                { label: 'Purchase', key: 'purchase' }
+                            ].map((event, idx) => (
+                                <tr key={idx}>
+                                    <td className='h-[3.8rem] border-b border-gray-800'>{event?.label}</td>
+                                    {[1, 2, 3, 4, 5]?.map(i => (
+                                        <td className='h-[3.8rem] border-b border-gray-800' key={i}>
+                                            {renderEmoji(`${event?.key}${i}`)}
+                                        </td>
+                                    ))}
                                 </tr>
-                            </thead>
-                            <tbody className='text-center'>
-                                {[
-                                    { label: 'View Item List', key: 'itemIVL' },
-                                    { label: 'View Item Details', key: 'itemIV' },
-                                    { label: 'Add to Cart', key: 'addtocart' },
-                                    { label: 'Checkout', key: 'checkout' },
-                                    { label: 'Purchase', key: 'purchase' }
-                                ]?.map((event, idx) => (
-                                    <tr key={idx}>
-                                        <td className='h-[3.8rem] border-b border-gray-800 text-center'>{event?.label}</td>
-                                        {[1, 2, 3, 4, 5]?.map(i => (
-                                            <td className='h-[3.8rem] border-b border-gray-800 text-center' key={i} id={`${event?.key}${i}`}><span>mood</span></td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

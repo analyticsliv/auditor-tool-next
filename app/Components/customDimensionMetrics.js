@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from 'react-icons/fa';
+import { HiEmojiSad } from 'react-icons/hi';
 
 const MoodIcon = ({ type }) => {
     const mood = type === 'bad' ? 'mood_bad' : 'mood';
@@ -50,7 +52,7 @@ const CustomDimensionMetrics = () => {
                     <tbody>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
                             <td>
-                                {dimensions?.length ? 'good' : 'bad'}
+                                {dimensions?.length ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
                             </td>
                             <td>Custom Dimensions</td>
                             <td>
@@ -70,7 +72,7 @@ const CustomDimensionMetrics = () => {
                         </tr>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
                             <td>
-                                {metrics?.length ? 'good' : 'bad'}
+                                {metrics?.length ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
                                 {/* <MoodIcon type={metrics?.length ? 'good' : 'bad'} /> */}
                             </td>
                             <td>Custom Metrics</td>
