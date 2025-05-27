@@ -1,65 +1,127 @@
-'use client'
+'use client';
 
-import React, { useEffect } from 'react'
-import AuditStart from '../Components/auditStart'
-import DataStreams from '../Components/dataStreams'
-import { useAccountStore } from '../store/useAccountStore'
-import GeneralConfig from '../Components/generalConfig'
-import DataCollectionRetention from '../Components/dataCollectionRetention'
-import AttributionSetting from '../Components/attributionSetting'
-import ActiveDomains from '../Components/activeDomains'
-import CoreMetrics from '../Components/coreMetrics'
+import React, { useEffect, useRef, useState } from 'react';
+import { useAccountStore } from '../store/useAccountStore';
 import { useRouter } from 'next/navigation';
-import EngagementMetrics from '../Components/engagementMetrics'
-import EngagementRate from '../Components/engagementRate'
-import EventsTracking from '../Components/eventsTracking'
-import KeyEvents from '../Components/keyEvents'
-import ConversionAnomaly from '../Components/conversionAnomaly'
-import EcommerceTracking from '../Components/ecommerceTracking'
-import ProductLinks from '../Components/productLinks'
-import EcomFunnels from '../Components/ecomFunnels'
-import EcomItemDetails from '../Components/ecomItemDetails'
-import Acquisitions from '../Components/acquisitions'
-import DownloadPdf from '../Components/downloadPdf'
-import CustomDimensionMetrics from '../Components/customDimensionMetrics'
+import { runCallApiInChunks, callApiBatchesCount } from '../utils/callApis';
+import componentsList from '../utils/componentList';
+import AuditStart from '../Components/auditStart';
 
-const Page = () => {
+const COMPONENTS_PER_BATCH = 6;
 
-  const { auditData, endApiData } = useAccountStore();
+const AuditPreview = () => {
+  const {
+    selectedProperty,
+    propertyId,
+    readyToRunAudit,
+    setReadyToRunAudit,
+    setAuditCompleted,
+    auditCompleted,
+    resetSelection,
+    auditRunCompleted,
+    setAuditRunCompleted,
+  } = useAccountStore();
+
   const router = useRouter();
 
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const hasRunRef = useRef(false);
+
+  // Handle missing property on direct page load
   useEffect(() => {
-    if (
-      Object.keys(auditData)?.length === 0 &&
-      Object.keys(endApiData)?.length === 0
-    ) {
+    if (!propertyId || !selectedProperty?.name) {
+      resetSelection();
+      alert("No property selected");
       router.push("/");
+      return;
     }
-  }, [auditData, endApiData, router]);
+  }, [propertyId]);
+
+  useEffect(() => {
+
+    console.log("readyToRunAudit && auditCompleted", readyToRunAudit, auditCompleted)
+    if (!readyToRunAudit && !auditCompleted) {
+      router.push("/");
+      return;
+    }
+  }, [readyToRunAudit, auditCompleted])
+
+  useEffect(() => {
+    console.log("auditRunCompleted---", auditRunCompleted)
+
+    if (auditRunCompleted) {
+      setVisibleCount(componentsList.length);  // Show all components
+      setLoading(false);
+      return;
+    }
+  }, [auditRunCompleted])
+
+  useEffect(() => {
+
+    // Redirect to home if audit NOT ready and NOT completed
+    // if (!readyToRunAudit && !auditCompleted) {
+    //   router.push("/");
+    //   return;
+    // }
+
+    // If audit has already run for this selection, skip API calls
+    // if (auditRunCompleted) {
+    //   setVisibleCount(componentsList.length);  // Show all components
+    //   setLoading(false);
+    //   return;
+    // }
+
+    console.log("readyToRunAudit---", readyToRunAudit)
+
+    if (readyToRunAudit && !hasRunRef.current) {
+      hasRunRef.current = true;
+      console.log("inside if 1")
+      const loadInBatches = async () => {
+        console.log("inside function load batch")
+        for (let i = 0; i < callApiBatchesCount; i++) {
+          console.log("inside for loop")
+          setLoading(true);
+          await runCallApiInChunks(i);
+          setVisibleCount((prev) => prev + COMPONENTS_PER_BATCH);
+          setLoading(false);
+        }
+        setReadyToRunAudit(false);
+        setAuditCompleted(true);
+        setAuditRunCompleted(true);  // Persist that audit has run
+      };
+      loadInBatches();
+    }
+  }, [
+    readyToRunAudit,
+  ]);
+
+  const visibleComponents = componentsList.slice(0, visibleCount);
 
   return (
-    <div>
+    <div className="p-6 space-y-4">
       <AuditStart />
-      <DataStreams />
-      <GeneralConfig />
-      <DataCollectionRetention />
-      <AttributionSetting />
-      <ActiveDomains />
-      <ProductLinks />
-      <CoreMetrics />
-      <EngagementRate />
-      <EngagementMetrics />
-      <EventsTracking />
-      <KeyEvents />
-      <ConversionAnomaly />
-      <EcommerceTracking />
-      <EcomFunnels />
-      <EcomItemDetails />
-      <Acquisitions />
-      <CustomDimensionMetrics />
-      <DownloadPdf />
-    </div>
-  )
-}
 
-export default Page
+      {visibleComponents?.map((Component, index) => (
+        <Component key={index} />
+      ))}
+
+      {loading && (
+        <div className="flex flex-col justify-center items-center py-10">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg className="w-6 h-6 text-blue-600 animate-ping" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+              </svg>
+            </div>
+          </div>
+          <div className="mt-4 text-center text-sm text-gray-500">Running audit...</div>
+        </div>
+
+      )}
+    </div>
+  );
+};
+
+export default AuditPreview;

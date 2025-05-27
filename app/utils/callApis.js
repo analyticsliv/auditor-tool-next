@@ -216,46 +216,61 @@ async function runEcomItemsDetailsWithMultipleMetrics() {
             limit: "10000"
         };
 
-        console.log("objectobjectobjectobject---", key, payload)
-
         await reportEndApiCall(key, payload);
     }
 }
 
-export async function callApis() {
-    await fetchAuditData('dataStreams', 'dataStreams');
-    await reportEndApiCall('generalConfig', endapiall);
-    await fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
-    await fetchAuditData('attributionSettings', 'attributionSettings');
-    await fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
-    await reportEndApiCall('usersDetails', usersDetails);
-    await fetchAuditData('googleAdsLinks', 'googleAdsLinks');
-    await fetchAuditData('bigQueryLinks', 'bigQueryLinks');
-    await fetchAuditData('firebaseLinks', 'firebaseLinks');
-    await fetchAuditData('searchAds360Links', 'searchAds360Links');
-    await fetchAuditData('displayVideo360AdvertiserLinks', 'displayVideo360AdvertiserLinks');
-    await reportEndApiCall('totaluserCore', totaluserCore);
-    await reportEndApiCall('sessionsCore', sessionsCore);
-    await reportEndApiCall('viewCore', viewCore);
-    await reportEndApiCall('engagementRate', engagementRate);
-    await reportEndApiCall('totaluserEng', totaluserEng);
-    await reportEndApiCall('viewEng', viewEng);
-    await reportEndApiCall('sessionsEng', sessionsEng);
-    await reportEndApiCall('eventsTracking', eventsTracking);
-    await fetchAuditData('keyEvents', 'keyEvents');
-    await reportEndApiCall('keyeventdetails', keyeventdetails);
-    await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
-    await reportEndApiCall('ecomTracking', ecomTracking);
-    await reportEndApiCall('itemView', itemView);
-    await reportEndApiCall('addToCart', addToCart);
-    await reportEndApiCall('checkout', checkout);
-    await reportEndApiCall('purchase', purchase);
-    await reportEndApiCall('beginCheckout', beginCheckout);
-    await reportEndApiCall('shipingInfo', shipingInfo);
-    await reportEndApiCall('paymentInfo', paymentInfo);
-    await runEcomItemsDetailsWithMultipleMetrics();
-    await reportEndApiCall('userAcquisition', userAcquisition);
-    await reportEndApiCall('trafficAcquisition', trafficAcquisition);
-    await fetchAuditData('customDimensions', 'customDimensions');
-    await fetchAuditData('customMetrics', 'customMetrics');
-}
+const callApiBatches = [
+    async () => {
+        await fetchAuditData('dataStreams', 'dataStreams');
+        reportEndApiCall('generalConfig', endapiall);
+        fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
+        fetchAuditData('attributionSettings', 'attributionSettings');
+        fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
+        await reportEndApiCall('usersDetails', usersDetails);
+        fetchAuditData('googleAdsLinks', 'googleAdsLinks');
+        fetchAuditData('bigQueryLinks', 'bigQueryLinks');
+        fetchAuditData('firebaseLinks', 'firebaseLinks');
+        fetchAuditData('searchAds360Links', 'searchAds360Links');
+        await fetchAuditData('displayVideo360AdvertiserLinks', 'displayVideo360AdvertiserLinks');
+    },
+    async () => {
+        await reportEndApiCall('totaluserCore', totaluserCore);
+        reportEndApiCall('sessionsCore', sessionsCore);
+        reportEndApiCall('viewCore', viewCore);
+        reportEndApiCall('engagementRate', engagementRate);
+        reportEndApiCall('totaluserEng', totaluserEng);
+        await reportEndApiCall('viewEng', viewEng);
+        reportEndApiCall('sessionsEng', sessionsEng);
+        reportEndApiCall('eventsTracking', eventsTracking);
+        fetchAuditData('keyEvents', 'keyEvents');
+        reportEndApiCall('keyeventdetails', keyeventdetails);
+        await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
+    },
+    async () => {
+        await reportEndApiCall('ecomTracking', ecomTracking);
+        reportEndApiCall('itemView', itemView);
+        reportEndApiCall('addToCart', addToCart);
+        reportEndApiCall('checkout', checkout);
+        reportEndApiCall('purchase', purchase);
+        reportEndApiCall('beginCheckout', beginCheckout);
+        await reportEndApiCall('shipingInfo', shipingInfo);
+        reportEndApiCall('paymentInfo', paymentInfo);
+        runEcomItemsDetailsWithMultipleMetrics();
+        reportEndApiCall('userAcquisition', userAcquisition);
+        reportEndApiCall('trafficAcquisition', trafficAcquisition);
+        fetchAuditData('customDimensions', 'customDimensions');
+        await fetchAuditData('customMetrics', 'customMetrics');
+    },
+];
+
+export const runCallApiInChunks = async (batchIndex) => {
+    console.log("Running API chunk for batch:", batchIndex);
+
+    const batch = callApiBatches[batchIndex];
+    if (batch) {
+        await batch();
+    }
+};
+
+export const callApiBatchesCount = callApiBatches.length;

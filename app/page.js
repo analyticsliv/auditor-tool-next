@@ -20,11 +20,12 @@ const Home = () => {
     fetchPropertySummaries,
     selectAccount,
     selectProperty,
-    auditData,
-    endApiData,
     loading,
     setLoading,
     hasFetchedAccounts,
+    setAuditCompleted,
+    setReadyToRunAudit,
+    setAuditRunCompleted
   } = useAccountStore();
 
   const { data: session, status } = useSession();
@@ -43,13 +44,6 @@ const Home = () => {
 
   const user = getUserSession();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   const userData = { given_name: user };
-  //   setLoadingAccounts(true);
-  //   fetchAccountSummaries(userData).finally(() => setLoadingAccounts(false));
-  // }, [fetchAccountSummaries]);
-
 
   useEffect(() => {
     if (!hasFetchedAccounts) {
@@ -73,12 +67,6 @@ const Home = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
-    localStorage.removeItem("session");
-    localStorage.removeItem("accessToken");
-    signOut({ callbackUrl: "/login" });
-  };
-
   const handleAccount = (account) => {
     selectAccount(account);
     setLoadingProperties(true);
@@ -97,11 +85,11 @@ const Home = () => {
   }
 
   const handleSubmit = async () => {
-    setLoading(true)
-    await callApis();
-    setLoading(false)
+    setReadyToRunAudit(true);
+    setAuditCompleted(false);
+    setAuditRunCompleted(false);
     router.push("/auditPreview");
-  }
+  };
 
   return (
     <AuthWrapper>
@@ -169,7 +157,6 @@ const Home = () => {
           className={`p-2 w-[400px] rounded-[8px] ${accountSelected && selectedProperty && !loadingAccounts && !loadingProperties && !loading ? 'bg-[#7380ec] hover:bg-[#6d79e5] text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
         >
           {loading ? 'Loading...' : 'Submit'}
-          {/* Submit */}
         </button>
       </div>
     </AuthWrapper>
@@ -177,16 +164,3 @@ const Home = () => {
 };
 
 export default Home;
-// const endapiall = {
-//   "dimensions": [{ "name": "streamId" }, { "name": "streamName" }],
-//   "metrics": [{ "name": "activeUsers" }],
-//   "dateRanges": [{ "startDate": '2025-02-15', "endDate": '2025-03-17' }],
-//   "keepEmptyRows": true
-// };
-
-// setLoading(true);
-
-// await reportEndApiCall(endapiall)
-// await fetchAuditData('dataStreams')
-
-// setLoading(false);

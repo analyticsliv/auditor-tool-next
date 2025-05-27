@@ -17,6 +17,13 @@ export const useAccountStore = create(
         endApiData: {},
         loading: false,
         hasFetchedAccounts: false,
+        readyToRunAudit: false,
+        auditCompleted: false,
+        auditRunCompleted: false,
+
+        setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
+        setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),
+        setAuditCompleted: (val) => set({ auditCompleted: val }),
 
         setLoading: (isLoading) => set({ loading: isLoading }),
 
@@ -114,6 +121,9 @@ export const useAccountStore = create(
             auditData: {},
             endApiData: {},
             loading: false,
+            readyToRunAudit: false,
+            auditCompleted: false,
+            auditRunCompleted: false,
         })
 
     })
