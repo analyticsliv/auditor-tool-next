@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from 'react-icons/fa';
+import { HiEmojiSad } from 'react-icons/hi';
 
 const AttributionSetting = () => {
 
@@ -47,7 +49,7 @@ const AttributionSetting = () => {
                     <div>
                         <div className='flex justify-evenly gap-10'>
                             <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{modelMood ? 'Mood Good' : 'Mood Bad'}</span>
+                                <span>{modelMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Model</h2>
@@ -57,7 +59,7 @@ const AttributionSetting = () => {
                             </div>
 
                             <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{acquisitionWindowMood ? 'Mood Good' : 'Mood Bad'}</span>
+                                <span>{acquisitionWindowMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Acquisition Window
@@ -68,7 +70,7 @@ const AttributionSetting = () => {
                             </div>
 
                             <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{conversionWindowMood ? 'Mood Good' : 'Mood Bad'}</span>
+                                <span>{conversionWindowMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Conversion Window</h2>

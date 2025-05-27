@@ -7,7 +7,6 @@ export async function GET(req) {
         const path = searchParams.get("path");
         const accessToken = req.headers.get("accessToken");
 
-        console.log("prop --",propertyId,path)
         if (!accessToken) {
             return NextResponse.json({ error: "Access token is missing" }, { status: 401 });
         }
@@ -23,8 +22,6 @@ export async function GET(req) {
                 }
             }
         );
-
-        console.log("post auitdata --",response)
 
         if (!response.ok) {
             return NextResponse.json({ error: "Failed to fetch audit data" }, { status: response.status });

@@ -20,11 +20,9 @@ const KeyEvents = () => {
     const { endApiData } = useAccountStore();
     const keyEventData = endApiData?.keyeventdetails;
 
-    // const []
-
     let nameofkeyevents = []
-    for (var i = 0; i < data?.rows?.length; i++) {
-        const obj = data?.rows?.[i];
+    for (var i = 0; i < keyEventData?.rows?.length; i++) {
+        const obj = keyEventData?.rows?.[i];
         const keyeventname = obj?.dimensionValues?.[0]?.value;
         const value = obj?.metricValues?.[1]?.value;
         if (value != 0) {
@@ -49,7 +47,7 @@ const KeyEvents = () => {
                     <div className='flex justify-evenly gap-10'>
                         <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
                             <h2 className='font-bold text-2xl pb-2'>Configured <br></br>Conversions</h2>
-                            <h3 className='text-center text-sm'>You have configured <b id="keyeventcount">{eventNames.length}</b> conversion events which is
+                            <h3 className='text-center text-sm'>You have configured <b id="keyeventcount">{eventNames?.length}</b> conversion events which is
                                 great! At least <b>3</b> conversions are generally recommended in addition to default conversions
                             </h3>
                         </div>
@@ -62,7 +60,7 @@ const KeyEvents = () => {
 
                         <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
                             <h2 className='font-bold text-2xl pb-2'>Conversions <br></br>Value</h2>
-                            <h3 className='text-center text-sm'>You have <b id="activekeyeventvalue">{nameofkeyevents.length}</b> conversions out of <b
+                            <h3 className='text-center text-sm'>You have <b id="activekeyeventvalue">{nameofkeyevents?.length}</b> conversions out of <b
                                 id="activekeyeventcount1">{keyEventData?.rows?.length}</b> active conversions have a value assigned to them.
                             </h3>
                         </div>
@@ -74,3 +72,89 @@ const KeyEvents = () => {
 }
 
 export default KeyEvents
+// {
+//     "dimensionHeaders": [
+//         {
+//             "name": "eventName"
+//         }
+//     ],
+//     "metricHeaders": [
+//         {
+//             "name": "keyEvents",
+//             "type": "TYPE_FLOAT"
+//         },
+//         {
+//             "name": "eventvalue",
+//             "type": "TYPE_FLOAT"
+//         }
+//     ],
+//     "rows": [
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "purchase"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "142"
+//                 },
+//                 {
+//                     "value": "79002.31"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "call_click"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "124"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "create_account"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "100"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         },
+//         {
+//             "dimensionValues": [
+//                 {
+//                     "value": "subscribe"
+//                 }
+//             ],
+//             "metricValues": [
+//                 {
+//                     "value": "26"
+//                 },
+//                 {
+//                     "value": "0"
+//                 }
+//             ]
+//         }
+//     ],
+//     "rowCount": 4,
+//     "metadata": {
+//         "schemaRestrictionResponse": {},
+//         "currencyCode": "USD",
+//         "timeZone": "America/New_York"
+//     },
+//     "kind": "analyticsData#runReport"
+// }

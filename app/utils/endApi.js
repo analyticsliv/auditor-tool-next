@@ -6,10 +6,10 @@ export async function reportEndApiCall(key, endapiall) {
     try {
         const { selectedProperty, propertyId, setEndApiData } = useAccountStore.getState();
 
-        if (!propertyId || !selectedProperty?.name) {
-            alert("No property selected");
-            return;
-        }
+        // if (!propertyId || !selectedProperty?.name) {
+        //     alert("No property selected");
+        //     return;
+        // }
 
         let accessToken = localStorage.getItem("accessToken");
 
@@ -56,10 +56,10 @@ export async function fetchAuditData(key, path) {
         const { propertyId, setAuditData } = useAccountStore.getState();
         const accessToken = localStorage.getItem('accessToken');
 
-        if (!propertyId) {
-            alert("No property selected");
-            return;
-        }
+        // if (!propertyId) {
+        //     alert("No property selected");
+        //     return;
+        // }
         if (!accessToken) {
             alert("Access token is missing");
             return;

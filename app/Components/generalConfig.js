@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from 'react-icons/fa';
+import { HiEmojiSad } from 'react-icons/hi';
 
 const GeneralConfig = () => {
     const { endApiData, selectedProperty } = useAccountStore();
@@ -56,18 +58,18 @@ const GeneralConfig = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td id="time" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{timezoneMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td id="time" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{timezoneMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Time Zone </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
                                 </tr>
                                 <tr>
-                                    <td id="currency" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{currenyMood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td id="currency" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{currenyMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Currency Code </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td id="industry" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{categorymood ? 'Mood Good' : 'Mood Bad'}</td>
+                                    <td id="industry" className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{categorymood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Industry Category </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
                                 </tr>

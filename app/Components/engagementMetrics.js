@@ -137,7 +137,7 @@ const EngagementMetrics = () => {
 
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
+        <div className='bg-white rounded-3xl py-10 mt-10'>
             <div>
                 <div className='flex justify-center relative'>
                     <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
@@ -188,7 +188,7 @@ const EngagementMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "#8884d8"}
                                                             strokeWidth={1}
@@ -248,7 +248,7 @@ const EngagementMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "green"}
                                                             strokeWidth={1}
@@ -309,7 +309,7 @@ const EngagementMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "orange"}
                                                             strokeWidth={1}

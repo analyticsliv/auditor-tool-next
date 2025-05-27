@@ -55,6 +55,83 @@ const ecomTracking = {
     "keepEmptyRows": true
 };
 
+const itemView = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "view_item" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const addToCart = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_to_cart" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const checkout = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "begin_checkout" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const purchase = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "purchase" }, "fieldName": "eventName" } },
+    "limit": "5000"
+};
+
+const beginCheckout = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "begin_checkout" }, "fieldName": "eventName" } }
+};
+
+const shipingInfo = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_shipping_info" }, "fieldName": "eventName" } }
+};
+
+const paymentInfo = {
+    "dimensions": [{ "name": "eventName" }],
+    "metrics": [{ "name": "totalUsers" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "dimensionFilter": { "filter": { "stringFilter": { "matchType": "EXACT", "value": "add_payment_info" }, "fieldName": "eventName" } }
+};
+
+const userAcquisition = {
+    "dimensions": [{ "name": "sessionSourceMedium" }],
+    "metrics": [{ "name": "sessions" }, { "name": "totalUsers" }, { "name": "newUsers" }],
+    // , { "name": "returningUsers"}
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "limit": "5",
+    "orderBys": [{
+        "metric": { "metricName": "sessions" },
+        "desc": true
+    }]
+}
+
+const trafficAcquisition = {
+    "dimensions": [{ "name": "sessionDefaultChannelGroup" }],
+    "metrics": [{ "name": "sessions" }, { "name": "engagedSessions" }],
+    "dateRanges": [{ "startDate": formattedStartDate, "endDate": formattedEndDate }],
+    "limit": "5",
+    "orderBys": [{
+        "metric": { "metricName": "sessions" },
+        "desc": true
+    }],
+    "metricAggregations": ["TOTAL"]
+}
+
 // 90 days
 
 const totaluserCore = {
@@ -112,24 +189,86 @@ const ConversionAnomaly = {
     "orderBys": [{ "dimension": { "dimensionName": "date" }, "desc": false }]
 };
 
-export async function callApis() {
-    await fetchAuditData('dataStreams', 'dataStreams');
-    await reportEndApiCall('generalConfig', endapiall);
-    await fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
-    await fetchAuditData('attributionSettings', 'attributionSettings');
-    await fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
-    await reportEndApiCall('usersDetails', usersDetails);
+async function runEcomItemsDetailsWithMultipleMetrics() {
+    const extraMetrics = [
+        { key: 'ecomItems_addToCart', metric: 'itemsAddedToCart' },
+        { key: 'ecomItems_itemIVL', metric: 'itemsViewedInList' },
+        { key: 'ecomItems_purchase', metric: 'itemsPurchased' },
+        { key: 'ecomItems_itemIV', metric: 'itemsViewed' },
+        { key: 'ecomItems_checkout', metric: 'itemsCheckedOut' }
+    ];
 
-    await reportEndApiCall('totaluserCore', totaluserCore);
-    await reportEndApiCall('sessionsCore', sessionsCore);
-    await reportEndApiCall('viewCore', viewCore);
-    await reportEndApiCall('engagementRate', engagementRate);
-    await reportEndApiCall('totaluserEng', totaluserEng);
-    await reportEndApiCall('viewEng', viewEng);
-    await reportEndApiCall('sessionsEng', sessionsEng);
-    await reportEndApiCall('eventsTracking', eventsTracking);
-    await fetchAuditData('keyEvents', 'keyEvents');
-    await reportEndApiCall('keyeventdetails', keyeventdetails);
-    await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
-    await reportEndApiCall('ecomTracking', ecomTracking);
+    const ecomDimensions = [
+        { name: "itemId" },
+        { name: "itemName" },
+        { name: "itemCategory" },
+        { name: "itemBrand" },
+        { name: "itemListName" },
+    ];
+
+    const dateRange = [{ startDate: formattedStartDate, endDate: formattedEndDate }];
+
+    for (const { key, metric } of extraMetrics) {
+        const payload = {
+            dimensions: ecomDimensions,
+            metrics: [{ name: metric }],
+            dateRanges: dateRange,
+            limit: "10000"
+        };
+
+        await reportEndApiCall(key, payload);
+    }
 }
+
+const callApiBatches = [
+    async () => {
+        await fetchAuditData('dataStreams', 'dataStreams');
+        reportEndApiCall('generalConfig', endapiall);
+        fetchAuditData('dataRetentionSettings', 'dataRetentionSettings');
+        fetchAuditData('attributionSettings', 'attributionSettings');
+        fetchAuditData('googleSignalsSettings', 'googleSignalsSettings');
+        await reportEndApiCall('usersDetails', usersDetails);
+        fetchAuditData('googleAdsLinks', 'googleAdsLinks');
+        fetchAuditData('bigQueryLinks', 'bigQueryLinks');
+        fetchAuditData('firebaseLinks', 'firebaseLinks');
+        fetchAuditData('searchAds360Links', 'searchAds360Links');
+        await fetchAuditData('displayVideo360AdvertiserLinks', 'displayVideo360AdvertiserLinks');
+    },
+    async () => {
+        await reportEndApiCall('totaluserCore', totaluserCore);
+        reportEndApiCall('sessionsCore', sessionsCore);
+        reportEndApiCall('viewCore', viewCore);
+        reportEndApiCall('engagementRate', engagementRate);
+        reportEndApiCall('totaluserEng', totaluserEng);
+        await reportEndApiCall('viewEng', viewEng);
+        reportEndApiCall('sessionsEng', sessionsEng);
+        reportEndApiCall('eventsTracking', eventsTracking);
+        fetchAuditData('keyEvents', 'keyEvents');
+        reportEndApiCall('keyeventdetails', keyeventdetails);
+        await reportEndApiCall('ConversionAnomaly', ConversionAnomaly);
+    },
+    async () => {
+        await reportEndApiCall('ecomTracking', ecomTracking);
+        reportEndApiCall('itemView', itemView);
+        reportEndApiCall('addToCart', addToCart);
+        reportEndApiCall('checkout', checkout);
+        reportEndApiCall('purchase', purchase);
+        reportEndApiCall('beginCheckout', beginCheckout);
+        await reportEndApiCall('shipingInfo', shipingInfo);
+        reportEndApiCall('paymentInfo', paymentInfo);
+        runEcomItemsDetailsWithMultipleMetrics();
+        reportEndApiCall('userAcquisition', userAcquisition);
+        reportEndApiCall('trafficAcquisition', trafficAcquisition);
+        fetchAuditData('customDimensions', 'customDimensions');
+        await fetchAuditData('customMetrics', 'customMetrics');
+    },
+];
+
+export const runCallApiInChunks = async (batchIndex) => {
+    const batch = callApiBatches[batchIndex];
+    if (batch) {
+        await batch();
+    }
+};
+
+export const callApiBatchesCount = callApiBatches.length;

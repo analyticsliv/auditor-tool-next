@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { useAccountStore } from '../store/useAccountStore';
+import { FaLaugh } from 'react-icons/fa';
+import { HiEmojiSad } from 'react-icons/hi';
 
 const EventsTracking = () => {
 
@@ -62,7 +64,6 @@ const EventsTracking = () => {
         eventlength.push(automaticallyCollectedEvents1?.length, enhancedMeasurementEvents1?.length, recommendedEvents1?.length, customEvents?.length);
 
 
-        console.log("event length ", eventlength)
 
         const formattedData = labels.map((label, index) => ({
             category: label,
@@ -90,10 +91,6 @@ const EventsTracking = () => {
         }
         setEventAnomalies(detectedAnomalies);
     }, [eventData]);
-
-    useEffect(() => {
-        console.log("eventChartData", eventChartData)
-    }, [eventChartData])
 
 
     return (
@@ -161,7 +158,7 @@ const EventsTracking = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? 'Mood Good' : 'Mood Bad'}
+                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
                                         </td>
                                         <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
                                         <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
