@@ -39,8 +39,6 @@ const AuditPreview = () => {
   }, [propertyId]);
 
   useEffect(() => {
-
-    console.log("readyToRunAudit && auditCompleted", readyToRunAudit, auditCompleted)
     if (!readyToRunAudit && !auditCompleted) {
       router.push("/");
       return;
@@ -48,8 +46,6 @@ const AuditPreview = () => {
   }, [readyToRunAudit, auditCompleted])
 
   useEffect(() => {
-    console.log("auditRunCompleted---", auditRunCompleted)
-
     if (auditRunCompleted) {
       setVisibleCount(componentsList.length);  // Show all components
       setLoading(false);
@@ -58,29 +54,10 @@ const AuditPreview = () => {
   }, [auditRunCompleted])
 
   useEffect(() => {
-
-    // Redirect to home if audit NOT ready and NOT completed
-    // if (!readyToRunAudit && !auditCompleted) {
-    //   router.push("/");
-    //   return;
-    // }
-
-    // If audit has already run for this selection, skip API calls
-    // if (auditRunCompleted) {
-    //   setVisibleCount(componentsList.length);  // Show all components
-    //   setLoading(false);
-    //   return;
-    // }
-
-    console.log("readyToRunAudit---", readyToRunAudit)
-
     if (readyToRunAudit && !hasRunRef.current) {
       hasRunRef.current = true;
-      console.log("inside if 1")
       const loadInBatches = async () => {
-        console.log("inside function load batch")
         for (let i = 0; i < callApiBatchesCount; i++) {
-          console.log("inside for loop")
           setLoading(true);
           await runCallApiInChunks(i);
           setVisibleCount((prev) => prev + COMPONENTS_PER_BATCH);

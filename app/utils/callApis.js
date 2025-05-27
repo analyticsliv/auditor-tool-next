@@ -265,8 +265,6 @@ const callApiBatches = [
 ];
 
 export const runCallApiInChunks = async (batchIndex) => {
-    console.log("Running API chunk for batch:", batchIndex);
-
     const batch = callApiBatches[batchIndex];
     if (batch) {
         await batch();
