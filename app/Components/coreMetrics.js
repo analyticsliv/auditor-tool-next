@@ -185,7 +185,7 @@ const CoreMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "#8884d8"}
                                                             strokeWidth={1}
@@ -245,7 +245,7 @@ const CoreMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "green"}
                                                             strokeWidth={1}
@@ -306,7 +306,7 @@ const CoreMetrics = () => {
                                                         <circle
                                                             cx={cx}
                                                             cy={cy}
-                                                            r={isAnomaly ? 7 : 5}
+                                                            r={isAnomaly ? 5 : 4}
                                                             fill={isAnomaly ? "red" : "white"}
                                                             stroke={isAnomaly ? "red" : "orange"}
                                                             strokeWidth={1}
