@@ -107,11 +107,11 @@ const Acquisitions = () => {
 
     return (
         <div>
-            <section className='bg-white rounded-3xl p-10 mt-10'>
+            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>User Acquisition</h1>
                 {renderUserAcquisitionTable()}
             </section>
-            <section className='bg-white rounded-3xl p-10 mt-10'>
+            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>Traffic Acquisition</h1>
                 {renderTrafficAcquisitionTable()}
             </section>

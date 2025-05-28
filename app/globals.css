@@ -19,6 +19,49 @@ body {
   background: var(--background); */
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .page-break {
   page-break-after: always;
+}
+
+.parent-div {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  background-color: white;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 1.5rem; /* rounded-3xl */
+  padding: 2.5rem; /* p-10 */
+  margin-top: 2.5rem; /* mt-10 */
+  box-shadow: 0 2px 4px rgba(207, 207, 255, 0.1);
+  overflow: hidden;
+  border: 1px solid rgb(207, 207, 255);
+}
+
+.parent-div::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(135deg, #cfcfff, #e0e0ff);
+  border-radius: inherit;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+  pointer-events: none;
+}
+
+.parent-div:hover {
+  box-shadow: 0 8px 24px rgba(207, 207, 255, 0.3), 0 0 0 1px rgba(207, 207, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.parent-div:hover::before {
+  background: linear-gradient(135deg, #a0a0ff, #d0d0ff);
+  transition: background 0.3s ease;
 }

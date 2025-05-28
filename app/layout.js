@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
           ) : (
             <main className="flex flex-col h-screen">
               {/* Header */}
-              <div className="px-4 py-2.5 flex justify-between items-center bg-white">
+              <div className="px-4 py-2.5 max-h-[65px] flex justify-between items-center bg-white">
                 <h2 className="text-lg font-bold text-gray-900">
                   GA4 <span className="text-red-600">Auditor Tool</span>
                 </h2>
@@ -112,7 +112,7 @@ export default function RootLayout({ children }) {
               {/* Main content area */}
               <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar */}
-                <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white transition-all duration-200`}>
+                <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white border-t-[2px] border-b-[2px] border-r-[2px] border-gray-300 transition-all duration-200`}>
                   <nav className="flex flex-col h-full pt-5">
                     {menuItems.map((item) => {
                       const isDisabled = disableMenus && item?.label !== "Home";
@@ -152,7 +152,7 @@ export default function RootLayout({ children }) {
                 </aside>
 
                 {/* Main content area */}
-                <main className="flex-1 overflow-auto bg-gray-50">
+                <main className="flex-1 overflow-auto bg-slate-100 border-t-[2px] border-b-[2px] border-gray-300">
                   <div className="p-6">{children}</div>
                 </main>
               </div>

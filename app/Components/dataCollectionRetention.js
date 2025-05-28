@@ -31,7 +31,7 @@ const DataCollectionRetention = () => {
     return (
         <div>
             <div>
-                <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <h1 className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Collection & Retention</h1>
                     <div>
                         <table className='w-full'>

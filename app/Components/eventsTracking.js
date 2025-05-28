@@ -95,7 +95,7 @@ const EventsTracking = () => {
 
     return (
         <>
-            <div className='bg-white rounded-3xl p-10 mt-10'>
+            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <div>
                     <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                         Events Tracking
@@ -139,7 +139,7 @@ const EventsTracking = () => {
                 </div>
             </div>
 
-            <div className='bg-white rounded-3xl p-10 mt-10'>
+            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <div>
                     <div>
                         <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Events Naming Convention</h1>

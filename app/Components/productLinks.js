@@ -35,10 +35,14 @@ const ProductLinks = () => {
             setGaLinkMood(false)
         } else {
             const length = gaLinksData?.googleAdsLinks?.length;
-            setGaLinkText(`You have the ${length} Google Ads Links.`);
+            setGaLinkText(
+                <span>
+                  You have the <span className="font-bold">{length}</span> Google Ads Links.
+                </span>
+              );
+              
             setGaLinkMood(true)
         }
-
     }, [gaLinksData])
 
     useEffect(() => {
@@ -47,10 +51,14 @@ const ProductLinks = () => {
             setBqLinkMood(false)
         } else {
             const length = bqLinksData?.bigqueryLinks?.length;
-            setBqLinkText(`You have the ${length} BigQuery Links.`);
+            setBqLinkText(
+                <span>
+                  You have the <span className="font-bold">{length}</span> BigQuery Links.
+                </span>
+              );
+              
             setBqLinkMood(true)
         }
-
     }, [bqLinksData])
 
     useEffect(() => {
@@ -59,10 +67,14 @@ const ProductLinks = () => {
             setFirebaseLinkMood(false)
         } else {
             const length = firebaseLinksData?.firebaseLinks?.length;
-            setFirebaseLinkText(`You have the ${length} Firebase Links.`);
+            setFirebaseLinkText(
+                <span>
+                  You have the <span className="font-bold">{length}</span> Firebase Links.
+                </span>
+              );
+              
             setFirebaseLinkMood(true)
         }
-
     }, [firebaseLinksData])
 
     useEffect(() => {
@@ -71,10 +83,14 @@ const ProductLinks = () => {
             setSa360LinkMood(false)
         } else {
             const length = sa360LinksData?.searchAds360Links?.length;
-            setSa360LinkText(`You have the ${length} Search Ads 360 Links.`);
+            setSa360LinkText(
+                <span>
+                  You have the <span className="font-bold">{length}</span> Search Ads 360 Links.
+                </span>
+              );
+              
             setSa360LinkMood(true)
         }
-
     }, [sa360LinksData])
 
     useEffect(() => {
@@ -83,7 +99,11 @@ const ProductLinks = () => {
             setDv360LinkMood(false)
         } else {
             const length = dv360LinksData?.displayVideo360AdvertiserLinks?.length;
-            setDv360LinkText(`You have the ${length} Display & Video 360 links.`);
+            setDv360LinkText(
+                <span>
+                  You have the <span className="font-bold">{length}</span> Display & Video 360 links.
+                </span>
+              );              
             setDv360LinkMood(true)
         }
 
@@ -98,7 +118,7 @@ const ProductLinks = () => {
                 <h1 className='pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem]' >Insight Activation
                     & Integration
                 </h1>
-                <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                         Product links
                     </h1>

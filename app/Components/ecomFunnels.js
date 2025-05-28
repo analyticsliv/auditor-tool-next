@@ -66,7 +66,7 @@ const EcomFunnels = () => {
     <div>
       {purchaseFunnel?.addToCart && purchaseFunnel.addToCart !== '0' && (
         <div>
-          <div className='bg-white rounded-3xl p-10 mt-10'>
+          <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Purchase Funnel</h1>
             <div className='grid grid-cols-4 gap-6'>
               <FunnelCard title="Item View" count={purchaseFunnel.itemView} />
@@ -76,7 +76,7 @@ const EcomFunnels = () => {
             </div>
           </div>
 
-          <div className='bg-white rounded-3xl p-10 mt-10'>
+          <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <h1 className="text-xl font-bold mb-6">E-Commerce Shopping Checkout Funnel</h1>
             <div className='grid grid-cols-4 gap-6'>
               <FunnelCard title="Begin Checkout" count={checkoutFunnel.beginCheckout} />
