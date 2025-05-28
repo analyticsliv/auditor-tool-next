@@ -72,7 +72,7 @@ const EngagementRate = () => {
     }, [engagementData]);
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <div>
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>{headerTitle}</h1>
                 <div className='flex justify-between items-center'>

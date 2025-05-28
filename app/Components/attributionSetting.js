@@ -44,7 +44,7 @@ const AttributionSetting = () => {
     return (
         <div>
             <div>
-                <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>Attribution Setting Details</h1>
                     <div>
                         <div className='flex justify-evenly gap-10'>

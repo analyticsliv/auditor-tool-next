@@ -62,7 +62,7 @@ const EcomItemDetails = () => {
     };
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <div id="ecommerce-section">
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>E-Commerce Item Details</h1>
                 <h3 className='text-center'>

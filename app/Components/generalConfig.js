@@ -45,7 +45,7 @@ const GeneralConfig = () => {
     return (
         <div>
             <div>
-                <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <div className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>General Configuration</div>
                     <div >
                         <table className='w-full'>

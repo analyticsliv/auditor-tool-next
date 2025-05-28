@@ -1,148 +1,149 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import moment from "moment";
 
 // import { fetchAccountSummaries, fetchPropertySummaries } from '../utils/accountAndProperty';
 
-export const useAccountStore = create(
-    (set, get) => ({
-        accounts: [],
-        properties: [],
-        selectedAccount: null,
-        selectedProperty: null,
-        accountSelected: false,
-        propertySelected: false,
-        accountId: null,
-        propertyId: null,
-        auditData: {},
-        endApiData: {},
-        loading: false,
-        hasFetchedAccounts: false,
-        readyToRunAudit: false,
-        auditCompleted: false,
-        auditRunCompleted: false,
+export const useAccountStore = create((set, get) => ({
+  accounts: [],
+  properties: [],
+  selectedAccount: null,
+  selectedProperty: null,
+  accountSelected: false,
+  propertySelected: false,
+  accountId: null,
+  propertyId: null,
+  auditData: {},
+  endApiData: {},
+  loading: false,
+  hasFetchedAccounts: false,
+  readyToRunAudit: false,
+  auditCompleted: false,
+  auditRunCompleted: false,
 
-        setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
-        setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),
-        setAuditCompleted: (val) => set({ auditCompleted: val }),
+  setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
+  setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),
+  setAuditCompleted: (val) => set({ auditCompleted: val }),
 
-        setLoading: (isLoading) => set({ loading: isLoading }),
+  setLoading: (isLoading) => set({ loading: isLoading }),
 
-        fetchAccountSummaries: async (userData, router) => {
+  dateRange: {
+    startDate: moment().subtract(30, "days").format("YYYY-MM-DD"),
+    endDate: moment().format("YYYY-MM-DD"),
+  },
 
-            if (get().hasFetchedAccounts) return;
+  // Function to update dateRange when user picks new dates
+  setDateRange: (startDate, endDate) =>
+    set(() => ({ dateRange: { startDate, endDate } })),
 
-            const accessToken = localStorage.getItem('accessToken');
+  fetchAccountSummaries: async (userData, router) => {
+    if (get().hasFetchedAccounts) return;
 
-            set({ loading: true })
+    const accessToken = localStorage.getItem("accessToken");
 
-            try {
-                const response = await fetch("https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200", {
-                    headers: { "Authorization": `Bearer ${accessToken}` }
-                });
+    set({ loading: true });
 
-                if (!response.ok) {
-                    alert('Failed to fetch account summaries');
-                    set({ loading: false })
-                };
+    try {
+      const response = await fetch(
+        "https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
 
-                const data = await response.json();
-                const accountSummaries = data?.accountSummaries || [];
+      if (!response.ok) {
+        alert("Failed to fetch account summaries");
+        set({ loading: false });
+      }
 
-                set({ accounts: accountSummaries, hasFetchedAccounts: true });
+      const data = await response.json();
+      const accountSummaries = data?.accountSummaries || [];
 
-                if (accountSummaries.length === 0) {
-                    alert(`Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`);
-                    router.push("/login");
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                set({ loading: false })
-            } finally {
-                set({ loading: false })
-            }
-        },
+      set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
-        fetchPropertySummaries: async (accountName) => {
-            const accessToken = localStorage.getItem('accessToken');
-            try {
-                const response = await fetch(`https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`, {
-                    headers: { "Authorization": `Bearer ${accessToken}` }
-                });
+      if (accountSummaries.length === 0) {
+        alert(
+          `Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`
+        );
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      set({ loading: false });
+    } finally {
+      set({ loading: false });
+    }
+  },
 
-                if (!response.ok) throw new Error('Failed to fetch property summaries');
+  fetchPropertySummaries: async (accountName) => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await fetch(
+        `https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
 
-                const propertiesData = await response.json();
-                set({ properties: propertiesData.properties || [] });
-            } catch (error) {
-                console.error('Error fetching Property Summaries:', error);
-            }
-        },
+      if (!response.ok) throw new Error("Failed to fetch property summaries");
 
-        selectAccount: (account) => set({
-            selectedAccount: account,
-            accountId: account?.account.replace('accounts/', ''),
-            accountSelected: true,
-            properties: [],
-            selectedProperty: null,
-            propertySelected: false
-        }),
+      const propertiesData = await response.json();
+      set({ properties: propertiesData.properties || [] });
+    } catch (error) {
+      console.error("Error fetching Property Summaries:", error);
+    }
+  },
 
-        selectProperty: (property) => set({
-            selectedProperty: property,
-            propertyId: property?.name.replace('properties/', ''),
-            propertySelected: true
-        }),
+  selectAccount: (account) =>
+    set({
+      selectedAccount: account,
+      accountId: account?.account.replace("accounts/", ""),
+      accountSelected: true,
+      properties: [],
+      selectedProperty: null,
+      propertySelected: false,
+    }),
 
-        // setAuditData: (data) => set({ auditData: data }),
-        setAuditData: (key, data) => set((state) => ({
-            auditData: {
-                ...state.auditData,
-                [key]: data
-            }
-        })),
-        setEndApiData: (key, data) => set((state) => ({
-            endApiData: {
-                ...state.endApiData,
-                [key]: data
-            }
-        })),
-        // setEndApiData: (data) => set({ endApiData: data }),
+  selectProperty: (property) =>
+    set({
+      selectedProperty: property,
+      propertyId: property?.name.replace("properties/", ""),
+      propertySelected: true,
+    }),
 
-        resetSelection: () => set({
-            accounts: [],
-            properties: [],
-            selectedAccount: null,
-            selectedProperty: null,
-            accountSelected: false,
-            propertySelected: false,
-            accountId: null,
-            propertyId: null,
-            hasFetchedAccounts: false,
-            auditData: {},
-            endApiData: {},
-            loading: false,
-            readyToRunAudit: false,
-            auditCompleted: false,
-            auditRunCompleted: false,
-        })
+  // setAuditData: (data) => set({ auditData: data }),
+  setAuditData: (key, data) =>
+    set((state) => ({
+      auditData: {
+        ...state.auditData,
+        [key]: data,
+      },
+    })),
+  setEndApiData: (key, data) =>
+    set((state) => ({
+      endApiData: {
+        ...state.endApiData,
+        [key]: data,
+      },
+    })),
+  // setEndApiData: (data) => set({ endApiData: data }),
 
-    })
-
-);
-
-
-
-// setAccountsData: (data) => set({ accountsData: data }),
-// setPropertiesData: (data) => set({ propertiesData: data }),
-
-// loadAccounts: async (token) => {
-//     set({ loading: true });
-//     const accounts = await fetchAccountSummaries(token);
-//     set({ accounts, loading: false });
-// },
-
-// loadProperties: async (accountName, token) => {
-//     set({ loading: true });
-//     const properties = await fetchPropertySummaries(accountName, token);
-//     set({ properties, loading: false });
-// },
+  resetSelection: () =>
+    set({
+      accounts: [],
+      properties: [],
+      selectedAccount: null,
+      selectedProperty: null,
+      accountSelected: false,
+      propertySelected: false,
+      accountId: null,
+      propertyId: null,
+      hasFetchedAccounts: false,
+      auditData: {},
+      endApiData: {},
+      loading: false,
+      readyToRunAudit: false,
+      auditCompleted: false,
+      auditRunCompleted: false,
+    }),
+}));
