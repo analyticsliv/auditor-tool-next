@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import { addDays, subDays } from "date-fns";
 
 const Home = () => {
   const {
@@ -127,6 +128,21 @@ const Home = () => {
       router.push("/auditPreview");
     }, 500);
   };
+  const today = new Date();
+
+  const maxStartDate = subDays(today, 31);
+  const maxEndDate = subDays(today, 2);
+
+  const handleDateChange = (date) =>{
+    setStartDate(date)
+    setEndDate(addDays(date, 29))
+  }
+
+  const handleEmdDateChange = (date) =>{
+    setEndDate(date)
+    setStartDate(subDays(date, 29))
+  }
+
 
   return (
     <AuthWrapper>
@@ -216,11 +232,12 @@ const Home = () => {
               <label className="text-sm text-gray-700 mb-1">Start Date</label>
               <DatePicker
                 selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                maxDate={new Date()}
+                onChange={handleDateChange}
+                // maxDate={new Date()}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
+                maxDate={maxStartDate}
                 dateFormat="yyyy-MM-dd"
                 className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7380ec]"
               />
@@ -230,8 +247,8 @@ const Home = () => {
               <label className="text-sm text-gray-700 mb-1">End Date</label>
               <DatePicker
                 selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                maxDate={new Date()}
+                onChange={handleEmdDateChange}
+                maxDate={maxEndDate}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}

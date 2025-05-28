@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { runCallApiInChunks, callApiBatchesCount } from '../utils/callApis';
 import componentsList from '../utils/componentList';
 import AuditStart from '../Components/auditStart';
+import InfoComponent from '../Components/info';
 
 const COMPONENTS_PER_BATCH = 6;
 
@@ -77,7 +78,7 @@ const AuditPreview = () => {
 
   return (
     <div className="p-6 space-y-4">
-      <AuditStart />
+      <InfoComponent />
 
       {visibleComponents?.map((Component, index) => (
         <Component key={index} />

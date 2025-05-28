@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -62,15 +62,31 @@ export default function RootLayout({ children }) {
 
   const handleSignOut = async () => {
     setLoading(true);
-    localStorage.removeItem('account-store');
-    localStorage.removeItem('userSession');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("session");
     await signOut({ redirect: false });
     router.push("/login");
+    setLoading(false);
   };
 
   const toggleMenu = () => {
     setToggle(!toggle);
   };
+
+  const isLoginPage = pathname === "/login";
+
+  useEffect(()=>{
+    if(!isLoginPage && useSession === "Guest"){
+      router.push('/login');
+      setLoading(false);
+    }
+    else if(isLoginPage && useSession !== 'Guest'){
+      router.push('/');
+      setLoading(false);
+    }
+    else if(userSession) setLoading(false);
+    console.log("userSession---",userSession)
+  },[userSession]);
 
   useEffect(() => {
     // Set the current label based on the current path
@@ -82,16 +98,21 @@ export default function RootLayout({ children }) {
     }
   }, [pathname, menuItems]);
 
-  const isLoginPage = pathname === "/login";
   const disableMenus = Object.keys(auditData)?.length === 0 && Object.keys(endApiData).length === 0;
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
-          {isLoginPage ? (
+          {
+          loading ? (
+            <div>Layout Loading...</div>
+          )
+           : 
+           isLoginPage ? (
             <div>{children}</div>
-          ) : (
+          ) :
+           (
             <main className="flex flex-col h-screen">
               {/* Header */}
               <div className="px-4 py-2.5 max-h-[65px] flex justify-between items-center bg-white">
