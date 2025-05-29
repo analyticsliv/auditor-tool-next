@@ -2,16 +2,18 @@
 
 import React, { useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (session) {
       const accessToken = session?.accessToken;
       localStorage.setItem("session", JSON.stringify(session));
       localStorage.setItem("accessToken", accessToken);
-      window.location.href = "/"; // Redirect to home page
+     router.push("/"); // Redirect to home page
     }
   }, [session]);
 
