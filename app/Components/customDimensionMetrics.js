@@ -43,9 +43,9 @@ const CustomDimensionMetrics = () => {
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th>Status</th>
-                            <th>Check</th>
-                            <th>Description</th>
+                            <th className='text-center'>Status</th>
+                            <th className='text-center'>Check</th>
+                            <th className='text-center'>Description</th>
                         </tr>
                     </thead>
                     <tbody>

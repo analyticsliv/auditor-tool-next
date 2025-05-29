@@ -28,6 +28,11 @@ const PdfContent = forwardRef((props, ref) => {
         return parseFloat(value || '0') > 0;
     };
 
+    const hasAddToCartDataEcomItem = () => {
+        const rows = endApiData?.ecomItems_addToCart?.rows || [];
+        return rows.length > 0;
+    };
+
     return (
         <div ref={ref} style={{ padding: "8px", background: "#fff", width: "800px" }}>
             <div><AuditStart /></div>
@@ -50,7 +55,12 @@ const PdfContent = forwardRef((props, ref) => {
                     <EcomFunnels />
                 </div>
             )}
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><EcomItemDetails /></div>
+            {hasAddToCartDataEcomItem() && (
+                <div className="page-break" style={{ pageBreakAfter: "always" }}>
+                    <EcomItemDetails />
+                </div>
+            )}
+
             <div className="page-break" style={{ pageBreakAfter: "always" }}><Acquisitions /></div>
             <div><CustomDimensionMetrics /></div>
         </div>

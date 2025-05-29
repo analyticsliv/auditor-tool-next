@@ -137,7 +137,7 @@ const EngagementMetrics = () => {
 
 
     return (
-        <div className='parent-div bg-white rounded-3xl py-10 mt-10'>
+        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <div>
                 <div className='flex justify-center relative'>
                     <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
