@@ -6,9 +6,19 @@ import { Frown, Smile } from 'lucide-react';
 const EcomItemDetails = () => {
     const { endApiData } = useAccountStore();
     const [emojiMap, setEmojiMap] = useState({});
+    const [shouldRender, setShouldRender] = useState(true); // New flag
 
     useEffect(() => {
         if (!endApiData) return;
+
+        const addToCartData = endApiData['ecomItems_addToCart'];
+        const rows = addToCartData?.rows || [];
+
+        // Hide component if no rows for Add to Cart
+        if (rows.length === 0) {
+            setShouldRender(false);
+            return;
+        }
 
         const metricKeysMap = {
             'itemIVL': 'ecomItems_itemIVL',
@@ -52,17 +62,15 @@ const EcomItemDetails = () => {
 
     const renderEmoji = (key) => {
         if (emojiMap[key] === 'laugh') {
-            return <div className="p-2 rounded-lg bg-green-500" >
-                <Smile className="w-5 h-5 text-white" />
-            </div>;
+            return <div className="p-2 rounded-lg bg-green-500"><Smile className="w-5 h-5 text-white" /></div>;
         } else if (emojiMap[key] === 'sad') {
-            return <div className="p-2 rounded-lg bg-red-500">
-                <Frown className="w-5 h-5 text-white" />
-            </div>;
+            return <div className="p-2 rounded-lg bg-red-500"><Frown className="w-5 h-5 text-white" /></div>;
         } else {
             return <span>-</span>;
         }
     };
+
+    if (!shouldRender) return null; // 👈 Hide entire component if Add to Cart is empty
 
     return (
         <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
