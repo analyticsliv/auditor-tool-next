@@ -152,7 +152,7 @@ const EventsTracking = () => {
                                     <tr>
                                         <th className='text-sm text-center'>Status</th>
                                         <th className='text-sm text-center'>Check</th>
-                                        <th className='text-sm text-center'>Description</th>
+                                        <th className='text-sm text-center w-[60%]'>Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>

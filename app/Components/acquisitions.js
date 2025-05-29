@@ -42,10 +42,10 @@ const Acquisitions = () => {
                 <table className='w-full'>
                     <thead>
                         <tr>
-                            <th>First user source/medium</th>
-                            <th>Sessions</th>
-                            <th>Total Users</th>
-                            <th>New Users</th>
+                            <th className='text-center'>First user source/medium</th>
+                            <th className='text-center'>Sessions</th>
+                            <th className='text-center'>Total Users</th>
+                            <th className='text-center'>New Users</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,9 +91,9 @@ const Acquisitions = () => {
                 <table className='w-full'>
                     <thead>
                         <tr>
-                            <th>Session default channel group</th>
-                            <th>Sessions</th>
-                            <th>Engaged Sessions</th>
+                            <th className='text-center'>Session default channel group</th>
+                            <th className='text-center'>Sessions</th>
+                            <th className='text-center'>Engaged Sessions</th>
                         </tr>
                     </thead>
                     <tbody>
