@@ -31,7 +31,6 @@ body {
   position: relative;
   transition: all 0.3s ease;
   border-radius: 1.5rem; /* rounded-3xl */
-  padding: 2.5rem; /* p-10 */
   margin-top: 2.5rem; /* mt-10 */
   box-shadow: 0 2px 4px rgba(207, 207, 255, 0.1);
   overflow: hidden;

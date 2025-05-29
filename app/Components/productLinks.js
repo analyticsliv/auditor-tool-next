@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { HiEmojiSad } from 'react-icons/hi';
-import { FaLaugh } from 'react-icons/fa';
+import { Frown, Smile } from 'lucide-react';
 
 const ProductLinks = () => {
 
@@ -37,10 +36,10 @@ const ProductLinks = () => {
             const length = gaLinksData?.googleAdsLinks?.length;
             setGaLinkText(
                 <span>
-                  You have the <span className="font-bold">{length}</span> Google Ads Links.
+                    You have the <span className="font-bold">{length}</span> Google Ads Links.
                 </span>
-              );
-              
+            );
+
             setGaLinkMood(true)
         }
     }, [gaLinksData])
@@ -53,10 +52,10 @@ const ProductLinks = () => {
             const length = bqLinksData?.bigqueryLinks?.length;
             setBqLinkText(
                 <span>
-                  You have the <span className="font-bold">{length}</span> BigQuery Links.
+                    You have the <span className="font-bold">{length}</span> BigQuery Links.
                 </span>
-              );
-              
+            );
+
             setBqLinkMood(true)
         }
     }, [bqLinksData])
@@ -69,10 +68,10 @@ const ProductLinks = () => {
             const length = firebaseLinksData?.firebaseLinks?.length;
             setFirebaseLinkText(
                 <span>
-                  You have the <span className="font-bold">{length}</span> Firebase Links.
+                    You have the <span className="font-bold">{length}</span> Firebase Links.
                 </span>
-              );
-              
+            );
+
             setFirebaseLinkMood(true)
         }
     }, [firebaseLinksData])
@@ -85,10 +84,10 @@ const ProductLinks = () => {
             const length = sa360LinksData?.searchAds360Links?.length;
             setSa360LinkText(
                 <span>
-                  You have the <span className="font-bold">{length}</span> Search Ads 360 Links.
+                    You have the <span className="font-bold">{length}</span> Search Ads 360 Links.
                 </span>
-              );
-              
+            );
+
             setSa360LinkMood(true)
         }
     }, [sa360LinksData])
@@ -101,16 +100,16 @@ const ProductLinks = () => {
             const length = dv360LinksData?.displayVideo360AdvertiserLinks?.length;
             setDv360LinkText(
                 <span>
-                  You have the <span className="font-bold">{length}</span> Display & Video 360 links.
+                    You have the <span className="font-bold">{length}</span> Display & Video 360 links.
                 </span>
-              );              
+            );
             setDv360LinkMood(true)
         }
 
     }, [dv360LinksData])
 
 
-    
+
 
     return (
         <div>
@@ -139,27 +138,47 @@ const ProductLinks = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{gaLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{gaLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <Smile className="w-5 h-5 text-white" />
+                                    </div> : <div className="p-2 rounded-lg bg-red-500">
+                                        <Frown className="w-5 h-5 text-white" />
+                                    </div>}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google Ads Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{gaLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{bqLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{bqLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <Smile className="w-5 h-5 text-white" />
+                                    </div> : <div className="p-2 rounded-lg bg-red-500">
+                                        <Frown className="w-5 h-5 text-white" />
+                                    </div>}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>BigQuery Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{bqLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{firebaseLinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{firebaseLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <Smile className="w-5 h-5 text-white" />
+                                    </div> : <div className="p-2 rounded-lg bg-red-500">
+                                        <Frown className="w-5 h-5 text-white" />
+                                    </div>}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Firebase Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{firebaseLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{sa360LinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{sa360LinkMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <Smile className="w-5 h-5 text-white" />
+                                    </div> : <div className="p-2 rounded-lg bg-red-500">
+                                        <Frown className="w-5 h-5 text-white" />
+                                    </div>}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Search Ads 360 Links </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{sa360LinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 font-bold text-center'>{dv360LinkMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{dv360LinkMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <Smile className="w-5 h-5 text-white" />
+                                    </div> : <div className="p-2 rounded-lg bg-red-500">
+                                        <Frown className="w-5 h-5 text-white" />
+                                    </div>}</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Display & Video 360 links</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>{dv360LinkText}</td>
                                 </tr>

@@ -7,6 +7,7 @@ import { runCallApiInChunks, callApiBatchesCount } from '../utils/callApis';
 import componentsList from '../utils/componentList';
 import AuditStart from '../Components/auditStart';
 import InfoComponent from '../Components/info';
+import Loader from '../Components/loader';
 
 const COMPONENTS_PER_BATCH = 6;
 
@@ -86,14 +87,7 @@ const AuditPreview = () => {
 
       {loading && (
         <div className="flex flex-col justify-center items-center py-10">
-          <div className="relative">
-            <div className="w-16 h-16 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600 animate-ping" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            </div>
-          </div>
+          <Loader />
           <div className="mt-4 text-center text-sm text-gray-500">Running audit...</div>
         </div>
 

@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
-import { FaLaugh } from 'react-icons/fa';
-import { HiEmojiSad } from 'react-icons/hi';
+import { Frown, Smile } from 'lucide-react';
 
 const EcomItemDetails = () => {
     const { endApiData } = useAccountStore();
@@ -29,7 +28,7 @@ const EcomItemDetails = () => {
 
         const tempMap = {};
 
-        Object.entries(metricKeysMap).forEach(([shortKey, storeKey]) => {
+        Object.entries(metricKeysMap)?.forEach(([shortKey, storeKey]) => {
             const data = endApiData[storeKey];
             const rows = data?.rows || [];
             const dimMap = new Set();
@@ -53,9 +52,13 @@ const EcomItemDetails = () => {
 
     const renderEmoji = (key) => {
         if (emojiMap[key] === 'laugh') {
-            return <FaLaugh className='h-8 w-14 mx-auto fill-green-600' />;
+            return <div className="p-2 rounded-lg bg-green-500" >
+                <Smile className="w-5 h-5 text-white" />
+            </div>;
         } else if (emojiMap[key] === 'sad') {
-            return <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />;
+            return <div className="p-2 rounded-lg bg-red-500">
+                <Frown className="w-5 h-5 text-white" />
+            </div>;
         } else {
             return <span>-</span>;
         }
@@ -88,12 +91,12 @@ const EcomItemDetails = () => {
                                 { label: 'Add to Cart', key: 'addtocart' },
                                 { label: 'Checkout', key: 'checkout' },
                                 { label: 'Purchase', key: 'purchase' }
-                            ].map((event, idx) => (
+                            ]?.map((event, idx) => (
                                 <tr key={idx}>
                                     <td className='h-[3.8rem] border-b border-gray-800'>{event?.label}</td>
                                     {[1, 2, 3, 4, 5]?.map(i => (
                                         <td className='h-[3.8rem] border-b border-gray-800' key={i}>
-                                            {renderEmoji(`${event?.key}${i}`)}
+                                            <div className='flex justify-center items-center'>{renderEmoji(`${event?.key}${i}`)}</div>
                                         </td>
                                     ))}
                                 </tr>

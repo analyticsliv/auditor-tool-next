@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore'
-import { FaLaugh } from 'react-icons/fa';
-import { HiEmojiSad } from 'react-icons/hi';
+import { Frown, Smile } from 'lucide-react';
 
 const EcommerceTracking = () => {
     const { endApiData, selectedProperty } = useAccountStore();
@@ -65,14 +64,24 @@ const EcommerceTracking = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'><span className='h-[3.8rem] font-bold text-center'><FaLaugh className='h-8 w-14 mx-auto fill-green-600' /></span></td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                        <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div>
+                                        </span>
+                                    </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Collecting Transactions</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>You have <b>{trackingData?.rows?.length}</b> transactions during reporting period.</td>
                                 </tr>
                                 <tr>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
-                                        <span className='h-[3.8rem] font-bold text-center'>
-                                            {notSetCount > 0 ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
+                                        <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
+                                            {notSetCount > 0 ? <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div> : <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div>}
                                         </span>
                                     </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions without IDs</td>
@@ -86,8 +95,12 @@ const EcommerceTracking = () => {
                                 </tr>
                                 <tr>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
-                                        <span className='h-[3.8rem] font-bold text-center'>
-                                            {duplicateArray.length > 0 ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
+                                        <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
+                                            {duplicateArray.length > 0 ? <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div> : <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div>}
                                         </span>
                                     </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Duplicate Transactions</td>
@@ -100,7 +113,13 @@ const EcommerceTracking = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'><span className='h-[3.8rem] font-bold text-center'><FaLaugh className='h-8 w-14 mx-auto fill-green-600' /></span></td>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                        <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div>
+                                        </span>
+                                    </td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions Revenue</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         You have <b>{totalRevenue.toFixed(2)} {currency}</b> revenue during the reporting period.

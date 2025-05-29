@@ -69,7 +69,7 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!hasFetchedAccounts) {
+    if (!hasFetchedAccounts && session) {
       // Fetch accounts only if they haven’t been fetched before
       const userData = { given_name: user };
       setLoadingAccounts(true);
@@ -79,7 +79,7 @@ const Home = () => {
     } else {
       setLoadingAccounts(false);
     }
-  }, [fetchAccountSummaries, hasFetchedAccounts]);
+  }, [fetchAccountSummaries, hasFetchedAccounts, session]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -133,12 +133,12 @@ const Home = () => {
   const maxStartDate = subDays(today, 31);
   const maxEndDate = subDays(today, 2);
 
-  const handleDateChange = (date) =>{
+  const handleDateChange = (date) => {
     setStartDate(date)
     setEndDate(addDays(date, 29))
   }
 
-  const handleEmdDateChange = (date) =>{
+  const handleEmdDateChange = (date) => {
     setEndDate(date)
     setStartDate(subDays(date, 29))
   }
@@ -151,17 +151,16 @@ const Home = () => {
 
         <div className="relative mb-4 w-[400px]" ref={dropdownRef}>
           <div
-            className={`pl-2.5 pr-1 py-1.5 border border-[#7380ec] rounded-[8px] w-full flex justify-between items-center bg-white ${
-              loadingAccounts ? "cursor-not-allowed" : "cursor-pointer"
-            }`}
+            className={`pl-2.5 pr-1 py-1.5 border border-[#7380ec] rounded-[8px] w-full flex justify-between items-center bg-white ${loadingAccounts ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
             onClick={() => !loadingAccounts && setDropdownOpen(!dropdownOpen)}
           >
             <span>
               {loadingAccounts
                 ? "Loading accounts..."
                 : selectedAccount
-                ? selectedAccount?.displayName
-                : "- Select an account -"}
+                  ? selectedAccount?.displayName
+                  : "- Select an account -"}
             </span>
             <span className="text-gray-500">
               <img
@@ -269,15 +268,14 @@ const Home = () => {
             loadingProperties ||
             loading
           }
-          className={`p-2 w-[400px] rounded-[8px] ${
-            accountSelected &&
-            selectedProperty &&
-            !loadingAccounts &&
-            !loadingProperties &&
-            !loading
+          className={`p-2 w-[400px] rounded-[8px] ${accountSelected &&
+              selectedProperty &&
+              !loadingAccounts &&
+              !loadingProperties &&
+              !loading
               ? "bg-[#7380ec] hover:bg-[#6d79e5] text-white"
               : "bg-gray-300 text-gray-600 cursor-not-allowed"
-          }`}
+            }`}
         >
           {loading ? "Loading..." : "Submit"}
         </button>

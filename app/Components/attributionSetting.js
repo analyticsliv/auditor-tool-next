@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
 import { FaLaugh } from 'react-icons/fa';
 import { HiEmojiSad } from 'react-icons/hi';
+import { Frown, Smile } from 'lucide-react';
 
 const AttributionSetting = () => {
 
@@ -48,8 +49,12 @@ const AttributionSetting = () => {
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>Attribution Setting Details</h1>
                     <div>
                         <div className='flex justify-evenly gap-10'>
-                            <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{modelMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
+                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
+                                <span>{modelMood ?                   <div className="p-2 rounded-lg bg-green-500" >
+                    <Smile className="w-5 h-5 text-white" />
+                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                  </div>}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Model</h2>
@@ -58,8 +63,12 @@ const AttributionSetting = () => {
                                 </div>
                             </div>
 
-                            <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{acquisitionWindowMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
+                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
+                                <span>{acquisitionWindowMood ?                   <div className="p-2 rounded-lg bg-green-500" >
+                    <Smile className="w-5 h-5 text-white" />
+                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                  </div>}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Acquisition Window
@@ -69,8 +78,12 @@ const AttributionSetting = () => {
                                 </div>
                             </div>
 
-                            <div className='flex flex-col text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{conversionWindowMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}</span>
+                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
+                                <span>{conversionWindowMood ?                   <div className="p-2 rounded-lg bg-green-500" >
+                    <Smile className="w-5 h-5 text-white" />
+                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                  </div>}</span>
                                 <div>
                                     <div>
                                         <h2 className='font-bold text-2xl pb-2'>Conversion Window</h2>
