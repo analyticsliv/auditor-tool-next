@@ -15,6 +15,7 @@ import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RxDashboard } from "react-icons/rx";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import Loader from "./Components/loader";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -75,18 +76,18 @@ export default function RootLayout({ children }) {
 
   const isLoginPage = pathname === "/login";
 
-  useEffect(()=>{
-    if(!isLoginPage && useSession === "Guest"){
+  useEffect(() => {
+    if (!isLoginPage && useSession === "Guest") {
       router.push('/login');
       setLoading(false);
     }
-    else if(isLoginPage && useSession !== 'Guest'){
+    else if (isLoginPage && useSession !== 'Guest') {
       router.push('/');
       setLoading(false);
     }
-    else if(userSession) setLoading(false);
-    console.log("userSession---",userSession)
-  },[userSession]);
+    else if (userSession) setLoading(false);
+    console.log("userSession---", userSession)
+  }, [userSession]);
 
   useEffect(() => {
     // Set the current label based on the current path
@@ -105,86 +106,88 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
           {
-          loading ? (
-            <div>Layout Loading...</div>
-          )
-           : 
-           isLoginPage ? (
-            <div>{children}</div>
-          ) :
-           (
-            <main className="flex flex-col h-screen">
-              {/* Header */}
-              <div className="px-4 py-2.5 max-h-[65px] flex justify-between items-center bg-white">
-                <h2 className="text-lg font-bold text-gray-900">
-                  GA4 <span className="text-red-600">Auditor Tool</span>
-                </h2>
-
-                <div className="font-semibold text-lg">Welcome, {user}</div>
-                <div className="flex items-center gap-3">
-                  <div className="flex flex-col text-center">
-                    <div className="font-semibold text-sm">{user}</div>
-                    <div className="text-xs font-normal">Admin</div>
-                  </div>
-                  <img src={userImage} alt={user} className="rounded-full w-8" />
-                </div>
+            loading ? (
+              <div className="h-screen w-full flex flex-col justify-center items-center py-10">
+                <Loader />
               </div>
+            )
+              :
+              isLoginPage ? (
+                <div>{children}</div>
+              ) :
+                (
+                  <main className="flex flex-col h-screen">
+                    {/* Header */}
+                    <div className="px-4 py-2.5 max-h-[65px] flex justify-between items-center bg-white">
+                      <h2 className="text-lg font-bold text-gray-900">
+                        GA4 <span className="text-red-600">Auditor Tool</span>
+                      </h2>
 
-              {/* Main content area */}
-              <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar */}
-                <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white border-t-[2px] border-b-[2px] border-r-[2px] border-gray-300 transition-all duration-200`}>
-                  <nav className="flex flex-col h-full pt-5">
-                    {menuItems.map((item) => {
-                      const isDisabled = disableMenus && item?.label !== "Home";
-
-                      return (
-
-                        <Link key={item?.path} href={isDisabled ? "#" : item?.path} passHref>
-                          <div
-                            className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
-                          >
-                            {item?.image}
-
-                            {!toggle && <div className="truncate text-xs xl:text-sm 2xl:text-base">{item?.label}</div>}
-                          </div>
-                        </Link>
-                      );
-                    })}
-
-                    <div
-                      onClick={handleSignOut}
-                      className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
-                    >
-                      <img src="/Signout.png" alt="logout" className="h-7 w-7" />
-                      {!toggle && <div className="truncate">Sign Out</div>}
-                    </div>
-
-                    <div
-                      onClick={toggleMenu}
-                      className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                    >
-                      <div className="flex justify-center items-center">
-                        {toggle ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
+                      <div className="font-semibold text-lg">Welcome, {user}</div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col text-center">
+                          <div className="font-semibold text-sm">{user}</div>
+                          <div className="text-xs font-normal">Admin</div>
+                        </div>
+                        <img src={userImage} alt={user} className="rounded-full w-8" />
                       </div>
                     </div>
-                  </nav>
-                </aside>
 
-                {/* Main content area */}
-                <main className="flex-1 overflow-auto bg-slate-100 border-t-[2px] border-b-[2px] border-gray-300">
-                  <div className="p-6">{children}</div>
-                </main>
-              </div>
+                    {/* Main content area */}
+                    <div className="flex flex-1 overflow-hidden">
+                      {/* Sidebar */}
+                      <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white border-t-[2px] border-b-[2px] border-r-[2px] border-gray-300 transition-all duration-200`}>
+                        <nav className="flex flex-col h-full pt-5">
+                          {menuItems.map((item) => {
+                            const isDisabled = disableMenus && item?.label !== "Home";
 
-              {/* Footer */}
-              <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1">
-                <img src="/copyright1.png" alt="logout" className="h-4 w-4" />
-                <p>Powered By AnalyticsLiv</p>
-              </div>
-            </main>
-          )}
+                            return (
+
+                              <Link key={item?.path} href={isDisabled ? "#" : item?.path} passHref>
+                                <div
+                                  className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                >
+                                  {item?.image}
+
+                                  {!toggle && <div className="truncate text-xs xl:text-sm 2xl:text-base">{item?.label}</div>}
+                                </div>
+                              </Link>
+                            );
+                          })}
+
+                          <div
+                            onClick={handleSignOut}
+                            className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
+                          >
+                            <img src="/Signout.png" alt="logout" className="h-7 w-7" />
+                            {!toggle && <div className="truncate">Sign Out</div>}
+                          </div>
+
+                          <div
+                            onClick={toggleMenu}
+                            className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                          >
+                            <div className="flex justify-center items-center">
+                              {toggle ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
+                            </div>
+                          </div>
+                        </nav>
+                      </aside>
+
+                      {/* Main content area */}
+                      <main className="flex-1 overflow-auto bg-slate-100 border-t-[2px] border-b-[2px] border-gray-300">
+                        <div className="p-6">{children}</div>
+                      </main>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1">
+                      <img src="/copyright1.png" alt="logout" className="h-4 w-4" />
+                      <p>Powered By AnalyticsLiv</p>
+                    </div>
+                  </main>
+                )}
         </SessionProvider>
       </body>
     </html>

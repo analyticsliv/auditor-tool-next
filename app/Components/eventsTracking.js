@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { useAccountStore } from '../store/useAccountStore';
-import { FaLaugh } from 'react-icons/fa';
-import { HiEmojiSad } from 'react-icons/hi';
+import { Frown, Smile } from 'lucide-react';
 
 const EventsTracking = () => {
 
@@ -158,7 +157,11 @@ const EventsTracking = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
+                                        <td className='h-[3.8rem] flex justify-center items-center border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                            <Smile className="w-5 h-5 text-white" />
+                                        </div> : <div className="p-2 rounded-lg bg-red-500">
+                                            <Frown className="w-5 h-5 text-white" />
+                                        </div>}
                                         </td>
                                         <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
                                         <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
