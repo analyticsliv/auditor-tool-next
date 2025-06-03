@@ -8,11 +8,11 @@ const moment = require('moment');
 export async function POST(request) {
     try {
         // Get user from request (you'll need to implement auth middleware)
-        await connectDB();
-        const user = request.user;
+        // await connectDB();
+        const { user, tokenData } = await authenticateUser(request);
         const { propertyId, accountId, auditData, endApiData, accountName, propertyName } = await request.json();
 
-        if (!propertyId || !accountId || !content || !chartData) {
+        if (!propertyId || !accountId || !auditData || !endApiData) {
             return NextResponse.json({ error: 'Some content are missing' }, { status: 400 });
         }
 
@@ -49,7 +49,10 @@ export async function POST(request) {
         }
     } catch (error) {
         console.error('Error storing Audit report:', error);
-        return NextResponse.json({ error: 'Error storing Audit report' }, { status: 500 });
+        return NextResponse.json({ 
+            error: error.message, 
+            details: error.details || ["Authentication failed"] 
+        }, { status: error.status || 500 });
     }
 }
 
@@ -68,6 +71,9 @@ export async function GET(request) {
         return NextResponse.json(auditRecords, { status: 200 });
     } catch (error) {
         console.error('Error fetching audit records:', error);
-        return NextResponse.json({ error: 'Error fetching audit records' }, { status: 500 });
+        return NextResponse.json({ 
+            error: error.message, 
+            details: error.details || ["Authentication failed"] 
+        }, { status: error.status || 500 });
     }
 }

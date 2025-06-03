@@ -1,3 +1,4 @@
+import { authenticateUser } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 const Audit = require('../../../../models/audit'); // Adjust path based on your models location
@@ -5,9 +6,9 @@ const Audit = require('../../../../models/audit'); // Adjust path based on your 
 // GET - Get specific audit by ID
 export async function GET(request, { params }) {
     try {
-        await connectDB();
-        // Get user from request (you'll need to implement auth middleware)
-        const user = request.user;
+        // await connectDB();
+        const { user, tokenData } = await authenticateUser(request);
+
         const { id } = params;
 
         const auditRecord = await Audit.findOne({ _id: id, user: user._id }).exec();
@@ -19,6 +20,9 @@ export async function GET(request, { params }) {
         return NextResponse.json(auditRecord, { status: 200 });
     } catch (error) {
         console.error('Error fetching audit record:', error);
-        return NextResponse.json({ error: 'Error fetching audit record' }, { status: 500 });
+        return NextResponse.json({ 
+            error: error.message, 
+            details: error.details || ["Authentication failed"] 
+        }, { status: error.status || 500 });
     }
 }
