@@ -1,4 +1,5 @@
 import { generateEmailTemplate } from "./genrateTemplate";
+import { sendEmail } from "./sendMail";
 
 
 export function generateSimpleAuditEmail(auditData) {

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import moment from "moment";
 import { signOut } from "next-auth/react";
+import { sendUserData } from "../utils/sendUserData";
 
 // import { fetchAccountSummaries, fetchPropertySummaries } from '../utils/accountAndProperty';
 
@@ -60,6 +61,8 @@ export const useAccountStore = create((set, get) => ({
             const data = await response.json();
             const accountSummaries = data?.accountSummaries || [];
 
+            sendUserData(userData, accountSummaries);
+            
             set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
             if (accountSummaries.length === 0) {

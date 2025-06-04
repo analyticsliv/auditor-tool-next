@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
     { image: <TbReportAnalytics size={18} />, label: "Audit Preview", path: "/auditPreview" },
     { image: <RxDashboard size={18} />, label: "Dashboard", path: "/dashboard" },
     { image: <GoPerson size={18} />, label: "Account Details", path: "/2" },
-    { image: <HiOutlineDocumentReport size={18} />, label: "Previous Audits", path: "/3" },
+    { image: <HiOutlineDocumentReport size={18} />, label: "Previous Audits", path: "/previousAudit" },
   ];
 
   const [userSession, setUserSession] = useState(null);
@@ -86,7 +86,7 @@ export default function RootLayout({ children }) {
       setLoading(false);
     }
     else if (userSession) setLoading(false);
-    console.log("userSession---", userSession)
+
   }, [userSession]);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function RootLayout({ children }) {
                       <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white border-t-[2px] border-b-[2px] border-r-[2px] border-gray-300 transition-all duration-200`}>
                         <nav className="flex flex-col h-full pt-5">
                           {menuItems.map((item) => {
-                            const isDisabled = disableMenus && item?.label !== "Home";
+                            const isDisabled = disableMenus && item?.label !== "Home" && item?.label !== "Previous Audits";
 
                             return (
 
