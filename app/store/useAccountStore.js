@@ -22,6 +22,18 @@ export const useAccountStore = create((set, get) => ({
     readyToRunAudit: false,
     auditCompleted: false,
     auditRunCompleted: false,
+    accountNameFromAudit: null,
+    accountIdFromAudit: null,
+    propertyNameFromAudit: null,
+    propertyIdFromAudit: null,
+
+    setAccountDetailsFromAudit: ({ accountName, accountId, propertyName, propertyId }) =>
+        set({
+            accountNameFromAudit: accountName,
+            accountIdFromAudit: accountId,
+            propertyNameFromAudit: propertyName,
+            propertyIdFromAudit: propertyId,
+        }),
 
     setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
     setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),

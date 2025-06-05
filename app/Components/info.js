@@ -4,7 +4,7 @@ import { useAccountStore } from "../store/useAccountStore";
 import moment from "moment";
 import { Eye, Building, Globe, ChevronRight } from "lucide-react";
 
-const InfoComponent = () => {
+const InfoComponent = ({ previousAudit }) => {
   const [status, setStatus] = useState("fine");
   const {
     selectedAccount,
@@ -12,15 +12,20 @@ const InfoComponent = () => {
     accountId,
     propertyId,
     dateRange,
+    accountNameFromAudit,
+    accountIdFromAudit,
+    propertyNameFromAudit,
+    propertyIdFromAudit,
+    auditData
   } = useAccountStore();
 
-  const endDate = dateRange?.endDate;
-  const startDate = dateRange?.startDate;
+  const endDate = previousAudit ? auditData?.__dateRange__?.endDate : dateRange?.endDate;
+  const startDate = previousAudit ? auditData?.__dateRange__?.startDate : dateRange?.startDate;
 
   return (
     <div>
       <div className="text-center text-[#7380ec] font-extrabold text-[1.8rem]">
-        {selectedAccount?.displayName || "Account"} Google Analytics Audit Report
+        {selectedAccount?.displayName || accountNameFromAudit || "Account"} Google Analytics Audit Report
       </div>
       <div className="parent-div bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-lg rounded-3xl p-10 mt-10">
         {/* Header */}
@@ -164,14 +169,14 @@ const InfoComponent = () => {
                       </div>
                       <div className="space-y-1">
                         <p className="text-lg font-bold text-slate-800 truncate">
-                          {selectedAccount?.displayName || "Not Selected"}
+                          {selectedAccount?.displayName || accountNameFromAudit || "Not Selected"}
                         </p>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium text-slate-500">
                             ID:
                           </span>
                           <code className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-mono">
-                            {accountId || "N/A"}
+                            {accountId || accountIdFromAudit || "N/A"}
                           </code>
                         </div>
                       </div>
@@ -194,14 +199,14 @@ const InfoComponent = () => {
                       </div>
                       <div className="space-y-1">
                         <p className="text-lg font-bold text-slate-800 truncate">
-                          {selectedProperty?.displayName || "Not Selected"}
+                          {selectedProperty?.displayName || propertyNameFromAudit || "Not Selected"}
                         </p>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium text-slate-500">
                             ID:
                           </span>
                           <code className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-mono">
-                            {propertyId || "N/A"}
+                            {propertyId || propertyIdFromAudit || "N/A"}
                           </code>
                         </div>
                       </div>

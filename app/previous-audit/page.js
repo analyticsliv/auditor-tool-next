@@ -6,6 +6,7 @@ import { GetAuditById } from '../utils/getAuditById';
 import componentList from '../utils/componentList';
 import Loader from '../Components/loader';
 import { useAccountStore } from '../store/useAccountStore';
+import InfoComponent from '../Components/info';
 
 const AuditDetailPage = () => {
     const searchParams = useSearchParams();
@@ -31,10 +32,21 @@ const AuditDetailPage = () => {
 
             if (data) {
                 const { auditData = {}, endApiData = {} } = data;
-
+                const {
+                    accountId,
+                    accountName,
+                    propertyId,
+                    propertyName,
+                } = data;
+                useAccountStore.getState().setAccountDetailsFromAudit({
+                    accountId,
+                    accountName,
+                    propertyId,
+                    propertyName,
+                });
                 // Batch auditData updates
                 await Promise.all(
-                    Object.entries(auditData).map(([key, value]) =>
+                    Object.entries(auditData)?.map(([key, value]) =>
                         new Promise((resolve) => {
                             setAuditData(key, value);
                             setTimeout(resolve, 0);
@@ -66,7 +78,10 @@ const AuditDetailPage = () => {
                     <Loader />
                 </div>
             ) : (
-                componentList.map((Component, idx) => <Component key={idx} />)
+                <>
+                    <InfoComponent previousAudit={true} />
+                    {componentList?.map((Component, idx) => <Component key={idx} />)}
+                </>
             )}
         </div>
     );
