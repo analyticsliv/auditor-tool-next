@@ -155,8 +155,8 @@ const Home = () => {
         {/* Header */}
         <div className="text-center flex-shrink-0">
           <div className="flex justify-center items-center gap-2">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-3 shadow-lg">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-10 2xl:w-12 h-10 2xl:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-2 2xl:mb-3 shadow-lg">
+              <svg className="w-5 2xl:w-6 h-5 2xl:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
@@ -169,7 +169,7 @@ const Home = () => {
         <div className="flex w-full flex-col md:flex-row gap-4 px-4 p-6 overflow-hidden">
 
           {/* Left Panel - Account & Property */}
-          <div className="md:w-[50%] 2xl:flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col 2xl:justify-between">
+          <div className="md:w-[50%] 2xl:flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-4 2xl:py-6 flex flex-col 2xl:justify-between">
             <div className="flex items-center mb-4 2xl:mb-6">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                 <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -315,7 +315,7 @@ const Home = () => {
           </div>
 
           {/* Right Panel - Date Range */}
-          <div className="md:w-[50%] 2xl:flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col">
+          <div className="md:w-[50%] 2xl:flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 px-6 py-4 2xl:py-6 flex flex-col">
             <div className="flex items-center mb-3 2xl:mb-6">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                 <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +386,7 @@ const Home = () => {
         </div>
 
         {/* Bottom Fixed Button */}
-        <div className="flex-shrink-0 px-4 pb-6">
+        <div className="flex-shrink-0 px-4">
           <div className="w-max mx-auto">
             <button
               onClick={handleSubmit}
@@ -397,7 +397,7 @@ const Home = () => {
                 loadingProperties ||
                 loading
               }
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 shadow-lg ${accountSelected &&
+              className={`w-full py-2 px-6 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 shadow-lg ${accountSelected &&
                 selectedProperty &&
                 !loadingAccounts &&
                 !loadingProperties &&
