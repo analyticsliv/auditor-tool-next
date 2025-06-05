@@ -8,11 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "./utils/user";
 import { useAccountStore } from "./store/useAccountStore";
-import { IoHomeOutline } from "react-icons/io5";
-import { TbReportAnalytics } from "react-icons/tb";
-import { GoPerson } from "react-icons/go";
-import { HiOutlineDocumentReport } from "react-icons/hi";
-import { RxDashboard } from "react-icons/rx";
+import { Home, BarChart, LayoutDashboard, User, FileText, LogOut, Menu, ChevronLeft, ChevronRight } from "lucide-react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Loader from "./Components/loader";
@@ -38,12 +34,13 @@ export default function RootLayout({ children }) {
   } = useAccountStore();
 
   const menuItems = [
-    { image: <IoHomeOutline size={18} />, label: "Home", path: "/" },
-    { image: <TbReportAnalytics size={18} />, label: "Audit Preview", path: "/auditPreview" },
-    { image: <RxDashboard size={18} />, label: "Dashboard", path: "/dashboard" },
-    { image: <GoPerson size={18} />, label: "Account Details", path: "/2" },
-    { image: <HiOutlineDocumentReport size={18} />, label: "Previous Audits", path: "/previousAudit" },
+    { icon: <Home size={20} />, label: "Home", path: "/" },
+    { icon: <BarChart size={20} />, label: "Audit Preview", path: "/auditPreview" },
+    { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
+    { icon: <User size={20} />, label: "Account Details", path: "/2" },
+    { icon: <FileText size={20} />, label: "Previous Audits", path: "/previousAudit" },
   ];
+
 
   const [userSession, setUserSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,6 +72,7 @@ export default function RootLayout({ children }) {
   };
 
   const isLoginPage = pathname === "/login";
+  const isAuditById = pathname === "/previous-audit";
 
   useEffect(() => {
     if (!isLoginPage && useSession === "Guest") {
@@ -115,79 +113,94 @@ export default function RootLayout({ children }) {
               isLoginPage ? (
                 <div>{children}</div>
               ) :
-                (
-                  <main className="flex flex-col h-screen">
-                    {/* Header */}
-                    <div className="px-4 py-2.5 max-h-[65px] flex justify-between items-center bg-white">
-                      <h2 className="text-lg font-bold text-gray-900">
-                        GA4 <span className="text-red-600">Auditor Tool</span>
-                      </h2>
-
-                      <div className="font-semibold text-lg">Welcome, {user}</div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col text-center">
-                          <div className="font-semibold text-sm">{user}</div>
-                          <div className="text-xs font-normal">Admin</div>
+                isAuditById ? (
+                  <div className="px-[5%] py-10">{children}</div>
+                )
+                  :
+                  (
+                    <main className="flex flex-col h-screen">
+                      {/* Header */}
+                      <header className="px-6 py-2 2xl:py-2.5 shadow-sm bg-white flex justify-between items-center border-b border-gray-200">
+                        <h1 className="text-xl font-bold text-gray-800">
+                          GA4 <span className="text-blue-600">Auditor Tool</span>
+                        </h1>
+                        <div className="text-lg text-gray-600 hidden sm:block">
+                          Welcome,&nbsp;<span className="font-semibold text-gray-800">{user}</span>
                         </div>
-                        <img src={userImage} alt={user} className="rounded-full w-8" />
-                      </div>
-                    </div>
 
-                    {/* Main content area */}
-                    <div className="flex flex-1 overflow-hidden">
-                      {/* Sidebar */}
-                      <aside className={`${toggle ? "w-[65px]" : "w-[150px] xl:w-[170px] 2xl:w-[200px]"} bg-white border-t-[2px] border-b-[2px] border-r-[2px] border-gray-300 transition-all duration-200`}>
-                        <nav className="flex flex-col h-full pt-5">
-                          {menuItems.map((item) => {
-                            const isDisabled = disableMenus && item?.label !== "Home" && item?.label !== "Previous Audits";
-
-                            return (
-
-                              <Link key={item?.path} href={isDisabled ? "#" : item?.path} passHref>
-                                <div
-                                  className={`py-2 px-4 flex items-center gap-3 ${pathname === item?.path ? "bg-blue-100 font-bold" : "hover:bg-gray-100"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
-                                >
-                                  {item?.image}
-
-                                  {!toggle && <div className="truncate text-xs xl:text-sm 2xl:text-base">{item?.label}</div>}
-                                </div>
-                              </Link>
-                            );
-                          })}
-
-                          <div
-                            onClick={handleSignOut}
-                            className="mt-auto py-5 px-4 flex items-center gap-3 cursor-pointer hover:bg-gray-100"
-                          >
-                            <img src="/Signout.png" alt="logout" className="h-7 w-7" />
-                            {!toggle && <div className="truncate">Sign Out</div>}
+                        <div className="flex items-center gap-4">
+                          <div className="text-right hidden sm:block">
+                            <div className="text-sm font-semibold">{user}</div>
+                            <div className="text-xs text-gray-500">Admin</div>
                           </div>
-
-                          <div
-                            onClick={toggleMenu}
-                            className="p-3 text-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                          >
-                            <div className="flex justify-center items-center">
-                              {toggle ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
-                            </div>
-                          </div>
-                        </nav>
-                      </aside>
+                          {userImage ?
+                            <img src={userImage} alt={user} className="rounded-full w-9 h-9 object-cover" />
+                            : (<div className="rounded-full bg-gray-200 p-2.5">
+                              <User strokeWidth={2.20} size={22} />
+                            </div>)}
+                        </div>
+                      </header>
 
                       {/* Main content area */}
-                      <main className="flex-1 overflow-auto bg-slate-100 border-t-[2px] border-b-[2px] border-gray-300">
-                        <div className="p-6">{children}</div>
-                      </main>
-                    </div>
+                      <div className="flex flex-1 overflow-hidden">
+                        {/* Sidebar */}
+                        <aside className={`${toggle ? "w-[70px]" : "w-[170px] xl:w-[185px] 2xl:w-[200px]"} bg-white transition-all duration-200 border-r border-gray-200`}>
+                          <nav className="flex flex-col h-full">
+                            <div className="flex-1 pt-6">
+                              {menuItems?.map((item) => {
+                                const isDisabled = disableMenus && item?.label !== "Home" && item?.label !== "Previous Audits";
+                                const isActive = pathname === item.path;
 
-                    {/* Footer */}
-                    <div className="bg-white flex justify-center items-center space-x-2 text-xs font-medium py-1">
-                      <img src="/copyright1.png" alt="logout" className="h-4 w-4" />
-                      <p>Powered By AnalyticsLiv</p>
-                    </div>
-                  </main>
-                )}
+                                return (
+                                  <Link key={item?.path} href={isDisabled ? "#" : item?.path}>
+                                    <div
+                                      className={`flex items-center gap-3 px-2 xl:px-4 py-3 rounded-md mx-2 my-1 transition-all duration-150
+                        ${isActive ? "bg-blue-50 text-blue-600 font-medium" : "hover:bg-gray-100"}
+                        ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                                    >
+                                      {item?.icon}
+                                      {!toggle && <span className="text-xs xl:text-sm 2xl:text-base truncate">{item?.label}</span>}
+                                    </div>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+
+                            <div className="px-2 pb-4 space-y-2">
+                              <button
+                                onClick={handleSignOut}
+                                className="flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-md w-full"
+                              >
+                                <LogOut size={20} />
+                                {!toggle && <span>Sign Out</span>}
+                              </button>
+
+                              <button
+                                onClick={toggleMenu}
+                                className="flex items-center justify-center w-full py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
+                              >
+                                {toggle ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+                              </button>
+                            </div>
+                          </nav>
+                        </aside>
+
+                        {/* Main content area */}
+                        <main className="flex-1 overflow-auto bg-slate-100">
+                          <div className="p-6">{children}</div>
+                        </main>
+                      </div>
+
+                      {/* Footer */}
+                      <footer className="bg-white border-t border-gray-200 py-1 2xl:py-2 text-center text-[10px] 2xl:text-xs text-gray-500">
+                        <p className="flex items-center justify-center gap-1">
+                          <span>&copy; {new Date().getFullYear()}</span>
+                          <span>Powered by</span>
+                          <strong className="text-gray-700">AnalyticsLiv</strong>
+                        </p>
+                      </footer>
+                    </main>
+                  )}
         </SessionProvider>
       </body>
     </html>

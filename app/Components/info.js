@@ -168,16 +168,16 @@ const InfoComponent = ({ previousAudit }) => {
                         <div className="h-px bg-slate-300 flex-1"></div>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-lg font-bold text-slate-800 truncate">
+                        <p className="text-lg font-bold text-slate-800 truncate mb-2 h-8">
                           {selectedAccount?.displayName || accountNameFromAudit || "Not Selected"}
                         </p>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium text-slate-500">
                             ID:
                           </span>
-                          <code className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-mono">
+                          <div className="px-2 py-1 flex items-center justify-center bg-slate-200 text-slate-700 rounded text-xs font-mono">
                             {accountId || accountIdFromAudit || "N/A"}
-                          </code>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -198,16 +198,16 @@ const InfoComponent = ({ previousAudit }) => {
                         <div className="h-px bg-slate-300 flex-1"></div>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-lg font-bold text-slate-800 truncate">
+                        <p className="text-lg font-bold text-slate-800 truncate mb-2 h-8">
                           {selectedProperty?.displayName || propertyNameFromAudit || "Not Selected"}
                         </p>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium text-slate-500">
                             ID:
                           </span>
-                          <code className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-mono">
+                          <div className="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-mono">
                             {propertyId || propertyIdFromAudit || "N/A"}
-                          </code>
+                          </div>
                         </div>
                       </div>
                     </div>
