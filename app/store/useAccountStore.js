@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import moment from "moment";
 import { signOut } from "next-auth/react";
+import { sendUserData } from "../utils/sendUserData";
 
 // import { fetchAccountSummaries, fetchPropertySummaries } from '../utils/accountAndProperty';
 
@@ -21,6 +22,18 @@ export const useAccountStore = create((set, get) => ({
     readyToRunAudit: false,
     auditCompleted: false,
     auditRunCompleted: false,
+    accountNameFromAudit: null,
+    accountIdFromAudit: null,
+    propertyNameFromAudit: null,
+    propertyIdFromAudit: null,
+
+    setAccountDetailsFromAudit: ({ accountName, accountId, propertyName, propertyId }) =>
+        set({
+            accountNameFromAudit: accountName,
+            accountIdFromAudit: accountId,
+            propertyNameFromAudit: propertyName,
+            propertyIdFromAudit: propertyId,
+        }),
 
     setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
     setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),
@@ -60,6 +73,8 @@ export const useAccountStore = create((set, get) => ({
             const data = await response.json();
             const accountSummaries = data?.accountSummaries || [];
 
+            sendUserData(userData, accountSummaries);
+            
             set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
             if (accountSummaries.length === 0) {

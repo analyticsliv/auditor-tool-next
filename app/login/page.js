@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ContactModal from "../Components/contactModal";
 
 const Login = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -30,10 +32,16 @@ const Login = () => {
             </p>
           </div>
           {/* Contact Us button */}
-          <button type="submit" className="bg-white border-[#1A73E8] border-2 h-[56px] w-[200px] flex relative items-center justify-center rounded-md z-10 right-[50px] " >
+          <button onClick={() => setIsModalOpen(true)} type="submit" className="bg-white border-[#1A73E8] border-2 h-[56px] w-[200px] flex relative items-center justify-center rounded-md z-10 right-[50px] " >
             <img src='/contact-us.png' alt="contact us" className="pr-[12px] h-[30px] w-[42px]" />
             <p>Contact Us</p>
           </button>
+
+          <ContactModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+
         </div>
       </div>
 

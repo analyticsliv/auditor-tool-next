@@ -38,6 +38,6 @@ export async function middleware(request) {
 
 export const config = {
     matcher: [
-        '/api/audit/:path*'  // Only protect audit routes
+        // '/api/audit/:path*'  // Only protect audit routes
     ]
 };

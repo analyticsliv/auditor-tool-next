@@ -12,9 +12,9 @@ const GeneralConfig = () => {
     const [currenyMood, setCurrencyMood] = useState(true);
     const [categorymood, setCategoryMood] = useState(true);
 
-    let timezone = selectedProperty?.timeZone || 'Not Defined';
-    let currencyCode = selectedProperty?.currencyCode || 'Not Defined';
-    let category = selectedProperty?.industryCategory || 'Not Defined';
+    let timezone = endApiData?.generalConfig?.metadata?.timeZone || 'Not Defined';
+    let currencyCode = endApiData?.generalConfig?.metadata?.currencyCode || 'Not Defined';
+    let category = endApiData?.generalConfig?.industryCategory || 'Not Defined';
 
     useEffect(() => {
         if (timezone != undefined) {

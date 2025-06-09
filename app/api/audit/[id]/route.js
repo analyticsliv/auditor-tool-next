@@ -1,15 +1,16 @@
 import { authenticateUser } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
-import { NextRequest, NextResponse } from 'next/server';
-const Audit = require('../../../../models/audit'); // Adjust path based on your models location
+import Audit from '@/models/audit';
+import { NextResponse } from 'next/server';
 
-// GET - Get specific audit by ID
-export async function GET(request, { params }) {
+export async function GET(request, context) {
     try {
         // await connectDB();
-        const { user, tokenData } = await authenticateUser(request);
 
+        const { params } = context;
         const { id } = params;
+
+        const { user } = await authenticateUser(request);
 
         const auditRecord = await Audit.findOne({ _id: id, user: user._id }).exec();
 
@@ -20,9 +21,9 @@ export async function GET(request, { params }) {
         return NextResponse.json(auditRecord, { status: 200 });
     } catch (error) {
         console.error('Error fetching audit record:', error);
-        return NextResponse.json({ 
-            error: error.message, 
-            details: error.details || ["Authentication failed"] 
+        return NextResponse.json({
+            error: error.message,
+            details: error.details || ["Authentication failed"]
         }, { status: error.status || 500 });
     }
 }

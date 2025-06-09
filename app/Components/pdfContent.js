@@ -1,5 +1,4 @@
 import React, { forwardRef } from "react";
-import AuditStart from "./auditStart";
 import DataStreams from "./dataStreams";
 import GeneralConfig from "./generalConfig";
 import DataCollectionRetention from './dataCollectionRetention'
@@ -18,6 +17,7 @@ import EcomItemDetails from './ecomItemDetails'
 import Acquisitions from './acquisitions'
 import CustomDimensionMetrics from './customDimensionMetrics'
 import { useAccountStore } from "../store/useAccountStore";
+import InfoComponent from "./info";
 
 const PdfContent = forwardRef((props, ref) => {
 
@@ -35,7 +35,7 @@ const PdfContent = forwardRef((props, ref) => {
 
     return (
         <div ref={ref} style={{ padding: "8px", background: "#fff", width: "800px" }}>
-            <div><AuditStart /></div>
+            <div><InfoComponent previousAudit={true} /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><DataStreams /></div>
             <div><GeneralConfig /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><DataCollectionRetention /></div>
