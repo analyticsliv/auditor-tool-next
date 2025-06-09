@@ -4,14 +4,14 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/nextjs-app:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/nextjs-app:latest'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:latest'
       - '.'
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/nextjs-app']
+    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/auditor-tool-next']
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -19,9 +19,9 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'nextjs-app'
+      - 'auditor-tool-next'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/nextjs-app:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
       - '--region'
       - 'us-central1'
       - '--platform'
@@ -30,15 +30,22 @@ steps:
       - '--port'
       - '3000'
       - '--memory'
-      - '1Gi'
+      - '2Gi'
       - '--cpu'
       - '1'
       - '--max-instances'
       - '10'
+      - '--min-instances'
+      - '0'
+      - '--set-env-vars'
+      - 'NODE_ENV=production'
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '1200s'
 
 images:
-  - 'gcr.io/$PROJECT_ID/nextjs-app:$COMMIT_SHA'
-  - 'gcr.io/$PROJECT_ID/nextjs-app:latest'
+  - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/auditor-tool-next:latest'
