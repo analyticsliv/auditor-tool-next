@@ -43,6 +43,7 @@ export default function RootLayout({ children }) {
 
 
   const [userSession, setUserSession] = useState(null);
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [toggle, setToggle] = useState(false);
   const pathname = usePathname();
@@ -53,10 +54,8 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const session = getUserSession();
     setUserSession(session);
+    setUser(session?.user);
   }, []);
-
-  const user = userSession?.user?.name;
-  const userImage = userSession?.user?.image;
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -125,16 +124,16 @@ export default function RootLayout({ children }) {
                           GA4 <span className="text-blue-600">Auditor Tool</span>
                         </h1>
                         <div className="text-lg text-gray-600 hidden sm:block">
-                          Welcome,&nbsp;<span className="font-semibold text-gray-800">{user}</span>
+                          Welcome,&nbsp;<span className="font-semibold text-gray-800">{user?.name}</span>
                         </div>
 
                         <div className="flex items-center gap-4">
                           <div className="text-right hidden sm:block">
-                            <div className="text-sm font-semibold">{user}</div>
+                            <div className="text-sm font-semibold">{user?.name}</div>
                             <div className="text-xs text-gray-500">Admin</div>
                           </div>
-                          {userImage ?
-                            <img src={userImage} alt={user} className="rounded-full w-9 h-9 object-cover" />
+                          {user?.image ?
+                            <img src={user?.image} alt={user} className="rounded-full w-9 h-9 object-cover" />
                             : (<div className="rounded-full bg-gray-200 p-2.5">
                               <User strokeWidth={2.20} size={22} />
                             </div>)}
