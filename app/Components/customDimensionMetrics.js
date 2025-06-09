@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
-import { FaLaugh } from 'react-icons/fa';
-import { HiEmojiSad } from 'react-icons/hi';
+import { Frown, Smile } from 'lucide-react';
 
 const MoodIcon = ({ type }) => {
     const mood = type === 'bad' ? 'mood_bad' : 'mood';
@@ -31,7 +30,7 @@ const CustomDimensionMetrics = () => {
     const metrics = auditData?.customMetrics || [];
 
     return (
-        <div className='bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
 
             <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Custom Dimensions & Metrics</h1>
             <h3 className='text-center px-[10%]'>
@@ -44,15 +43,19 @@ const CustomDimensionMetrics = () => {
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th>Status</th>
-                            <th>Check</th>
-                            <th>Description</th>
+                            <th className='text-center'>Status</th>
+                            <th className='text-center'>Check</th>
+                            <th className='text-center'>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
-                            <td>
-                                {dimensions?.length ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
+                            <td className='h-[3.8rem] flex justify-center items-center'>
+                                {dimensions?.length ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}
                             </td>
                             <td>Custom Dimensions</td>
                             <td>
@@ -71,9 +74,12 @@ const CustomDimensionMetrics = () => {
                             </td>
                         </tr>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
-                            <td>
-                                {metrics?.length ? <FaLaugh className='h-8 w-14 mx-auto fill-green-600' /> : <HiEmojiSad className='h-10 w-14 mx-auto fill-red-600' />}
-                                {/* <MoodIcon type={metrics?.length ? 'good' : 'bad'} /> */}
+                            <td className='h-[3.8rem] flex justify-center items-center'>
+                                {metrics?.length ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}
                             </td>
                             <td>Custom Metrics</td>
                             <td>

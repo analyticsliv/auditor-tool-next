@@ -42,10 +42,10 @@ const Acquisitions = () => {
                 <table className='w-full'>
                     <thead>
                         <tr>
-                            <th>First user source/medium</th>
-                            <th>Sessions</th>
-                            <th>Total Users</th>
-                            <th>New Users</th>
+                            <th className='text-center'>First user source/medium</th>
+                            <th className='text-center'>Sessions</th>
+                            <th className='text-center'>Total Users</th>
+                            <th className='text-center'>New Users</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,9 +91,9 @@ const Acquisitions = () => {
                 <table className='w-full'>
                     <thead>
                         <tr>
-                            <th>Session default channel group</th>
-                            <th>Sessions</th>
-                            <th>Engaged Sessions</th>
+                            <th className='text-center'>Session default channel group</th>
+                            <th className='text-center'>Sessions</th>
+                            <th className='text-center'>Engaged Sessions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,11 +107,11 @@ const Acquisitions = () => {
 
     return (
         <div>
-            <section className='bg-white rounded-3xl p-10 mt-10'>
+            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>User Acquisition</h1>
                 {renderUserAcquisitionTable()}
             </section>
-            <section className='bg-white rounded-3xl p-10 mt-10'>
+            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>Traffic Acquisition</h1>
                 {renderTrafficAcquisitionTable()}
             </section>

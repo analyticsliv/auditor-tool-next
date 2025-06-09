@@ -33,7 +33,7 @@ const KeyEvents = () => {
 
 
     return (
-        <div className='bg-white rounded-3xl p-8 mt-10'>
+        <div className='parent-div bg-white rounded-3xl p-8 mt-10'>
             <div>
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Key Events</h1>
                 <h3 className='text-sm pb-12 text-center'>Reviewing your configured conversion

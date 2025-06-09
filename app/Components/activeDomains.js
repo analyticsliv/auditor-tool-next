@@ -88,7 +88,7 @@ const ActiveDomains = () => {
             <div>
                 <h1 className='pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem]'>Data Integrity &
                     Customization</h1>
-                <div className='bg-white rounded-3xl p-10 mt-10'>
+                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                         Active Domains
                     </h1>
