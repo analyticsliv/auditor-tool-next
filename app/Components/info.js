@@ -93,7 +93,7 @@ const InfoComponent = ({ previousAudit }) => {
                 <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
                 <div>
                   <h3 className="font-semibold text-blue-900 mb-1">
-                    Data Range Information
+                    Date Range Information
                   </h3>
                   <p className="text-sm text-blue-700">
                     We are using 30 days of data in most reports, except anomaly
