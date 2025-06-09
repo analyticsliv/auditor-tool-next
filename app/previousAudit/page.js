@@ -44,51 +44,51 @@ const PreviousAudit = () => {
     useEffect(() => {
         setCurrentPage(1);
     }, [search]);
-
+    //  bg-gradient-to-br from-[#f8f9ff] to-[#e0e7ff] 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#f8f9ff] to-[#e0e7ff] py-10 px-6">
-            <h2 className="text-3xl text-center font-extrabold text-[#3f51b5] mb-6 drop-shadow-md">
+        <div className="px-6">
+            <h2 className="text-2xl 2xl:text-3xl text-center font-extrabold text-[#3f51b5] mb-4 2xl:mb-6 drop-shadow-md">
                 🚀 Previous Audits
             </h2>
 
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-6 2xl:mb-8">
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="🔍 Search by Account or Property Name"
-                    className="w-[90%] max-w-[600px] px-5 py-3 text-base border border-[#ccc] rounded-xl shadow focus:ring-2 focus:ring-blue-400 transition duration-300"
+                    className="w-[90%] max-w-[600px] px-4 2xl:px-5 py-2 2xl:py-3 text-sm 2xl:text-base border border-[#ccc] rounded-xl shadow focus:ring-2 focus:ring-blue-400 transition duration-300"
                 />
             </div>
 
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden">
-                    <thead className="bg-[#3f51b5] text-white text-sm lg:text-base uppercase">
+                    <thead className="bg-[#3f51b5] text-white text-sm 2xl:text-base uppercase">
                         <tr>
-                            <th className="px-6 py-4 text-left">Account Name</th>
-                            <th className="px-6 py-4 text-left">Property Name</th>
-                            <th className="px-6 py-4 text-left">Created At</th>
-                            <th className="px-6 py-4 text-left">Updated At</th>
-                            <th className="px-6 py-4 text-left">Links</th>
+                            <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Account Name</th>
+                            <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Property Name</th>
+                            <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Created At</th>
+                            <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Updated At</th>
+                            <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Links</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             [...Array(3)]?.map((_, i) => (
                                 <tr key={i} className="animate-pulse bg-gray-50">
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <div className="h-4 bg-gray-300 rounded w-3/4"></div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <div className="h-4 bg-gray-300 rounded w-3/4"></div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <div className="h-4 bg-gray-300 rounded w-2/3"></div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <div className="h-4 bg-gray-300 rounded w-2/3"></div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <div className="h-8 bg-gray-300 rounded w-16"></div>
                                     </td>
                                 </tr>
@@ -97,18 +97,18 @@ const PreviousAudit = () => {
                             paginatedAudits?.map((audit, index) => (
                                 <tr
                                     key={audit?._id}
-                                    className={`text-gray-700 text-sm lg:text-base ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                    className={`text-gray-700 text-sm 2xl:text-base ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                                         } hover:bg-blue-50 transition`}
                                 >
-                                    <td className="px-6 py-4">{audit?.accountName}</td>
-                                    <td className="px-6 py-4">{audit?.propertyName}</td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">{audit?.accountName}</td>
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">{audit?.propertyName}</td>
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         {new Date(audit?.createdAt).toLocaleString()}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         {new Date(audit?.updatedAt).toLocaleString()}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="2xl:px-6 px-4 py-3 2xl:py-4">
                                         <button
                                             onClick={() => handleView(audit?._id)}
                                             className="bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition duration-200"
@@ -131,11 +131,11 @@ const PreviousAudit = () => {
 
             {/* Pagination Controls */}
             {!loading && totalPages > 1 && (
-                <div className="mt-8 flex justify-center items-center gap-2 flex-wrap">
+                <div className="mt-5 2xl:mt-6 flex justify-center items-center gap-2 flex-wrap">
                     <button
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
                     >
                         Previous
                     </button>
@@ -144,7 +144,7 @@ const PreviousAudit = () => {
                         <button
                             key={index}
                             onClick={() => setCurrentPage(index + 1)}
-                            className={`px-4 py-2 rounded-md border ${currentPage === index + 1
+                            className={`text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 rounded-md border ${currentPage === index + 1
                                 ? 'bg-blue-600 text-white'
                                 : 'bg-white text-blue-600 hover:bg-blue-50'
                                 }`}
@@ -156,7 +156,7 @@ const PreviousAudit = () => {
                     <button
                         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
                     >
                         Next
                     </button>
