@@ -1,4 +1,5 @@
 import { sendSimpleAuditNotification } from "./genrateAuditTemplate";
+import { sendEmail } from "./sendMail";
 
 
 
@@ -8,7 +9,7 @@ export async function notifyUserAuditComplete(userName, userEmail, propertyName,
             userName,
             userEmail,
             propertyName,
-            auditUrl: `${process.env.NEXTAUTH_URL}/audit-report/${auditId}`
+            auditUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/previous-audit?id=${auditId}`
         };
 
         await sendSimpleAuditNotification(

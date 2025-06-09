@@ -1,9 +1,11 @@
 import moment from "moment";
 import { fetchAuditData, reportEndApiCall } from "./endApi";
 import { useAccountStore } from "../store/useAccountStore";
+import { saveAudit } from "./saveAudit";
+// import { notifyUserAuditComplete } from "./sendAuditReport";
 
 export const runCallApiInChunks = async (batchIndex) => {
-  const { dateRange } = useAccountStore.getState(); // Fetch fresh state every call
+  const { dateRange, accountId, propertyId, selectedAccount, selectedProperty } = useAccountStore.getState(); // Fetch fresh state every call
 
   const endDate = moment(dateRange?.endDate);
   const startDate = moment(dateRange?.startDate);
@@ -235,32 +237,30 @@ export const runCallApiInChunks = async (batchIndex) => {
       await reportEndApiCall("ConversionAnomaly", ConversionAnomaly);
     },
     async () => {
-      await reportEndApiCall("ecomTracking", ecomTracking);
-      reportEndApiCall("itemView", itemView);
-      reportEndApiCall("addToCart", addToCart);
-      reportEndApiCall("checkout", checkout);
-      reportEndApiCall("purchase", purchase);
-      reportEndApiCall("beginCheckout", beginCheckout);
-      await reportEndApiCall("shipingInfo", shipingInfo);
-      reportEndApiCall("paymentInfo", paymentInfo);
-      await runEcomItemsDetailsWithMultipleMetrics();
-      reportEndApiCall("userAcquisition", userAcquisition);
-      reportEndApiCall("trafficAcquisition", trafficAcquisition);
-      fetchAuditData("customDimensions", "customDimensions");
-      await fetchAuditData("customMetrics", "customMetrics");
-    },
-  ];
+      await Promise.all([
+        reportEndApiCall("ecomTracking", ecomTracking),
+        reportEndApiCall("itemView", itemView),
+        reportEndApiCall("addToCart", addToCart),
+        reportEndApiCall("checkout", checkout),
+        reportEndApiCall("purchase", purchase),
+        reportEndApiCall("beginCheckout", beginCheckout),
+        reportEndApiCall("shipingInfo", shipingInfo),
+        reportEndApiCall("paymentInfo", paymentInfo),
+        reportEndApiCall("userAcquisition", userAcquisition),
+        reportEndApiCall("trafficAcquisition", trafficAcquisition),
+        fetchAuditData("customDimensions", "customDimensions"),
+        fetchAuditData("customMetrics", "customMetrics"),
+        runEcomItemsDetailsWithMultipleMetrics()
+      ]);
 
+      // ✅ Only called after all above async operations are complete
+      await saveAudit(accountId, propertyId, selectedAccount, selectedProperty);
+
+      // await notifyUserAuditComplete('Atul verma', 'atul.verma@analyticsliv.com', selectedProperty.displayName, '684036dd6eace3ecea3a6cbf');
+    }
+  ]
   const batch = callApiBatches[batchIndex];
   if (batch) {
-    console.log("store-date-callapi", dateRange);
-    console.log(
-      "formattedStartDate, end,start90,end90",
-      formattedStartDate,
-      formattedEndDate,
-      formattedStartDate90,
-      formattedEndDate90
-    );
     await batch();
   }
 };
