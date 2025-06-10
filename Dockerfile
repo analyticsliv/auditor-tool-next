@@ -6,6 +6,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+
 # Copy package files
 COPY package.json package-lock.json* ./
 RUN \
