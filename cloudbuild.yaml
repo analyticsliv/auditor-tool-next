@@ -1,24 +1,27 @@
 steps:
-  # Build and push Docker image
+  # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: 
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/auditor-tool-next'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:latest'
       - '.'
-    timeout: '1200s'
 
+  # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/auditor-tool-next']
+    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/auditor-tool-next']
 
-  # Deploy to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
+  # Deploy to Cloud Run (will use your existing env vars)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
       - 'auditor-tool-next'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/auditor-tool-next'
+      - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
       - '--region'
       - 'us-central1'
       - '--platform'
@@ -29,4 +32,12 @@ steps:
       - '--memory'
       - '2Gi'
 
-timeout: '1800s'
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '1200s'
+
+images:
+  - 'gcr.io/$PROJECT_ID/auditor-tool-next:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/auditor-tool-next:latest'
