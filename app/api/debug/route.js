@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 export async function GET() {
     return Response.json({
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
