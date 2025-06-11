@@ -66,7 +66,8 @@ export const authOptions = {
       return session;
     },
   },
-  url: process.env.NEXTAUTH_URL ,
+  // url: process.env.NEXTAUTH_URL ,
+  url: "https://ga4auditor.analyticsliv.com",
   secret: process.env.NEXTAUTH_SECRET,
 
   // // ✅ Add debug logging (remove after fixing)
