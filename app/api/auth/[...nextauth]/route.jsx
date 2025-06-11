@@ -66,34 +66,25 @@ export const authOptions = {
       return session;
     },
   },
+  url: process.env.NEXT_PUBLIC_BASE_URL,
+  secret: process.env.NEXTAUTH_SECRET,
+
+  // // ✅ Add debug logging (remove after fixing)
+  // debug: process.env.NODE_ENV === 'development',
+
+  // // ✅ Ensure cookies work with your domain
+  // cookies: {
+  //   sessionToken: {
+  //     name: `next-auth.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'lax',
+  //       path: '/',
+  //       secure: process.env.NODE_ENV === 'production'
+  //     }
+  //   }
+  // }
 };
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
-
-
-
-
-
-
-
-
-
-
-// import NextAuth from "next-auth";
-// import GoogleProvider from "next-auth/providers/google";
-
-// export const authOptions = {
-//   providers: [
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     }),
-//   ],
-//   pages: {
-//     signIn: "/login", // Redirect here if login is required
-//   },
-// };
-
-// const handler = NextAuth(authOptions);
-// export { handler as GET, handler as POST };
