@@ -9,7 +9,7 @@ export async function notifyUserAuditComplete(userName, userEmail, propertyName,
             userName,
             userEmail,
             propertyName,
-            auditUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/previous-audit?id=${auditId}`
+            auditUrl: `${process.env.NEXTAUTH_URL }/previous-audit?id=${auditId}`
         };
 
         await sendSimpleAuditNotification(

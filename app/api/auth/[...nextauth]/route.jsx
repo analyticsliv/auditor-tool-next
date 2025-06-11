@@ -66,7 +66,7 @@ export const authOptions = {
       return session;
     },
   },
-  url: process.env.NEXT_PUBLIC_BASE_URL,
+  url: process.env.NEXTAUTH_URL ,
   secret: process.env.NEXTAUTH_SECRET,
 
   // // ✅ Add debug logging (remove after fixing)

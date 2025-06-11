@@ -21,7 +21,7 @@ export async function saveAudit(accountId, propertyId, selectedAccount, selected
     const user = getUserSession();
 
     try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/audit`
+        const apiUrl = `${process.env.NEXTAUTH_URL }/api/audit`
 
         const response = await fetch(apiUrl, {
             method: 'POST',
