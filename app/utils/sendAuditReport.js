@@ -9,7 +9,7 @@ export async function notifyUserAuditComplete(userName, userEmail, propertyName,
             userName,
             userEmail,
             propertyName,
-            auditUrl: `${process.env.NEXTAUTH_URL }/previous-audit?id=${auditId}`
+            auditUrl: `https://ga4auditor.analyticsliv.com/previous-audit?id=${auditId}`
         };
 
         await sendSimpleAuditNotification(
