@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AllAudit } from '../utils/allAudit';
 
 const ITEMS_PER_PAGE = 5;
@@ -10,15 +10,23 @@ const PreviousAudit = () => {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const hasFetchedRef = useRef(false); // 🚫 Prevent multiple API calls
 
     useEffect(() => {
-        const fetchAudits = async () => {
-            setLoading(true);
-            const data = await AllAudit();
-            setAudits(data || []);
-            setLoading(false);
-        };
-        fetchAudits();
+        if (!hasFetchedRef.current) {
+            hasFetchedRef.current = true; // ✅ Set ref to true after first call
+            const fetchAudits = async () => {
+                setLoading(true);
+                try {
+                    const data = await AllAudit();
+                    setAudits(data || []);
+                } catch (error) {
+                    console.error("Failed to fetch audits:", error);
+                }
+                setLoading(false);
+            };
+            fetchAudits();
+        }
     }, []);
 
     const handleView = (id) => {
@@ -44,7 +52,7 @@ const PreviousAudit = () => {
     useEffect(() => {
         setCurrentPage(1);
     }, [search]);
-    //  bg-gradient-to-br from-[#f8f9ff] to-[#e0e7ff] 
+
     return (
         <div className="px-6">
             <h2 className="text-2xl 2xl:text-3xl text-center font-extrabold text-[#3f51b5] mb-4 2xl:mb-6 drop-shadow-md">

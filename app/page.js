@@ -64,13 +64,14 @@ const Home = () => {
   const [loadingProperties, setLoadingProperties] = useState(false);
 
   const dropdownRef = useRef(null);
+  const hasFetchedRef = useRef(false);
 
   const user = getUserSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!hasFetchedAccounts && session) {
-      // Fetch accounts only if they haven't been fetched before
+    if (!hasFetchedRef.current && !hasFetchedAccounts && session) {
+      hasFetchedRef.current = true; // prevent future executions
       const userData = { given_name: user };
       setLoadingAccounts(true);
       fetchAccountSummaries(userData, router).finally(() =>
@@ -79,7 +80,7 @@ const Home = () => {
     } else {
       setLoadingAccounts(false);
     }
-  }, [fetchAccountSummaries, hasFetchedAccounts, session]);
+  }, [session]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
