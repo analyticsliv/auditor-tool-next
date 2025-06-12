@@ -11,23 +11,23 @@ const EcomFunnels = () => {
 
   const extractCount = (data) => {
     if (!data?.rows || data?.rows?.length === 0) return 0;
-    return parseInt(data.rows[0].metricValues[0].value || '0');
+    return parseInt(data?.rows[0]?.metricValues[0].value || '0');
   };
 
   useEffect(() => {
     if (endApiData) {
       const purchase = [
-        { label: 'Item View', value: extractCount(endApiData.itemView), color: '#6366f1' },
-        { label: 'Add to Cart', value: extractCount(endApiData.addToCart), color: '#8b5cf6' },
-        { label: 'Checkout', value: extractCount(endApiData.checkout), color: '#ec4899' },
-        { label: 'Purchase', value: extractCount(endApiData.purchase), color: '#ef4444' }
+        { label: 'Item View', value: extractCount(endApiData?.itemView), color: '#6366f1' },
+        { label: 'Add to Cart', value: extractCount(endApiData?.addToCart), color: '#8b5cf6' },
+        { label: 'Checkout', value: extractCount(endApiData?.checkout), color: '#ec4899' },
+        { label: 'Purchase', value: extractCount(endApiData?.purchase), color: '#ef4444' }
       ];
 
       const checkout = [
-        { label: 'Begin Checkout', value: extractCount(endApiData.beginCheckout), color: '#06b6d4' },
-        { label: 'Add Shipping Info', value: extractCount(endApiData.shipingInfo), color: '#3b82f6' },
-        { label: 'Add Payment Info', value: extractCount(endApiData.payment), color: '#10b981' },
-        { label: 'Purchase', value: extractCount(endApiData.purchase), color: '#f97316' }
+        { label: 'Begin Checkout', value: extractCount(endApiData?.beginCheckout), color: '#06b6d4' },
+        { label: 'Add Shipping Info', value: extractCount(endApiData?.shipingInfo), color: '#3b82f6' },
+        { label: 'Add Payment Info', value: extractCount(endApiData?.paymentInfo), color: '#10b981' },
+        { label: 'Purchase', value: extractCount(endApiData?.purchase), color: '#f97316' }
       ];
 
       setPurchaseData(purchase);
@@ -35,11 +35,11 @@ const EcomFunnels = () => {
     }
   }, [endApiData]);
 
-  if (!purchaseData.length || !checkoutData.length) return null;
+  if (!purchaseData?.length || !checkoutData?.length) return null;
 
   return (
     <div>
-      {purchaseData.find(step => step.label === 'Add to Cart')?.value > 0 && (
+      {purchaseData?.find(step => step?.label === 'Add to Cart')?.value > 0 && (
         <>
           {/* Purchase Funnel Block */}
           <div className="parent-div bg-white rounded-3xl p-10 mt-10">
@@ -116,16 +116,16 @@ const FunnelContent = ({ data }) => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 w-full lg:max-w-md mt-6 lg:mt-0">
-        <StatCard label="Top of Funnel" value={data[0].value.toLocaleString()} color="text-indigo-600" />
+        <StatCard label="Top of Funnel" value={data[0]?.value.toLocaleString()} color="text-indigo-600" />
         <StatCard
           label="Conversion"
-          value={`${((data[data.length - 1].value / data[0].value) * 100).toFixed(1)}%`}
+          value={`${((data[data.length - 1]?.value / data[0]?.value) * 100).toFixed(1)}%`}
           color="text-purple-600"
         />
-        <StatCard label="Purchases" value={data[data.length - 1].value.toLocaleString()} color="text-pink-600" />
+        <StatCard label="Purchases" value={data[data.length - 1]?.value.toLocaleString()} color="text-pink-600" />
         <StatCard
           label="Drop-offs"
-          value={(data[0].value - data[data.length - 1].value).toLocaleString()}
+          value={(data[0]?.value - data[data.length - 1]?.value).toLocaleString()}
           color="text-red-600"
         />
       </div>
