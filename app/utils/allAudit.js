@@ -5,7 +5,7 @@ export async function AllAudit() {
     try {
         const user = getUserSession();
 
-        const apiUrl = `${process.env.NEXTAUTH_URL }/api/audit`;
+        const apiUrl = `/api/audit`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',

@@ -4,7 +4,7 @@ export async function GetAuditById(id) {
     const user = getUserSession();
     const accessToken = localStorage.getItem('accessToken');
     try {
-        const apiUrl = `${process.env.NEXTAUTH_URL }/api/audit/${id}`;
+        const apiUrl = `/api/audit/${id}`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',

@@ -26,7 +26,7 @@ export async function sendUserData(userDetail, accountSummaries) {
     console.log("userDatauserDatauserDatauserData--", userData)
     const accessToken = localStorage.getItem("accessToken");
     try {
-        const apiUrl = `${process.env.NEXTAUTH_URL }/api/user`;
+        const apiUrl = `/api/user`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
