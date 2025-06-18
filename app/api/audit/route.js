@@ -49,9 +49,9 @@ export async function POST(request) {
         }
     } catch (error) {
         console.error('Error storing Audit report:', error);
-        return NextResponse.json({ 
-            error: error.message, 
-            details: error.details || ["Authentication failed"] 
+        return NextResponse.json({
+            error: error.message,
+            details: error.details || ["Authentication failed"]
         }, { status: error.status || 500 });
     }
 }
@@ -59,12 +59,15 @@ export async function POST(request) {
 // GET - Get all audits for user
 export async function GET(request) {
     try {
+        await connectDB();
         // Get user from request (you'll need to implement auth middleware)
         const { user, tokenData } = await authenticateUser(request);
+        console.log("user in /api/audit---",user._id)
 
         const auditRecords = await Audit.find({ user: user._id }).exec();
+        console.log("auditrecoedd in db 00----",auditRecords?.length)
 
-        if (auditRecords.length === 0) {
+        if (auditRecords?.length === 0) {
             return NextResponse.json({ message: 'No audit records found for the user' }, { status: 404 });
         }
 
