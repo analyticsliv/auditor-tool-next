@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
     { icon: <Home size={20} />, label: "Home", path: "/" },
     { icon: <BarChart size={20} />, label: "Audit Preview", path: "/auditPreview" },
     { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
-    { icon: <User size={20} />, label: "Account Details", path: "/2" },
+    { icon: <User size={20} />, label: "Account Details", path: "/account" },
     { icon: <FileText size={20} />, label: "Previous Audits", path: "/previousAudit" },
   ];
 
@@ -147,9 +147,9 @@ export default function RootLayout({ children }) {
                           <nav className="flex flex-col h-full">
                             <div className="flex-1 pt-6">
                               {menuItems?.map((item) => {
-                                const isDisabled = disableMenus && item?.label !== "Home" && item?.label !== "Previous Audits";
+                                const isDisabled = disableMenus && item?.label !== "Home"
+                                 && item?.label !== "Dashboard" && item?.label !== "Account Details" && item?.label !== "Previous Audits";
                                 const isActive = pathname === item.path;
-
                                 return (
                                   <Link key={item?.path} href={isDisabled ? "#" : item?.path}>
                                     <div
