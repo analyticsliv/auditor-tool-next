@@ -64,7 +64,9 @@ export async function GET(request) {
         const { user, tokenData } = await authenticateUser(request);
         console.log("user in /api/audit---",user._id)
 
-        const auditRecords = await Audit.find({ user: user._id }).exec();
+        const auditRecords = await Audit.find({ user: user._id })
+            .select('-auditData -endApiData')
+            .exec();
         console.log("auditrecoedd in db 00----",auditRecords?.length)
 
         if (auditRecords?.length === 0) {
