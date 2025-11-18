@@ -65,7 +65,9 @@ export async function GET(request) {
         // Get user from request (you'll need to implement auth middleware)
         const { user, tokenData } = await authenticateUser(request);
 
-        const auditRecords = await Audit.find({ user: user._id }).exec();
+        const auditRecords = await Audit.find({ user: user._id })
+            .select('-auditData -endApiData')
+            .exec();
 
         if (auditRecords?.length === 0) {
             return NextResponse.json({ message: 'No audit records found for the user' }, { status: 404 });
