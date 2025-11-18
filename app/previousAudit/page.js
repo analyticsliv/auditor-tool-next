@@ -56,7 +56,7 @@ const PreviousAudit = () => {
     return (
         <div className="px-6">
             <h2 className="text-2xl 2xl:text-3xl text-center font-extrabold text-[#3f51b5] mb-4 2xl:mb-6 drop-shadow-md">
-                🚀 Previous Audits
+                🚀 All Audits
             </h2>
 
             <div className="flex justify-center mb-6 2xl:mb-8">
