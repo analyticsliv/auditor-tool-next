@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
 import { useRouter } from 'next/navigation';
 import { runCallApiInChunks, callApiBatchesCount } from '../utils/callApis';
-import componentsList from '../utils/componentList';
+import { getComponentsList } from '../utils/componentList';
 import AuditStart from '../Components/auditStart';
 import InfoComponent from '../Components/info';
 import Loader from '../Components/loader';
@@ -29,6 +29,8 @@ const AuditPreview = () => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const hasRunRef = useRef(false);
+
+  const componentsList = getComponentsList();
 
   // Handle missing property on direct page load
   useEffect(() => {
@@ -90,7 +92,6 @@ const AuditPreview = () => {
           <Loader />
           <div className="mt-4 text-center text-sm text-gray-500">Running audit...</div>
         </div>
-
       )}
     </div>
   );

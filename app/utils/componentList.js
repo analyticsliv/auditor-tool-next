@@ -19,9 +19,12 @@ import DownloadPdf from '../Components/downloadPdf';
 import { useAccountStore } from '../store/useAccountStore';
 
 // Function that returns components based on isEcommerce flag
-export const getComponentsList = () => {
-    const { isEcommerce } = useAccountStore.getState();
-    console.log("isecommerce-----", isEcommerce)
+export const getComponentsList = (isEcommerceOverride) => {
+    // Use override if provided, otherwise get from store
+    const isEcommerce = isEcommerceOverride !== undefined
+        ? isEcommerceOverride
+        : useAccountStore.getState().isEcommerce;
+
     const baseComponents = [
         DataStreams,
         GeneralConfig,
