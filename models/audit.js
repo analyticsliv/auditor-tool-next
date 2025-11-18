@@ -35,7 +35,10 @@ const AuditSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    isEcommerce: {
+        type: Boolean,
+    },
 });
 
 // Update the updatedAt field before saving

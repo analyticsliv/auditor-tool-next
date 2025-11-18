@@ -5,7 +5,7 @@ import { saveAudit } from "./saveAudit";
 // import { notifyUserAuditComplete } from "./sendAuditReport";
 
 export const runCallApiInChunks = async (batchIndex) => {
-  const { dateRange, accountId, propertyId, selectedAccount, selectedProperty } = useAccountStore.getState(); // Fetch fresh state every call
+  const { dateRange, accountId, propertyId, selectedAccount, selectedProperty, isEcommerce } = useAccountStore.getState();
 
   const endDate = moment(dateRange?.endDate);
   const startDate = moment(dateRange?.startDate);
@@ -56,34 +56,6 @@ export const runCallApiInChunks = async (batchIndex) => {
     metrics: [{ name: "keyEvents" }, { name: "eventvalue" }],
     dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
   };
-
-  const ecomTracking = {
-    dimensions: [{ name: "transactionId" }],
-    metrics: [{ name: "transactions" }, { name: "totalRevenue" }],
-    dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
-    keepEmptyRows: true,
-  };
-
-  const dimensionFilterFactory = (eventName) => ({
-    dimensions: [{ name: "eventName" }],
-    metrics: [{ name: "totalUsers" }],
-    dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
-    dimensionFilter: {
-      filter: {
-        stringFilter: { matchType: "EXACT", value: eventName },
-        fieldName: "eventName",
-      },
-    },
-    limit: "5000",
-  });
-
-  const itemView = dimensionFilterFactory("view_item");
-  const addToCart = dimensionFilterFactory("add_to_cart");
-  const checkout = dimensionFilterFactory("begin_checkout");
-  const purchase = dimensionFilterFactory("purchase");
-  const beginCheckout = dimensionFilterFactory("begin_checkout");
-  const shipingInfo = dimensionFilterFactory("add_shipping_info");
-  const paymentInfo = dimensionFilterFactory("add_payment_info");
 
   const userAcquisition = {
     dimensions: [{ name: "sessionSourceMedium" }],
@@ -175,6 +147,35 @@ export const runCallApiInChunks = async (batchIndex) => {
     orderBys: [{ dimension: { dimensionName: "date" }, desc: false }],
   };
 
+  // Ecommerce-related payloads (only used if isEcommerce is true)
+  const ecomTracking = {
+    dimensions: [{ name: "transactionId" }],
+    metrics: [{ name: "transactions" }, { name: "totalRevenue" }],
+    dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
+    keepEmptyRows: true,
+  };
+
+  const dimensionFilterFactory = (eventName) => ({
+    dimensions: [{ name: "eventName" }],
+    metrics: [{ name: "totalUsers" }],
+    dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
+    dimensionFilter: {
+      filter: {
+        stringFilter: { matchType: "EXACT", value: eventName },
+        fieldName: "eventName",
+      },
+    },
+    limit: "5000",
+  });
+
+  const itemView = dimensionFilterFactory("view_item");
+  const addToCart = dimensionFilterFactory("add_to_cart");
+  const checkout = dimensionFilterFactory("begin_checkout");
+  const purchase = dimensionFilterFactory("purchase");
+  const beginCheckout = dimensionFilterFactory("begin_checkout");
+  const shipingInfo = dimensionFilterFactory("add_shipping_info");
+  const paymentInfo = dimensionFilterFactory("add_payment_info");
+
   const runEcomItemsDetailsWithMultipleMetrics = async () => {
     const extraMetrics = [
       { key: "ecomItems_addToCart", metric: "itemsAddedToCart" },
@@ -237,28 +238,32 @@ export const runCallApiInChunks = async (batchIndex) => {
       await reportEndApiCall("ConversionAnomaly", ConversionAnomaly);
     },
     async () => {
-      await Promise.all([
-        reportEndApiCall("ecomTracking", ecomTracking),
-        reportEndApiCall("itemView", itemView),
-        reportEndApiCall("addToCart", addToCart),
-        reportEndApiCall("checkout", checkout),
-        reportEndApiCall("purchase", purchase),
-        reportEndApiCall("beginCheckout", beginCheckout),
-        reportEndApiCall("shipingInfo", shipingInfo),
-        reportEndApiCall("paymentInfo", paymentInfo),
-        reportEndApiCall("userAcquisition", userAcquisition),
-        reportEndApiCall("trafficAcquisition", trafficAcquisition),
-        fetchAuditData("customDimensions", "customDimensions"),
-        fetchAuditData("customMetrics", "customMetrics"),
-        runEcomItemsDetailsWithMultipleMetrics()
-      ]);
+      // Execute ecommerce APIs sequentially if isEcommerce is true
+      if (isEcommerce) {
+        await reportEndApiCall("ecomTracking", ecomTracking);
+        await reportEndApiCall("itemView", itemView);
+        await reportEndApiCall("addToCart", addToCart);
+        await reportEndApiCall("checkout", checkout);
+        await reportEndApiCall("purchase", purchase);
+        await reportEndApiCall("beginCheckout", beginCheckout);
+        await reportEndApiCall("shipingInfo", shipingInfo);
+        await reportEndApiCall("paymentInfo", paymentInfo);
+        await runEcomItemsDetailsWithMultipleMetrics();
+      }
+
+      // Execute remaining APIs sequentially
+      await reportEndApiCall("userAcquisition", userAcquisition);
+      await reportEndApiCall("trafficAcquisition", trafficAcquisition);
+      await fetchAuditData("customDimensions", "customDimensions");
+      await fetchAuditData("customMetrics", "customMetrics");
 
       // ✅ Only called after all above async operations are complete
-      await saveAudit(accountId, propertyId, selectedAccount, selectedProperty);
+      await saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce);
 
       // await notifyUserAuditComplete('Atul verma', 'atul.verma@analyticsliv.com', selectedProperty.displayName, '684036dd6eace3ecea3a6cbf');
     }
   ]
+
   const batch = callApiBatches[batchIndex];
   if (batch) {
     await batch();

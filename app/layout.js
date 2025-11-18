@@ -8,9 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "./utils/user";
 import { useAccountStore } from "./store/useAccountStore";
-import { Home, BarChart, LayoutDashboard, User, FileText, LogOut, Menu, ChevronLeft, ChevronRight } from "lucide-react";
-import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
-import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { Home, BarChart, LayoutDashboard, User, FileText, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import Loader from "./Components/loader";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +36,7 @@ export default function RootLayout({ children }) {
     { icon: <BarChart size={20} />, label: "Audit Preview", path: "/auditPreview" },
     { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
     { icon: <User size={20} />, label: "Account Details", path: "/account" },
-    { icon: <FileText size={20} />, label: "Previous Audits", path: "/previousAudit" },
+    { icon: <FileText size={20} />, label: "All Audits", path: "/previousAudit" },
   ];
 
 
@@ -148,7 +146,7 @@ export default function RootLayout({ children }) {
                             <div className="flex-1 pt-6">
                               {menuItems?.map((item) => {
                                 const isDisabled = disableMenus && item?.label !== "Home"
-                                 && item?.label !== "Dashboard" && item?.label !== "Account Details" && item?.label !== "Previous Audits";
+                                  && item?.label !== "Dashboard" && item?.label !== "Account Details" && item?.label !== "All Audits";
                                 const isActive = pathname === item.path;
                                 return (
                                   <Link key={item?.path} href={isDisabled ? "#" : item?.path}>

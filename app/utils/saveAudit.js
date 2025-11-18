@@ -1,7 +1,7 @@
 import { useAccountStore } from "../store/useAccountStore";
 import { getUserSession } from "./user";
 
-export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty) {
+export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce) {
     // const { auditData, endApiData } = useAccountStore.getState();
     // selectedAccount?.displayName
 
@@ -16,6 +16,7 @@ export async function saveAudit(accountId, propertyId, selectedAccount, selected
         "endApiData": endApiData,
         "accountName": selectedAccount?.displayName,
         "propertyName": selectedProperty?.displayName,
+        "isEcommerce": isEcommerce,
     }
 
     const user = getUserSession();

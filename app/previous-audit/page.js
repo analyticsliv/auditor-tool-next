@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { GetAuditById } from '../utils/getAuditById';
-import componentList from '../utils/componentList';
+import { getComponentsList } from '../utils/componentList';
 import Loader from '../Components/loader';
 import { useAccountStore } from '../store/useAccountStore';
 import InfoComponent from '../Components/info';
@@ -14,9 +14,11 @@ const AuditDetailPage = () => {
 
     const setAuditData = useAccountStore((state) => state.setAuditData);
     const setEndApiData = useAccountStore((state) => state.setEndApiData);
+    const setIsEcommerce = useAccountStore((state) => state.setIsEcommerce);
     const resetSelection = useAccountStore((state) => state.resetSelection);
 
     const [loading, setLoading] = useState(true);
+    const [isEcommerceFromApi, setIsEcommerceFromApi] = useState(false);
     const fetchedRef = useRef(false);
 
     useEffect(() => {
@@ -31,13 +33,22 @@ const AuditDetailPage = () => {
             const data = await GetAuditById(id);
 
             if (data) {
-                const { auditData = {}, endApiData = {} } = data;
+                const {
+                    auditData = {},
+                    endApiData = {},
+                    isEcommerce = false
+                } = data;
+
                 const {
                     accountId,
                     accountName,
                     propertyId,
                     propertyName,
                 } = data;
+
+                setIsEcommerceFromApi(isEcommerce);
+                setIsEcommerce(isEcommerce);
+
                 useAccountStore.getState().setAccountDetailsFromAudit({
                     accountId,
                     accountName,
@@ -71,6 +82,9 @@ const AuditDetailPage = () => {
         fetchAudit();
     }, [id, setAuditData, setEndApiData, resetSelection]);
 
+    // Get dynamic component list based on isEcommerce from API
+    const componentsList = getComponentsList(isEcommerceFromApi);
+
     return (
         <div>
             {loading ? (
@@ -80,7 +94,7 @@ const AuditDetailPage = () => {
             ) : (
                 <>
                     <InfoComponent previousAudit={true} />
-                    {componentList?.map((Component, idx) => <Component key={idx} />)}
+                    {componentsList?.map((Component, idx) => <Component key={idx} />)}
                 </>
             )}
         </div>

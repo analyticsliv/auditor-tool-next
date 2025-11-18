@@ -109,23 +109,14 @@ const ConversionAnomaly = () => {
                                                 <circle
                                                     cx={cx}
                                                     cy={cy}
-                                                    r={isAnomaly ? 5 : 4}
+                                                    r={isAnomaly ? 6 : 4}
                                                     fill={isAnomaly ? "red" : "white"}
                                                     stroke={isAnomaly ? "red" : "green"}
-                                                    strokeWidth={1}
+                                                    strokeWidth={2}
                                                 />
                                             );
                                         }}
                                     />
-                                    {convAnomalies?.length > 0 && (
-                                        <Line
-                                            type="monotone"
-                                            dataKey="purchases"
-                                            stroke="red"
-                                            strokeWidth={2}
-                                            dot={{ fill: "red", stroke: "red", r: 7 }}
-                                        />
-                                    )}
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>

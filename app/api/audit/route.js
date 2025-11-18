@@ -10,7 +10,7 @@ export async function POST(request) {
         // Get user from request (you'll need to implement auth middleware)
         // await connectDB();
         const { user, tokenData } = await authenticateUser(request);
-        const { propertyId, accountId, auditData, endApiData, accountName, propertyName } = await request.json();
+        const { propertyId, accountId, auditData, endApiData, accountName, propertyName, isEcommerce } = await request.json();
 
         if (!propertyId || !accountId || !auditData || !endApiData) {
             return NextResponse.json({ error: 'Some content are missing' }, { status: 400 });
@@ -30,6 +30,7 @@ export async function POST(request) {
             // Update the existing audit entry
             audit.auditData = auditData;
             audit.endApiData = endApiData;
+            audit.isEcommerce = isEcommerce
             audit.updatedAt = moment();
             await audit.save();
             return NextResponse.json({ message: 'Audit entry updated successfully', audit }, { status: 200 });
@@ -42,7 +43,8 @@ export async function POST(request) {
                 auditData,
                 endApiData,
                 accountName,
-                propertyName
+                propertyName,
+                isEcommerce
             });
             await audit.save();
             return NextResponse.json({ message: 'Audit entry created successfully', audit }, { status: 201 });
@@ -62,12 +64,10 @@ export async function GET(request) {
         await connectDB();
         // Get user from request (you'll need to implement auth middleware)
         const { user, tokenData } = await authenticateUser(request);
-        console.log("user in /api/audit---",user._id)
 
         const auditRecords = await Audit.find({ user: user._id })
             .select('-auditData -endApiData')
             .exec();
-        console.log("auditrecoedd in db 00----",auditRecords?.length)
 
         if (auditRecords?.length === 0) {
             return NextResponse.json({ message: 'No audit records found for the user' }, { status: 404 });
@@ -76,9 +76,9 @@ export async function GET(request) {
         return NextResponse.json(auditRecords, { status: 200 });
     } catch (error) {
         console.error('Error fetching audit records:', error);
-        return NextResponse.json({ 
-            error: error.message, 
-            details: error.details || ["Authentication failed"] 
+        return NextResponse.json({
+            error: error.message,
+            details: error.details || ["Authentication failed"]
         }, { status: error.status || 500 });
     }
 }
