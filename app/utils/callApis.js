@@ -238,28 +238,24 @@ export const runCallApiInChunks = async (batchIndex) => {
       await reportEndApiCall("ConversionAnomaly", ConversionAnomaly);
     },
     async () => {
-      // Conditional ecommerce API calls
-      const ecommerceAPIs = isEcommerce
-        ? [
-          reportEndApiCall("ecomTracking", ecomTracking),
-          reportEndApiCall("itemView", itemView),
-          reportEndApiCall("addToCart", addToCart),
-          reportEndApiCall("checkout", checkout),
-          reportEndApiCall("purchase", purchase),
-          reportEndApiCall("beginCheckout", beginCheckout),
-          reportEndApiCall("shipingInfo", shipingInfo),
-          reportEndApiCall("paymentInfo", paymentInfo),
-          runEcomItemsDetailsWithMultipleMetrics()
-        ]
-        : [];
+      // Execute ecommerce APIs sequentially if isEcommerce is true
+      if (isEcommerce) {
+        await reportEndApiCall("ecomTracking", ecomTracking);
+        await reportEndApiCall("itemView", itemView);
+        await reportEndApiCall("addToCart", addToCart);
+        await reportEndApiCall("checkout", checkout);
+        await reportEndApiCall("purchase", purchase);
+        await reportEndApiCall("beginCheckout", beginCheckout);
+        await reportEndApiCall("shipingInfo", shipingInfo);
+        await reportEndApiCall("paymentInfo", paymentInfo);
+        await runEcomItemsDetailsWithMultipleMetrics();
+      }
 
-      await Promise.all([
-        ...ecommerceAPIs,
-        reportEndApiCall("userAcquisition", userAcquisition),
-        reportEndApiCall("trafficAcquisition", trafficAcquisition),
-        fetchAuditData("customDimensions", "customDimensions"),
-        fetchAuditData("customMetrics", "customMetrics"),
-      ]);
+      // Execute remaining APIs sequentially
+      await reportEndApiCall("userAcquisition", userAcquisition);
+      await reportEndApiCall("trafficAcquisition", trafficAcquisition);
+      await fetchAuditData("customDimensions", "customDimensions");
+      await fetchAuditData("customMetrics", "customMetrics");
 
       // ✅ Only called after all above async operations are complete
       await saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce);
