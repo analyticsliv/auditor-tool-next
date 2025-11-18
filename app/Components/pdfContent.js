@@ -19,16 +19,23 @@ import CustomDimensionMetrics from './customDimensionMetrics'
 import { useAccountStore } from "../store/useAccountStore";
 import InfoComponent from "./info";
 
-const PdfContent = forwardRef((props, ref) => {
+const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
 
-    const { endApiData } = useAccountStore();
+    const { endApiData, isEcommerce: isEcommerceFromStore } = useAccountStore();
+
+    // Use override if provided, otherwise use store value
+    const isEcommerce = isEcommerceOverride !== undefined
+        ? isEcommerceOverride
+        : isEcommerceFromStore;
 
     const hasAddToCartData = () => {
+        if (!isEcommerce) return false;
         const value = endApiData?.addToCart?.rows?.[0]?.metricValues?.[0]?.value;
         return parseFloat(value || '0') > 0;
     };
 
     const hasAddToCartDataEcomItem = () => {
+        if (!isEcommerce) return false;
         const rows = endApiData?.ecomItems_addToCart?.rows || [];
         return rows.length > 0;
     };
@@ -48,17 +55,26 @@ const PdfContent = forwardRef((props, ref) => {
             <div className="page-break" style={{ pageBreakAfter: "always" }}><EventsTracking /></div>
             <div><KeyEvents /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><ConversionAnomaly /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><EcommerceTracking /></div>
-            {/* <div className="page-break" style={{ pageBreakAfter: "always" }}><EcomFunnels /></div> */}
-            {hasAddToCartData() && (
-                <div className="page-break" style={{ pageBreakAfter: "always" }}>
-                    <EcomFunnels />
-                </div>
-            )}
-            {hasAddToCartDataEcomItem() && (
-                <div className="page-break" style={{ pageBreakAfter: "always" }}>
-                    <EcomItemDetails />
-                </div>
+
+            {/* ✅ Only render ecommerce components if isEcommerce is true */}
+            {isEcommerce && (
+                <>
+                    <div className="page-break" style={{ pageBreakAfter: "always" }}>
+                        <EcommerceTracking />
+                    </div>
+
+                    {hasAddToCartData() && (
+                        <div className="page-break" style={{ pageBreakAfter: "always" }}>
+                            <EcomFunnels />
+                        </div>
+                    )}
+
+                    {hasAddToCartDataEcomItem() && (
+                        <div className="page-break" style={{ pageBreakAfter: "always" }}>
+                            <EcomItemDetails />
+                        </div>
+                    )}
+                </>
             )}
 
             <div className="page-break" style={{ pageBreakAfter: "always" }}><Acquisitions /></div>

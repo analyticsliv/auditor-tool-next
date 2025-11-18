@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import html2pdf from "html2pdf.js";
 import PdfContent from "./pdfContent";
+import { useAccountStore } from "../store/useAccountStore";
 
 const DownloadPdf = () => {
     const pdfRef = useRef(null);
@@ -10,6 +11,8 @@ const DownloadPdf = () => {
     const [loading, setLoading] = useState(false);
     const [filename, setFilename] = useState("GA4_Audit_Report");
 
+    // Get isEcommerce from store
+    const { isEcommerce } = useAccountStore();
     const generatePDF = async () => {
         if (pdfRef.current) {
             setShowInput(false);
@@ -36,7 +39,6 @@ const DownloadPdf = () => {
             html2pdf().set(opt).from(element).save();
             setLoading(false);
         }
-
     };
 
     return (
@@ -51,7 +53,7 @@ const DownloadPdf = () => {
                 }}
             >
                 <div ref={pdfRef}>
-                    <PdfContent />
+                    <PdfContent isEcommerceOverride={isEcommerce} />
                 </div>
             </div>
 
