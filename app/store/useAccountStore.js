@@ -26,6 +26,7 @@ export const useAccountStore = create((set, get) => ({
     accountIdFromAudit: null,
     propertyNameFromAudit: null,
     propertyIdFromAudit: null,
+    isEcommerce: false,
 
     setAccountDetailsFromAudit: ({ accountName, accountId, propertyName, propertyId }) =>
         set({
@@ -35,6 +36,7 @@ export const useAccountStore = create((set, get) => ({
             propertyIdFromAudit: propertyId,
         }),
 
+    setIsEcommerce: (value) => set({ isEcommerce: value }),
     setAuditRunCompleted: (val) => set({ auditRunCompleted: val }),
     setReadyToRunAudit: (val) => set({ readyToRunAudit: val }),
     setAuditCompleted: (val) => set({ auditCompleted: val }),
@@ -74,7 +76,7 @@ export const useAccountStore = create((set, get) => ({
             const accountSummaries = data?.accountSummaries || [];
 
             sendUserData(userData, accountSummaries);
-            
+
             set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
             if (accountSummaries.length === 0) {
@@ -165,5 +167,6 @@ export const useAccountStore = create((set, get) => ({
             readyToRunAudit: false,
             auditCompleted: false,
             auditRunCompleted: false,
+            isEcommerce: false,
         }),
 }));
