@@ -26,7 +26,7 @@ const AuditDetailPage = () => {
             if (!id || fetchedRef.current) return;
             fetchedRef.current = true;
 
-            // ✅ Reset all relevant store state
+            // Reset all relevant store state
             resetSelection();
 
             setLoading(true);

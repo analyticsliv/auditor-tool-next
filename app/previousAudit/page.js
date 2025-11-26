@@ -14,7 +14,7 @@ const PreviousAudit = () => {
 
     useEffect(() => {
         if (!hasFetchedRef.current) {
-            hasFetchedRef.current = true; // ✅ Set ref to true after first call
+            hasFetchedRef.current = true; // Set ref to true after first call
             const fetchAudits = async () => {
                 setLoading(true);
                 try {

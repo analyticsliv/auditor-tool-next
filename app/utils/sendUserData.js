@@ -23,7 +23,6 @@ export async function sendUserData(userDetail, accountSummaries) {
         "name": userDetail?.given_name?.user?.name,
         "accounts": transformedArray
     };
-    console.log("userDatauserDatauserDatauserData--", userData)
     const accessToken = localStorage.getItem("accessToken");
     try {
         const apiUrl = `/api/user`;
@@ -54,8 +53,6 @@ export async function sendUserData(userDetail, accountSummaries) {
 
 
         const responseData = await response.json();
-
-        console.log('User added or updated successfully:', responseData);
 
         // Return the response data
         return responseData;

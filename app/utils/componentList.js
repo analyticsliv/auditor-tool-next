@@ -32,12 +32,9 @@ export const getComponentsList = (isEcommerceOverride) => {
         AttributionSetting,
         ActiveDomains,
         ProductLinks,
-        CoreMetrics,
         EngagementRate,
-        EngagementMetrics,
         EventsTracking,
         KeyEvents,
-        ConversionAnomaly,
     ];
 
     // Only include ecommerce components if isEcommerce is true
@@ -48,6 +45,9 @@ export const getComponentsList = (isEcommerceOverride) => {
     const endComponents = [
         Acquisitions,
         CustomDimensionMetrics,
+        CoreMetrics,
+        EngagementMetrics,
+        ConversionAnomaly,
         DownloadPdf,
     ];
 
@@ -61,16 +61,16 @@ export default [
     AttributionSetting,
     ActiveDomains,
     ProductLinks,
-    CoreMetrics,
     EngagementRate,
-    EngagementMetrics,
     EventsTracking,
     KeyEvents,
-    ConversionAnomaly,
     EcommerceTracking,
     EcomFunnels,
     EcomItemDetails,
     Acquisitions,
     CustomDimensionMetrics,
+    CoreMetrics,
+    EngagementMetrics,
+    ConversionAnomaly,
     DownloadPdf,
 ];

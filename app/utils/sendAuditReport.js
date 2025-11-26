@@ -18,8 +18,6 @@ export async function notifyUserAuditComplete(userName, userEmail, propertyName,
             process.env.SENDGRID_FROM_EMAIL
         );
 
-        console.log(`Audit notification sent to ${userEmail} for property: ${propertyName}`);
-
     } catch (error) {
         console.error('Failed to send audit notification:', error);
         throw error;
