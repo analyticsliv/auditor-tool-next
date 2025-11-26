@@ -49,14 +49,11 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
             <div className="page-break" style={{ pageBreakAfter: "always" }}><AttributionSetting /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><ActiveDomains /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><ProductLinks /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><CoreMetrics /></div>
-            <div><EngagementRate /></div>
-            <div><EngagementMetrics /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><EventsTracking /></div>
+            <div className="page-break" style={{ pageBreakAfter: "always" }}><EngagementRate /></div>
+            <div><EventsTracking /></div>
             <div><KeyEvents /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><ConversionAnomaly /></div>
 
-            {/* ✅ Only render ecommerce components if isEcommerce is true */}
+            {/* Only render ecommerce components if isEcommerce is true */}
             {isEcommerce && (
                 <>
                     <div className="page-break" style={{ pageBreakAfter: "always" }}>
@@ -77,8 +74,11 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
                 </>
             )}
 
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><Acquisitions /></div>
+            <div><Acquisitions /></div>
             <div><CustomDimensionMetrics /></div>
+            <div><CoreMetrics /></div>
+            <div><EngagementMetrics /></div>
+            <div><ConversionAnomaly /></div>
         </div>
     );
 });
