@@ -49,6 +49,8 @@ export default function RootLayout({ children }) {
 
   const router = useRouter();
 
+  const wrapperClass = pathname === "/" ? "" : "p-6";
+
   useEffect(() => {
     const session = getUserSession();
     setUserSession(session);
@@ -184,7 +186,7 @@ export default function RootLayout({ children }) {
 
                         {/* Main content area */}
                         <main className="flex-1 overflow-auto bg-slate-100">
-                          <div className="p-6">{children}</div>
+                          <div className={wrapperClass}>{children}</div>
                         </main>
                       </div>
 
