@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useAccountStore } from '../store/useAccountStore'
 import { Frown, Smile } from 'lucide-react';
 
@@ -13,19 +13,50 @@ const EcommerceTracking = () => {
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [isEcomDataAvailable, setIsEcomDataAvailable] = useState(true);
     const [currency, setCurrency] = useState('INR');
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Use ref to track if we've already processed this data
+    const hasProcessedData = useRef(false);
+    const lastProcessedRows = useRef(null);
 
     useEffect(() => {
-        if (!trackingData?.rows || trackingData?.rows?.length === 0) {
-            setIsEcomDataAvailable(false);
+        // If endApiData doesn't exist yet, we're still loading
+        if (!endApiData) {
+            setIsLoading(true);
             return;
         }
+
+        // If ecomTracking key doesn't exist yet, we're still loading
+        if (!endApiData.hasOwnProperty('ecomTracking')) {
+            setIsLoading(true);
+            return;
+        }
+
+        // Check if we've already processed this exact data
+        if (hasProcessedData.current && lastProcessedRows.current === trackingData?.rows) {
+            return; // Skip processing if it's the same data
+        }
+
+        // Mark that we're now processing
+        setIsLoading(false);
+
+        // Check if there's no data or empty rows
+        if (!trackingData?.rows || trackingData?.rows?.length === 0) {
+            setIsEcomDataAvailable(false);
+            hasProcessedData.current = true;
+            lastProcessedRows.current = trackingData?.rows;
+            return;
+        }
+
+        // Data is available, process it
+        setIsEcomDataAvailable(true);
 
         let notSet = 0;
         let duplicates = [];
         let revenue = 0;
 
-        trackingData?.rows?.forEach((item, index) => {
-            if (item?.dimensionValues?.[0]?.value === '(not set)' && index !== trackingData?.rows?.length - 1) {
+        trackingData.rows.forEach((item, index) => {
+            if (item?.dimensionValues?.[0]?.value === '(not set)' && index !== trackingData.rows.length - 1) {
                 notSet++;
             }
 
@@ -40,7 +71,12 @@ const EcommerceTracking = () => {
         setDuplicateArray(duplicates);
         setTotalRevenue(revenue);
         setCurrency(selectedProperty?.currencyCode);
-    }, [trackingData]);
+
+        // Mark as processed
+        hasProcessedData.current = true;
+        lastProcessedRows.current = trackingData.rows;
+
+    }, [trackingData?.rows]);
 
     return (
         <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
@@ -50,8 +86,19 @@ const EcommerceTracking = () => {
                 </h1>
                 <h3 className="pb-6 text-center">Analyzing transaction and revenue data, making sure it&apos;s working properly.</h3>
 
-                {!isEcomDataAvailable ? (
-                    <div className="text-red-500 font-semibold text-center">Not an e-commerce account.</div>
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-12">
+                        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
+                        <p className="text-gray-600 font-medium">Loading e-commerce data...</p>
+                    </div>
+                ) : !isEcomDataAvailable ? (
+                    <div className="flex flex-col items-center justify-center py-8">
+                        <div className="p-4 rounded-full bg-red-100 mb-4">
+                            <Frown className="w-8 h-8 text-red-500" />
+                        </div>
+                        <p className="text-red-500 font-semibold text-lg">Not an e-commerce account.</p>
+                        <p className="text-gray-500 text-sm mt-2">No transaction data found for the selected period.</p>
+                    </div>
                 ) : (
                     <div>
                         <table className='w-full'>
@@ -77,10 +124,10 @@ const EcommerceTracking = () => {
                                 <tr>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            {notSetCount > 0 ? <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div> : <div className="p-2 rounded-lg bg-red-500">
+                                            {notSetCount > 0 ? <div className="p-2 rounded-lg bg-red-500">
                                                 <Frown className="w-5 h-5 text-white" />
+                                            </div> : <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
                                             </div>}
                                         </span>
                                     </td>
@@ -96,10 +143,10 @@ const EcommerceTracking = () => {
                                 <tr>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            {duplicateArray.length > 0 ? <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div> : <div className="p-2 rounded-lg bg-red-500">
+                                            {duplicateArray.length > 0 ? <div className="p-2 rounded-lg bg-red-500">
                                                 <Frown className="w-5 h-5 text-white" />
+                                            </div> : <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
                                             </div>}
                                         </span>
                                     </td>
