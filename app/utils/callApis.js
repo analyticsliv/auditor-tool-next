@@ -257,7 +257,7 @@ export const runCallApiInChunks = async (batchIndex) => {
       await fetchAuditData("customDimensions", "customDimensions");
       await fetchAuditData("customMetrics", "customMetrics");
 
-      // ✅ Only called after all above async operations are complete
+      // Only called after all above async operations are complete
       await saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce);
 
       // await notifyUserAuditComplete('Atul verma', 'atul.verma@analyticsliv.com', selectedProperty.displayName, '684036dd6eace3ecea3a6cbf');
