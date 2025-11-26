@@ -40,7 +40,6 @@ export async function saveAudit(accountId, propertyId, selectedAccount, selected
         }
 
         const responseData = response.json();
-        console.log("responseDataresponseData---saveaudit-", responseData)
     } catch (err) {
         console.error('Error adding or updating user:', err.message);
         throw err;
