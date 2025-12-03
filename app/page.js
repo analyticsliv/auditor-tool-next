@@ -7,11 +7,12 @@ import AuthWrapper from "./Components/AuthWrapper";
 import { getUserSession } from "./utils/user";
 import { callApis } from "./utils/callApis";
 import { useRouter } from "next/navigation";
-
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import { addDays, subDays } from "date-fns";
+import AuditLimitModal from "./Components/AuditLimitModal";
+import ContactFormModal from "./Components/ContactFormModal";
+import { checkAuditCount } from "./utils/Auditcountutils";
 
 const Home = () => {
   const {
@@ -38,19 +39,17 @@ const Home = () => {
   } = useAccountStore();
   const [startDate, setStartDate] = useState(dateRange.startDate);
   const [endDate, setEndDate] = useState(dateRange.endDate);
+  const [auditCount, setAuditCount] = useState(0);
+  const [auditLimit, setAuditLimit] = useState(5);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [checkingAuditLimit, setCheckingAuditLimit] = useState(false);
 
   const isValidDateRange = (start, end) => {
     if (!start || !end) return false;
     const diff = moment(end).diff(moment(start), "days");
     const today = moment().endOf("day");
     return diff === 29 && moment(end).isSameOrBefore(today);
-  };
-
-  const updateDateRangeInStore = (newStart, newEnd) => {
-    setDateRange(
-      moment(newStart).format("YYYY-MM-DD"),
-      moment(newEnd).format("YYYY-MM-DD")
-    );
   };
 
   const { data: session, status } = useSession();
@@ -60,6 +59,7 @@ const Home = () => {
       router.push("/login");
     }
   }, [status]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
@@ -70,6 +70,19 @@ const Home = () => {
 
   const user = getUserSession();
   const router = useRouter();
+
+  useEffect(() => {
+    const loadAuditCount = async () => {
+      if (session?.user?.email) {
+        const result = await checkAuditCount(session.user.email);
+        if (result.success) {
+          setAuditCount(result.data.auditCount);
+          setAuditLimit(result.data.auditLimit);
+        }
+      }
+    };
+    loadAuditCount();
+  }, [session]);
 
   useEffect(() => {
     if (!hasFetchedRef.current && !hasFetchedAccounts && session) {
@@ -113,11 +126,34 @@ const Home = () => {
     }
   };
 
+  // handleSubmit to check AND set state:
   const handleSubmit = async () => {
     if (!isValidDateRange(startDate, endDate)) {
       alert("Please select a valid 30-day date range before submitting.");
       return;
     }
+
+    setCheckingAuditLimit(true);
+
+    const result = await checkAuditCount(session?.user?.email);
+
+    if (!result.success) {
+      alert("Failed to verify audit limit. Please try again.");
+      setCheckingAuditLimit(false);
+      return;
+    }
+
+    // Update state with current counts
+    setAuditCount(result.data.auditCount);
+    setAuditLimit(result.data.auditLimit);
+
+    if (result.data.hasReachedLimit) {
+      setShowLimitModal(true);
+      setCheckingAuditLimit(false);
+      return;
+    }
+
+    setCheckingAuditLimit(false);
 
     const formattedStart = moment(startDate).format("YYYY-MM-DD");
     const formattedEnd = moment(endDate).format("YYYY-MM-DD");
@@ -136,6 +172,7 @@ const Home = () => {
       router.push("/auditPreview");
     }, 500);
   };
+
   const today = new Date();
 
   const maxStartDate = subDays(today, 31);
@@ -166,6 +203,14 @@ const Home = () => {
             <h1 className="text-3xl font-bold text-gray-800">Analytics Setup</h1>
           </div>
           <p className="text-gray-600 mt-2">Choose your account and property</p>
+          <div className="mt-3 inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md border border-gray-200">
+            <svg className="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-semibold text-gray-700">
+              Audits Used: <span className={auditCount >= auditLimit ? "text-red-600" : "text-blue-600"}>{auditCount}</span> / {auditLimit}
+            </span>
+          </div>
         </div>
 
         {/* Main Content Area */}
@@ -436,18 +481,20 @@ const Home = () => {
                 !selectedProperty ||
                 loadingAccounts ||
                 loadingProperties ||
-                loading
+                loading ||
+                checkingAuditLimit
               }
               className={`w-full py-3.5 px-8 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 shadow-xl ${accountSelected &&
                 selectedProperty &&
                 !loadingAccounts &&
                 !loadingProperties &&
-                !loading
+                !loading ||
+                !checkingAuditLimit
                 ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white focus:ring-blue-300 shadow-blue-300/50"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-gray-200"
                 }`}
             >
-              {loading ? (
+              {loading || checkingAuditLimit ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-6 w-6 border-3 border-white border-t-transparent mr-3"></div>
                   Processing...
@@ -464,6 +511,23 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <AuditLimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        onRequestMore={() => {
+          setShowLimitModal(false);
+          setShowContactModal(true);
+        }}
+        auditCount={auditCount}
+        auditLimit={auditLimit}
+      />
+
+      <ContactFormModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        userEmail={session?.user?.email}
+      />
     </AuthWrapper>
   );
 };

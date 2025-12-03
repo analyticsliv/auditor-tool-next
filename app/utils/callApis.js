@@ -2,7 +2,8 @@ import moment from "moment";
 import { fetchAuditData, reportEndApiCall } from "./endApi";
 import { useAccountStore } from "../store/useAccountStore";
 import { saveAudit } from "./saveAudit";
-// import { notifyUserAuditComplete } from "./sendAuditReport";
+import { incrementAuditCount } from "./Auditcountutils";
+import { getUserSession } from "./user";
 
 export const runCallApiInChunks = async (batchIndex) => {
   const { dateRange, accountId, propertyId, selectedAccount, selectedProperty, isEcommerce } = useAccountStore.getState();
@@ -257,12 +258,22 @@ export const runCallApiInChunks = async (batchIndex) => {
       await fetchAuditData("customDimensions", "customDimensions");
       await fetchAuditData("customMetrics", "customMetrics");
 
-      // Only called after all above async operations are complete
+      // Save audit to database
       await saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce);
 
-      // await notifyUserAuditComplete('Atul verma', 'atul.verma@analyticsliv.com', selectedProperty.displayName, '684036dd6eace3ecea3a6cbf');
+      // Increment audit count after successful completion
+      const user = getUserSession();
+      if (user?.user?.email) {
+        const result = await incrementAuditCount(user.user.email);
+
+        if (result.success) {
+          console.log('Audit count incremented:', result.data.auditCount);
+        } else {
+          console.error('Failed to increment audit count:', result.error);
+        }
+      }
     }
-  ]
+  ];
 
   const batch = callApiBatches[batchIndex];
   if (batch) {

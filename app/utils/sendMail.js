@@ -3,10 +3,18 @@ const sgMail = require('@sendgrid/mail');
 // Set API key from environment variables
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-export const sendEmail = async (to, subject, html, from) => {
+export const sendEmail = async (to, subject, html, from = 'noreply@analyticsliv.com') => {
+    // Ensure 'to' is always an array
+    const recipients = Array.isArray(to) ? to : [to];
+
+    // Format 'from' as an object if it's a string
+    const fromAddress = typeof from === 'string'
+        ? { email: from, name: 'AnalyticsLiv' }
+        : from;
+
     const msg = {
-        to,
-        from, // Ensure 'from' is a verified email address
+        to: recipients,
+        from: fromAddress,
         subject,
         html,
     };
