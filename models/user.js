@@ -41,7 +41,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    accounts: [AccountSchema], // Embed accounts directly within the user document
+    accounts: [AccountSchema],
+    auditCount: {
+        type: Number,
+        default: 0,
+    },
+    auditLimit: {
+        type: Number,
+        default: 5,
+    },
     lastLogin: {
         type: Date,
         default: Date.now,
