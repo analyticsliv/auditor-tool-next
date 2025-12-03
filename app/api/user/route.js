@@ -24,8 +24,12 @@ export async function POST(request) {
 
         // Prepare update object
         const update = {
-            email: email.toLowerCase().trim(), // Normalize email
-            lastLogin: new Date()
+            email: email.toLowerCase().trim(),
+            lastLogin: new Date(),
+            $setOnInsert: {
+                auditCount: 0,
+                auditLimit: 5
+            }
         };
 
         // Only add name if provided
