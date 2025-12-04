@@ -100,7 +100,7 @@ const EventsTracking = () => {
                         Events Tracking
                     </h1>
                     <div className='flex justify-between items-center'>
-                        <div className='w-[40%] content-center text-sm 2xl:text-base text-center'>
+                        <div className='w-[40%] content-center text-sm 2xl:text-base text-left'>
                             <h3><b>Automatically collected
                                 events</b> are events
                                 that are collected by default i.e page_view, app_update. You&apos;re

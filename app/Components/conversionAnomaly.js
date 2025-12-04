@@ -68,7 +68,7 @@ const ConversionAnomaly = () => {
                     </div>
                     :
                     <div className='flex justify-between 2xl:justify-around items-center'>
-                        <div className='w-[35%] text-center text-sm 2xl:text-base' id="">
+                        <div className='w-[35%] text-left text-sm 2xl:text-base' id="">
                             <h3 className='pb-5'>
                                 Presented
                                 graph highlights your core conversions.

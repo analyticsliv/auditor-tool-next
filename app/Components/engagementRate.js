@@ -76,7 +76,7 @@ const EngagementRate = () => {
             <div>
                 <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>{headerTitle}</h1>
                 <div className='flex justify-between items-center'>
-                    <div className='w-[40%] content-center text-sm 2xl:text-base text-center'>
+                    <div className='w-[40%] content-center text-base 2xl:text-lg text-left'>
                         <h3>By analyzing the engagement rate
                             over
                             a period of
