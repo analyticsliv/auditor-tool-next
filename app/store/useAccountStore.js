@@ -4,8 +4,6 @@ import moment from "moment";
 import { signOut } from "next-auth/react";
 import { sendUserData } from "../utils/sendUserData";
 
-// import { fetchAccountSummaries, fetchPropertySummaries } from '../utils/accountAndProperty';
-
 export const useAccountStore = create((set, get) => ({
     accounts: [],
     properties: [],
@@ -17,6 +15,7 @@ export const useAccountStore = create((set, get) => ({
     propertyId: null,
     auditData: {},
     endApiData: {},
+    analyzerData: null,
     loading: false,
     hasFetchedAccounts: false,
     readyToRunAudit: false,
@@ -42,6 +41,8 @@ export const useAccountStore = create((set, get) => ({
     setAuditCompleted: (val) => set({ auditCompleted: val }),
 
     setLoading: (isLoading) => set({ loading: isLoading }),
+
+    setAnalyzerData: (data) => set({ analyzerData: data }),
 
     dateRange: {
         startDate: moment().subtract(31, "days").format("YYYY-MM-DD"),
@@ -111,6 +112,7 @@ export const useAccountStore = create((set, get) => ({
 
             const propertiesData = await response.json();
             set({ properties: propertiesData.properties || [] });
+            return propertiesData.properties || [];
         } catch (error) {
             console.error("Error fetching Property Summaries:", error);
         }
@@ -163,6 +165,7 @@ export const useAccountStore = create((set, get) => ({
             hasFetchedAccounts: false,
             auditData: {},
             endApiData: {},
+            analyzerData: null,
             loading: false,
             readyToRunAudit: false,
             auditCompleted: false,
