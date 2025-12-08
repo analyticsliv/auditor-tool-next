@@ -13,6 +13,7 @@ import { addDays, subDays } from "date-fns";
 import AuditLimitModal from "./Components/AuditLimitModal";
 import ContactFormModal from "./Components/ContactFormModal";
 import { checkAuditCount } from "./utils/Auditcountutils";
+import ChatbotModal from "./Components/ChatbotModal";
 
 const Home = () => {
   const {
@@ -64,6 +65,7 @@ const Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [loadingProperties, setLoadingProperties] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
 
   const dropdownRef = useRef(null);
   const hasFetchedRef = useRef(false);
@@ -528,6 +530,22 @@ const Home = () => {
         onClose={() => setShowContactModal(false)}
         userEmail={session?.user?.email}
       />
+
+      <ChatbotModal
+        isOpen={showChatbot}
+        onClose={() => setShowChatbot(false)}
+      />
+
+      <button
+        onClick={() => setShowChatbot(true)}
+        className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 z-40"
+        aria-label="Open chatbot"
+      >
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+        <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 animate-ping"></span>
+      </button>
     </AuthWrapper>
   );
 };
