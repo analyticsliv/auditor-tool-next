@@ -18,6 +18,7 @@ import Acquisitions from './acquisitions'
 import CustomDimensionMetrics from './customDimensionMetrics'
 import { useAccountStore } from "../store/useAccountStore";
 import InfoComponent from "./info";
+import AnalyzerResults from "./AnalyzerResults";
 
 const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
 
@@ -79,6 +80,7 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
             <div><CoreMetrics /></div>
             <div><EngagementMetrics /></div>
             <div><ConversionAnomaly /></div>
+            <div><AnalyzerResults /></div>
         </div>
     );
 });
