@@ -2,10 +2,7 @@ import { useAccountStore } from "../store/useAccountStore";
 import { getUserSession } from "./user";
 
 export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce) {
-    // const { auditData, endApiData } = useAccountStore.getState();
-    // selectedAccount?.displayName
-
-    const {auditData, endApiData} = useAccountStore.getState();
+    const { auditData, endApiData } = useAccountStore.getState();
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -39,9 +36,17 @@ export async function saveAudit(accountId, propertyId, selectedAccount, selected
             throw new Error(errorData.error || 'Failed to save audit');
         }
 
-        const responseData = response.json();
+        const responseData = await response.json();
+
+        return {
+            success: true,
+            data: responseData
+        };
     } catch (err) {
-        console.error('Error adding or updating user:', err.message);
-        throw err;
+        console.error('❌ Error saving audit:', err.message);
+        return {
+            success: false,
+            error: err.message
+        };
     }
 }

@@ -17,6 +17,7 @@ import Acquisitions from '../Components/acquisitions';
 import CustomDimensionMetrics from '../Components/customDimensionMetrics';
 import DownloadPdf from '../Components/downloadPdf';
 import { useAccountStore } from '../store/useAccountStore';
+import AnalyzerResults from '../Components/AnalyzerResults';
 
 // Function that returns components based on isEcommerce flag
 export const getComponentsList = (isEcommerceOverride) => {
@@ -48,6 +49,7 @@ export const getComponentsList = (isEcommerceOverride) => {
         CoreMetrics,
         EngagementMetrics,
         ConversionAnomaly,
+        AnalyzerResults,
         DownloadPdf,
     ];
 
@@ -72,5 +74,6 @@ export default [
     CoreMetrics,
     EngagementMetrics,
     ConversionAnomaly,
+    AnalyzerResults,
     DownloadPdf,
 ];
