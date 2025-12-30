@@ -15,19 +15,28 @@ export const authOptions = {
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours - update session if older than this
+  },
   pages: {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, account }) {
-
+    async jwt({ token, account, user }) {
+      // Initial sign in
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.expiresAt = Date.now() + account.expires_in * 1000;
+        token.email = user?.email;
+        token.name = user?.name;
+        token.picture = user?.image;
       }
 
-      if (Date.now() < token.expiresAt) {
+      // Return token if it's still valid (not expired)
+      if (!token.expiresAt || Date.now() < token.expiresAt) {
         return token;
       }
 
@@ -62,29 +71,33 @@ export const authOptions = {
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.error = token.error;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.image = token.picture;
 
       return session;
     },
   },
-  // url: process.env.NEXTAUTH_URL ,
-  url: "https://ga4auditor.analyticsliv.com",
   secret: process.env.NEXTAUTH_SECRET,
 
-  // // ✅ Add debug logging (remove after fixing)
-  // debug: process.env.NODE_ENV === 'development',
+  // Use environment variable for URL (production or development)
+  url: process.env.NEXTAUTH_URL || "http://localhost:3000",
 
-  // // ✅ Ensure cookies work with your domain
-  // cookies: {
-  //   sessionToken: {
-  //     name: `next-auth.session-token`,
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: 'lax',
-  //       path: '/',
-  //       secure: process.env.NODE_ENV === 'production'
-  //     }
-  //   }
-  // }
+  // Security: Use secure cookies in production
+  cookies: {
+    sessionToken: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production'
+      }
+    }
+  },
+
+  // Enable debug in development
+  debug: process.env.NODE_ENV === 'development',
 };
 
 const handler = NextAuth(authOptions);

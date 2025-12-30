@@ -1,30 +1,47 @@
 import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request) {
-    // Only apply middleware to audit API routes
-    if (request.nextUrl.pathname.startsWith('/api/audit')) {
-        
-        const authHeader = request.headers.get('authorization');
-        const Email = request.headers.get('email');
+    const { pathname } = request.nextUrl;
 
-        if (!authHeader && !Email) {
-            return NextResponse.json({ 
-                message: 'Authorization token required' 
-            }, { status: 401 });
+    // Public paths that don't require authentication
+    const publicPaths = ['/login', '/api/auth'];
+    const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+
+    // Get the NextAuth JWT token
+    const token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    // Protect API routes (except auth routes)
+    if (pathname.startsWith('/api/audit')) {
+        // If no valid session, return 401
+        if (!token) {
+            return NextResponse.json(
+                {
+                    message: 'Authentication required',
+                    details: ['You must be signed in to access this resource']
+                },
+                { status: 401 }
+            );
         }
 
-        const token = authHeader?.split(' ')[1];
-
-        if (!token && !Email) {
-            return NextResponse.json({ 
-                message: 'Token missing from Authorization header' 
-            }, { status: 401 });
+        // Check if token has refresh error
+        if (token.error === 'RefreshAccessTokenError') {
+            return NextResponse.json(
+                {
+                    message: 'Session expired',
+                    details: ['Your session has expired. Please sign in again']
+                },
+                { status: 401 }
+            );
         }
 
-        // Pass authentication data to API routes for verification
+        // Add user email to headers for API routes that need it
         const requestHeaders = new Headers(request.headers);
-        requestHeaders.set('auth-token', token || '');
-        requestHeaders.set('auth-email', Email || '');
+        requestHeaders.set('x-user-email', token.email || '');
+        requestHeaders.set('x-user-name', token.name || '');
 
         return NextResponse.next({
             request: {
@@ -33,11 +50,31 @@ export async function middleware(request) {
         });
     }
 
+    // Protect page routes - redirect to login if not authenticated
+    if (!isPublicPath && !token) {
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(loginUrl);
+    }
+
+    // Redirect authenticated users away from login page
+    if (pathname === '/login' && token) {
+        return NextResponse.redirect(new URL('/', request.url));
+    }
+
+    // Allow all other requests
     return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        // '/api/audit/:path*'  // Only protect audit routes
+        '/api/audit/:path*',  // Protect audit API routes
+        '/',                   // Protect home page
+        '/dashboard',          // Protect dashboard
+        '/account',            // Protect account page
+        '/auditPreview',       // Protect audit preview
+        '/previous-audit',     // Protect previous audit
+        '/previousAudit',      // Protect previous audit (alt)
+        '/login',              // Handle login redirects
     ]
 };

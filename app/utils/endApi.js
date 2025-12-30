@@ -1,4 +1,5 @@
 import { useAccountStore } from "../store/useAccountStore";
+import { getSession } from "next-auth/react";
 
 export async function reportEndApiCall(key, endapiall) {
     if (typeof window === "undefined") return;
@@ -6,17 +7,19 @@ export async function reportEndApiCall(key, endapiall) {
     try {
         const { selectedProperty, propertyId, setEndApiData } = useAccountStore.getState();
 
-        // if (!propertyId || !selectedProperty?.name) {
-        //     alert("No property selected");
-        //     return;
-        // }
+        // Get fresh session and access token
+        const session = await getSession();
 
-        let accessToken = localStorage.getItem("accessToken");
-
-        if (!accessToken) {
-            alert("Access token is missing");
+        if (!session || !session.accessToken) {
+            console.error("No session or access token available");
+            alert("Session expired. Please refresh the page and try again.");
             return;
         }
+
+        const accessToken = session.accessToken;
+
+        // Update localStorage with fresh token
+        localStorage.setItem("accessToken", accessToken);
 
         const response = await fetch("/api/report-end", {
             method: "POST",
@@ -54,16 +57,20 @@ export async function fetchAuditData(key, path) {
 
     try {
         const { propertyId, setAuditData } = useAccountStore.getState();
-        const accessToken = localStorage.getItem('accessToken');
 
-        // if (!propertyId) {
-        //     alert("No property selected");
-        //     return;
-        // }
-        if (!accessToken) {
-            alert("Access token is missing");
+        // Get fresh session and access token
+        const session = await getSession();
+
+        if (!session || !session.accessToken) {
+            console.error("No session or access token available");
+            alert("Session expired. Please refresh the page and try again.");
             return;
         }
+
+        const accessToken = session.accessToken;
+
+        // Update localStorage with fresh token
+        localStorage.setItem("accessToken", accessToken);
 
         const response = await fetch(`/api/audit-data?propertyId=${propertyId}&path=${path}`, {
             headers: {
