@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import moment from "moment";
-import { signOut } from "next-auth/react";
+import { signOut, getSession } from "next-auth/react";
 import { sendUserData } from "../utils/sendUserData";
 
 export const useAccountStore = create((set, get) => ({
@@ -56,11 +56,43 @@ export const useAccountStore = create((set, get) => ({
     fetchAccountSummaries: async (userData, router) => {
         if (get().hasFetchedAccounts) return;
 
-        const accessToken = localStorage.getItem("accessToken");
+        // Get fresh session and access token
+        const session = await getSession();
+
+        console.log("📊 Session status:", {
+            hasSession: !!session,
+            hasAccessToken: !!session?.accessToken,
+            hasUser: !!session?.user,
+            error: session?.error
+        });
+
+        if (!session) {
+            console.error("❌ No session found");
+            alert("Session expired. Please sign in again.");
+            router.push("/login");
+            return;
+        }
+
+        if (!session.accessToken) {
+            console.error("❌ No access token in session:", session);
+            alert("Access token missing. Please sign out and sign in again.");
+            await signOut({ redirect: false });
+            router.push("/login");
+            return;
+        }
+
+        const accessToken = session.accessToken;
+        console.log("✅ Using access token (first 20 chars):", accessToken.substring(0, 20) + "...");
+
+        // Update localStorage with fresh token
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("session", JSON.stringify(session));
 
         set({ loading: true });
 
         try {
+            console.log("🔄 Fetching account summaries from Google Analytics API...");
+
             const response = await fetch(
                 "https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200",
                 {
@@ -69,14 +101,29 @@ export const useAccountStore = create((set, get) => ({
             );
 
             if (!response.ok) {
-                alert("Failed to fetch account summaries");
+                const errorData = await response.json().catch(() => ({}));
+                console.error("❌ Failed to fetch account summaries:", {
+                    status: response.status,
+                    statusText: response.statusText,
+                    error: errorData
+                });
+                alert(`Failed to fetch account summaries (${response.status}). Please try signing in again.`);
                 set({ loading: false });
+                return;
             }
+
+            console.log("✅ Successfully fetched account summaries");
 
             const data = await response.json();
             const accountSummaries = data?.accountSummaries || [];
 
-            sendUserData(userData, accountSummaries);
+            // Pass session user data (email, name) to sendUserData
+            const userDataForSave = {
+                email: session.user?.email,
+                name: session.user?.name
+            };
+
+            sendUserData(userDataForSave, accountSummaries);
 
             set({ accounts: accountSummaries, hasFetchedAccounts: true });
 
@@ -99,7 +146,19 @@ export const useAccountStore = create((set, get) => ({
     },
 
     fetchPropertySummaries: async (accountName) => {
-        const accessToken = localStorage.getItem("accessToken");
+        // Get fresh session and access token
+        const session = await getSession();
+
+        if (!session || !session.accessToken) {
+            console.error("No session or access token available");
+            return [];
+        }
+
+        const accessToken = session.accessToken;
+
+        // Update localStorage with fresh token
+        localStorage.setItem("accessToken", accessToken);
+
         try {
             const response = await fetch(
                 `https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`,
@@ -108,13 +167,18 @@ export const useAccountStore = create((set, get) => ({
                 }
             );
 
-            if (!response.ok) throw new Error("Failed to fetch property summaries");
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Failed to fetch property summaries:", errorData);
+                throw new Error("Failed to fetch property summaries");
+            }
 
             const propertiesData = await response.json();
             set({ properties: propertiesData.properties || [] });
             return propertiesData.properties || [];
         } catch (error) {
             console.error("Error fetching Property Summaries:", error);
+            return [];
         }
     },
 

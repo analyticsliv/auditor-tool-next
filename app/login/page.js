@@ -15,9 +15,14 @@ const Login = () => {
       const accessToken = session?.accessToken;
       localStorage.setItem("session", JSON.stringify(session));
       localStorage.setItem("accessToken", accessToken);
-     router.push("/"); // Redirect to home page
+
+      // Get the callback URL from query params, or default to home page
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get('callbackUrl') || '/';
+
+      router.push(callbackUrl);
     }
-  }, [session]);
+  }, [session, router]);
 
 
   return (

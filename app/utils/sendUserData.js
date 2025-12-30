@@ -18,9 +18,20 @@ export async function sendUserData(userDetail, accountSummaries) {
     // array of accounts in formatted form in which format i have to save in db
     const transformedArray = transformAccounts(accountSummaries);
 
+    // Support both old format (userDetail.given_name.user) and new format (userDetail directly)
+    const email = userDetail?.email || userDetail?.given_name?.user?.email;
+    const name = userDetail?.name || userDetail?.given_name?.user?.name;
+
+    console.log("📧 Sending user data:", { email, name, accountCount: transformedArray?.length });
+
+    if (!email) {
+        console.error("❌ No email found in userDetail:", userDetail);
+        throw new Error("Email is required to save user data");
+    }
+
     let userData = {
-        "email": userDetail?.given_name?.user?.email,
-        "name": userDetail?.given_name?.user?.name,
+        "email": email,
+        "name": name,
         "accounts": transformedArray
     };
     const accessToken = localStorage.getItem("accessToken");
