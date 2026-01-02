@@ -46,7 +46,7 @@ export const useChatbot = () => {
             const botMessage = {
                 id: Date.now() + 1,
                 type: 'bot',
-                content: data.insights || data.response || 'No response received',
+                content: data.insights || data.response || data.answer || 'No response received',
                 data: data,
                 timestamp: new Date().toISOString(),
                 recommendedQuestions: data.recommended_followup_questions || []

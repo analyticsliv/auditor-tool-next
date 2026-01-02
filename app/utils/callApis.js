@@ -259,8 +259,7 @@ export const runCallApiInChunks = async (batchIndex) => {
       await fetchAuditData("customDimensions", "customDimensions");
       await fetchAuditData("customMetrics", "customMetrics");
 
-      // Save audit to database and get the response
-      const saveResult = await saveAudit(
+      const analyzerResult = await analyzeAudit(
         accountId,
         propertyId,
         selectedAccount,
@@ -268,30 +267,32 @@ export const runCallApiInChunks = async (batchIndex) => {
         isEcommerce
       );
 
-      if (!saveResult.success) {
-        console.error('❌ Failed to save audit:', saveResult.error);
-        return;
-      }
-
-      // Extract audit data from save response
-      const auditData = saveResult?.data?.audit;
-
-      if (!auditData) {
-        console.error('❌ No audit data found in save response');
-        return;
-      }
-
-      // Call analyzer API with the audit data
-      const analyzerResult = await analyzeAudit(auditData);
+      let analyzerData = null;
 
       if (analyzerResult.success) {
-            useAccountStore.getState().setAnalyzerData(analyzerResult.data);
-
+        analyzerData = analyzerResult.data;
+        // Store in global state
+        useAccountStore.getState().setAnalyzerData(analyzerData);
       } else {
         console.error('❌ Analyzer failed:', analyzerResult.error);
       }
 
-      // Increment audit count after successful completion
+      // Save audit to database WITH analyzer data
+      const saveResult = await saveAudit(
+        accountId,
+        propertyId,
+        selectedAccount,
+        selectedProperty,
+        isEcommerce,
+        analyzerData
+      );
+
+      if (!saveResult.success) {
+        console.error('❌ Failed to save audit:', saveResult.error);
+        return; // Exit if save fails
+      }
+
+      // Increment audit count ONLY after successful save
       const user = getUserSession();
       if (user?.user?.email) {
         const result = await incrementAuditCount(user.user.email);

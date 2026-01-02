@@ -1,7 +1,7 @@
 import { useAccountStore } from "../store/useAccountStore";
 import { getUserSession } from "./user";
 
-export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce) {
+export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce, analyzerData = null) {
     const { auditData, endApiData } = useAccountStore.getState();
 
     const accessToken = localStorage.getItem('accessToken');
@@ -14,6 +14,7 @@ export async function saveAudit(accountId, propertyId, selectedAccount, selected
         "accountName": selectedAccount?.displayName,
         "propertyName": selectedProperty?.displayName,
         "isEcommerce": isEcommerce,
+        "analyzerData": analyzerData,
     }
 
     const user = getUserSession();

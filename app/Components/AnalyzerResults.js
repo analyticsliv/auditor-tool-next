@@ -19,7 +19,22 @@ const AnalyzerResults = () => {
     );
   }
 
-  const { executiveSummary, table, keyRisks, keyRiskBuckets } = analyzerData;
+  const { executiveSummary, table, keyRisks, keyRiskBuckets, aiSummary } = analyzerData;
+
+  // Filter out "Old UA Code" from table
+  const filteredTable = table?.filter(row =>
+    row.auditArea !== "Old UA Code"
+  ) || [];
+
+  // Filter out "Old UA Code" from keyRisks
+  const filteredKeyRisks = keyRisks?.filter(risk =>
+    !risk.toLowerCase().includes('old ua code')
+  ) || [];
+
+  // Filter out "Old UA Code" from keyRiskBuckets
+  const filteredKeyRiskBuckets = keyRiskBuckets?.filter(bucket =>
+    bucket.exampleArea !== "Old UA Code"
+  ) || [];
 
   // Get risk level color
   const getRiskColor = (risk) => {
@@ -35,6 +50,8 @@ const AnalyzerResults = () => {
     if (statusLower.includes('fully') || statusLower.includes('implemented')) return 'text-green-700 bg-green-100';
     if (statusLower.includes('partial')) return 'text-orange-700 bg-orange-100';
     if (statusLower.includes('not') || statusLower.includes('missing')) return 'text-red-700 bg-red-100';
+    if (statusLower.includes('error') || statusLower.includes('issue')) return 'text-red-700 bg-red-100';
+    if (statusLower.includes('functional')) return 'text-blue-700 bg-blue-100';
     return 'text-blue-700 bg-blue-100';
   };
 
@@ -50,7 +67,7 @@ const AnalyzerResults = () => {
           </div>
           <h2 className="text-3xl font-bold text-gray-800">Executive Summary</h2>
         </div>
-        
+
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
             <p className="text-sm font-semibold text-gray-600 mb-2">Overall Score</p>
@@ -70,12 +87,12 @@ const AnalyzerResults = () => {
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
           <h3 className="text-2xl font-bold text-white">Audit Details</h3>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b-2 border-gray-200">
               <tr>
-                {table && table.length > 0 && Object.keys(table[0]).map((key) => (
+                {filteredTable && filteredTable.length > 0 && Object.keys(filteredTable[0]).map((key) => (
                   <th key={key} className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     {key.replace(/([A-Z])/g, ' $1').trim()}
                   </th>
@@ -83,7 +100,7 @@ const AnalyzerResults = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {table?.map((row, index) => (
+              {filteredTable?.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-50 transition-colors">
                   {Object.entries(row).map(([key, value], idx) => (
                     <td key={idx} className="px-6 py-4 text-sm">
@@ -112,7 +129,7 @@ const AnalyzerResults = () => {
       </div>
 
       {/* Key Risks */}
-      {keyRisks && keyRisks.length > 0 && (
+      {filteredKeyRisks && filteredKeyRisks.length > 0 && (
         <div className="bg-red-50 rounded-2xl shadow-lg p-6 border-2 border-red-200">
           <div className="flex items-center gap-3 mb-4">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +138,7 @@ const AnalyzerResults = () => {
             <h3 className="text-xl font-bold text-red-800">Key Risks</h3>
           </div>
           <ul className="space-y-2">
-            {keyRisks.map((risk, index) => (
+            {filteredKeyRisks.map((risk, index) => (
               <li key={index} className="flex items-start gap-2 text-red-700">
                 <span className="text-red-500 mt-1">•</span>
                 <span className="font-medium">{risk}</span>
@@ -132,11 +149,11 @@ const AnalyzerResults = () => {
       )}
 
       {/* Key Risk Buckets */}
-      {keyRiskBuckets && keyRiskBuckets.length > 0 && (
+      {filteredKeyRiskBuckets && filteredKeyRiskBuckets.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-200">
           <h3 className="text-xl font-bold text-gray-800 mb-4">Risk Breakdown</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {keyRiskBuckets.map((bucket, index) => (
+            {filteredKeyRiskBuckets.map((bucket, index) => (
               <div key={index} className={`rounded-xl p-4 border-2 ${getRiskColor(bucket.risk)}`}>
                 <p className="font-bold text-lg mb-2">{bucket.bucket}</p>
                 <div className="space-y-1 text-sm">
@@ -147,6 +164,21 @@ const AnalyzerResults = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* AI Summary */}
+      {aiSummary && (
+        <div className="mt-6 bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <div>
+              <p className="text-xl font-semibold text-gray-600 mb-1">AI Summary</p>
+              <p className="text-gray-800 text-base max-xl:text-sm">{aiSummary}</p>
+            </div>
           </div>
         </div>
       )}
