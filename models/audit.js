@@ -28,6 +28,9 @@ const AuditSchema = new mongoose.Schema({
         type: Object,
         required: true
     },
+    analyzerData: {
+        type: Object,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
