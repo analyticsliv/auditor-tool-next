@@ -10,7 +10,7 @@ export async function POST(request) {
         // Get user from request (you'll need to implement auth middleware)
         // await connectDB();
         const { user, tokenData } = await authenticateUser(request);
-        const { propertyId, accountId, auditData, endApiData, accountName, propertyName, isEcommerce } = await request.json();
+        const { propertyId, accountId, auditData, endApiData, accountName, propertyName, isEcommerce, analyzerData } = await request.json();
 
         if (!propertyId || !accountId || !auditData || !endApiData) {
             return NextResponse.json({ error: 'Some content are missing' }, { status: 400 });
@@ -30,7 +30,8 @@ export async function POST(request) {
             // Update the existing audit entry
             audit.auditData = auditData;
             audit.endApiData = endApiData;
-            audit.isEcommerce = isEcommerce
+            audit.isEcommerce = isEcommerce;
+            audit.analyzerData = analyzerData;
             audit.updatedAt = moment();
             await audit.save();
             return NextResponse.json({ message: 'Audit entry updated successfully', audit }, { status: 200 });
@@ -44,7 +45,8 @@ export async function POST(request) {
                 endApiData,
                 accountName,
                 propertyName,
-                isEcommerce
+                isEcommerce,
+                analyzerData
             });
             await audit.save();
             return NextResponse.json({ message: 'Audit entry created successfully', audit }, { status: 201 });
@@ -66,7 +68,7 @@ export async function GET(request) {
         const { user, tokenData } = await authenticateUser(request);
 
         const auditRecords = await Audit.find({ user: user._id })
-            .select('-auditData -endApiData')
+            .select('-auditData -endApiData -analyzerData')
             .exec();
 
         if (auditRecords?.length === 0) {

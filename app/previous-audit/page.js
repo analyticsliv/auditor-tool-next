@@ -15,6 +15,7 @@ const AuditDetailPage = () => {
     const setAuditData = useAccountStore((state) => state.setAuditData);
     const setEndApiData = useAccountStore((state) => state.setEndApiData);
     const setIsEcommerce = useAccountStore((state) => state.setIsEcommerce);
+    const setAnalyzerData = useAccountStore((state) => state.setAnalyzerData); // ✅ Add this
     const resetSelection = useAccountStore((state) => state.resetSelection);
 
     const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const AuditDetailPage = () => {
                 const {
                     auditData = {},
                     endApiData = {},
+                    analyzerData = null,
                     isEcommerce = false
                 } = data;
 
@@ -48,6 +50,12 @@ const AuditDetailPage = () => {
 
                 setIsEcommerceFromApi(isEcommerce);
                 setIsEcommerce(isEcommerce);
+
+                if (analyzerData) {
+                    setAnalyzerData(analyzerData);
+                } else {
+                    setAnalyzerData(null);
+                }
 
                 useAccountStore.getState().setAccountDetailsFromAudit({
                     accountId,
@@ -80,7 +88,7 @@ const AuditDetailPage = () => {
         };
 
         fetchAudit();
-    }, [id, setAuditData, setEndApiData, resetSelection]);
+    }, [id, setAuditData, setEndApiData, setAnalyzerData, resetSelection, setIsEcommerce]); // ✅ Add dependencies
 
     // Get dynamic component list based on isEcommerce from API
     const componentsList = getComponentsList(isEcommerceFromApi);

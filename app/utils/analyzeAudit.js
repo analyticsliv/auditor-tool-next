@@ -1,10 +1,18 @@
 import { useAccountStore } from "../store/useAccountStore";
 
-export async function analyzeAudit(auditData) {
+export async function analyzeAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce) {
     const accessToken = localStorage.getItem('accessToken');
+    const { auditData, endApiData } = useAccountStore.getState();
 
-    // Extract the audit object from the response
-    const rawData = auditData?.audit || auditData;
+    const rawData = {
+        accountId: accountId,
+        propertyId: propertyId,
+        auditData: auditData,
+        endApiData: endApiData,
+        accountName: selectedAccount?.displayName,
+        propertyName: selectedProperty?.displayName,
+        isEcommerce: isEcommerce,
+    };
 
     try {
         const apiUrl = `/api/analyzer`;
