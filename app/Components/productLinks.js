@@ -27,16 +27,15 @@ const ProductLinks = () => {
     const [dv360LinkMood, setDv360LinkMood] = useState(true);
     const [dv360LinkText, setDv360LinkText] = useState("");
 
-
     useEffect(() => {
         if (!gaLinksData?.googleAdsLinks || gaLinksData?.googleAdsLinks?.length < 1) {
-            setGaLinkText("No Google Ads Links found.");
+            setGaLinkText("NA");
             setGaLinkMood(false)
         } else {
             const length = gaLinksData?.googleAdsLinks?.length;
             setGaLinkText(
                 <span>
-                    You have the <span className="font-bold">{length}</span> Google Ads Links.
+                    <span className="font-bold">{length}</span>
                 </span>
             );
 
@@ -46,13 +45,13 @@ const ProductLinks = () => {
 
     useEffect(() => {
         if (!bqLinksData?.bigqueryLinks || bqLinksData?.bigqueryLinks?.length < 1) {
-            setBqLinkText("No BigQuery Links found.");
+            setBqLinkText("NA");
             setBqLinkMood(false)
         } else {
             const length = bqLinksData?.bigqueryLinks?.length;
             setBqLinkText(
                 <span>
-                    You have the <span className="font-bold">{length}</span> BigQuery Links.
+                    <span className="font-bold">{length}</span>
                 </span>
             );
 
@@ -62,13 +61,13 @@ const ProductLinks = () => {
 
     useEffect(() => {
         if (!firebaseLinksData?.firebaseLinks || firebaseLinksData?.firebaseLinks?.length < 1) {
-            setFirebaseLinkText("No Firebase Links found.");
+            setFirebaseLinkText("NA");
             setFirebaseLinkMood(false)
         } else {
             const length = firebaseLinksData?.firebaseLinks?.length;
             setFirebaseLinkText(
                 <span>
-                    You have the <span className="font-bold">{length}</span> Firebase Links.
+                    <span className="font-bold">{length}</span>
                 </span>
             );
 
@@ -78,13 +77,13 @@ const ProductLinks = () => {
 
     useEffect(() => {
         if (!sa360LinksData?.searchAds360Links || sa360LinksData?.searchAds360Links?.length < 1) {
-            setSa360LinkText("No Search Ads 360 Links found.");
+            setSa360LinkText("NA");
             setSa360LinkMood(false)
         } else {
             const length = sa360LinksData?.searchAds360Links?.length;
             setSa360LinkText(
                 <span>
-                    You have the <span className="font-bold">{length}</span> Search Ads 360 Links.
+                    <span className="font-bold">{length}</span>
                 </span>
             );
 
@@ -94,22 +93,19 @@ const ProductLinks = () => {
 
     useEffect(() => {
         if (!dv360LinksData?.displayVideo360AdvertiserLinks || dv360LinksData?.displayVideo360AdvertiserLinks?.length < 1) {
-            setDv360LinkText("No Display & Video 360 links found.");
+            setDv360LinkText("NA");
             setDv360LinkMood(false)
         } else {
             const length = dv360LinksData?.displayVideo360AdvertiserLinks?.length;
             setDv360LinkText(
                 <span>
-                    You have the <span className="font-bold">{length}</span> Display & Video 360 links.
+                    <span className="font-bold">{length}</span>
                 </span>
             );
             setDv360LinkMood(true)
         }
 
     }, [dv360LinksData])
-
-
-
 
     return (
         <div>
@@ -121,69 +117,97 @@ const ProductLinks = () => {
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>
                         Product links
                     </h1>
-                    <h3 className='text-center pb-20'>Ensuring that your Google Ads accounts are
+                    <h3 className='text-center pb-10'>Ensuring that your Google Ads accounts are
                         properly linked
                         to GA4 and configured
                         <br></br>correctly to avoid having campaigns labeled as "(not set)."
                     </h3>
                     <div>
-
                         <table className='w-full'>
                             <thead>
                                 <tr>
-                                    <th className='text-sm text-center'>Status</th>
-                                    <th className='text-sm text-center'>Check</th>
-                                    <th className='text-sm text-center'>Description</th>
+                                    <th className='text-lg text-center'>Check</th>
+                                    <th className='text-lg text-center'>Status</th>
+                                    <th className='text-lg text-center'>No. of account linked</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{gaLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google Ads Links </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>{gaLinkText}</td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>Google Ads Links </td>
+                                    <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                        {gaLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div><div>{'Linked'}</div>
+                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div><div>{'Not Linked'}</div>
+                                        </div>}
+                                    </td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>{gaLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{bqLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>BigQuery Links </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>{bqLinkText}</td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>BigQuery Links </td>
+                                    <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                        {bqLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div><div>{'Linked'}</div>
+                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div><div>{'Not Linked'}</div>
+                                        </div>}
+                                    </td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>{bqLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{firebaseLinkMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Firebase Links </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>{firebaseLinkText}</td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>Firebase Links </td>
+                                    <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                        {firebaseLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div><div>{'Linked'}</div>
+                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div><div>{'Not Linked'}</div>
+                                        </div>}
+                                    </td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>{firebaseLinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{sa360LinkMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Search Ads 360 Links </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>{sa360LinkText}</td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>Search Ads 360 Links </td>
+                                    <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                        {sa360LinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div><div>{'Linked'}</div>
+                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div><div>{'Not Linked'}</div>
+                                        </div>}
+                                    </td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>{sa360LinkText}</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{dv360LinkMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Display & Video 360 links</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>{dv360LinkText}</td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>Display & Video 360 links</td>
+                                    <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                        {dv360LinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
+                                            <div className="p-2 rounded-lg bg-green-500" >
+                                                <Smile className="w-5 h-5 text-white" />
+                                            </div><div>{'Linked'}</div>
+                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <div className="p-2 rounded-lg bg-red-500">
+                                                <Frown className="w-5 h-5 text-white" />
+                                            </div><div>{'Not Linked'}</div>
+                                        </div>}
+                                    </td>
+                                    <td className='h-[3.2rem] border-b border-gray-800 text-center'>{dv360LinkText}</td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
                 </div>
