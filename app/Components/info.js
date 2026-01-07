@@ -142,7 +142,7 @@ const InfoComponent = ({ previousAudit }) => {
             <div className="relative z-10">
               {/* <h1 className="text-4xl font-bold tracking-tight text-center"> */}
               <h1 className="text-white font-extrabold text-[1.8rem] text-center">
-                In Review
+                Account and Property Configuration
               </h1>
             </div>
 
