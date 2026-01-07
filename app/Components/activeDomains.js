@@ -17,34 +17,122 @@ const ActiveDomains = () => {
 
     const data = endApiData?.usersDetails;
 
-    function getRandomColor() {
+    const lightColorPalette = [
+        // Red
+        '#FFB3B3', '#FF8A80',
 
-        const r = Math.floor(Math.random() * 131) + 100;
-        const g = Math.floor(Math.random() * 131) + 100;
-        const b = Math.floor(Math.random() * 131) + 100;
+        // Coral
+        '#FF9F80', '#FF6F61',
 
-        const color = '#' + r.toString(16).padStart(2, '0') +
-            g.toString(16).padStart(2, '0') +
-            b.toString(16).padStart(2, '0');
+        // Orange
+        '#FFB74D', '#FFCC80',
 
-        return color;
+        // Amber
+        '#FFD180', '#FFE082',
+
+        // Yellow
+        '#FFF176', '#FFF59D',
+
+        // Lime
+        '#DCE775', '#C5E1A5',
+
+        // Green
+        '#AED581', '#A5D6A7',
+
+        // Mint
+        '#B9F6CA', '#A7FFEB',
+
+        // Teal
+        '#80CBC4', '#B2EBF2',
+
+        // Cyan
+        '#81D4FA', '#90CAF9',
+
+        // Sky Blue
+        '#64B5F6', '#82B1FF',
+
+        // Blue
+        '#7986CB', '#AECBFA',
+
+        // Indigo
+        '#B39DDB', '#D1C4E9',
+
+        // Purple
+        '#CE93D8', '#E1BEE7',
+
+        // Pink
+        '#F8BBD0', '#FFCAD4',
+
+        // Rose
+        '#FADADD', '#FDE2E4',
+
+        // Peach
+        '#FFDAC1', '#FFD6A5',
+
+        // Sand
+        '#E6D3A3', '#EAD7C1',
+
+        // Light Brown
+        '#D7CCC8', '#CDB79E',
+
+        // Olive
+        '#CDEAC0', '#E2F0CB',
+
+        // Steel
+        '#CFD8DC', '#ECEFF1',
+
+        // Grey
+        '#E0E0E0', '#F5F5F5'
+    ];
+
+
+    function getRandomLightColor(usedColors) {
+        // First use predefined palette
+        const available = lightColorPalette.filter(c => !usedColors.includes(c));
+        if (available.length > 0) {
+            return available[Math.floor(Math.random() * available.length)];
+        }
+
+        // After palette exhausted → generate soft pastel via HSL
+        let newColor = '';
+        let attempts = 0;
+
+        do {
+            const hue = Math.floor(Math.random() * 360);      // any color
+            const saturation = 60 + Math.random() * 20;      // soft but colorful
+            const lightness = 75 + Math.random() * 10;       // always light
+
+            newColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            attempts++;
+        } while (usedColors.includes(newColor) && attempts < 100);
+
+        return newColor;
     }
 
     useEffect(() => {
         const domains = data?.rows?.map(item => item?.dimensionValues[0]?.value);
-        const chartValues = data?.rows?.map(item => (item?.metricValues[1]?.value
-        ));
+        const chartValues = data?.rows?.map(item => (item?.metricValues[1]?.value));
         setDomain(domains);
         setChartData(chartValues);
         setVisibleDomains(new Set(domains));
 
         const newColorMap = {};
-        domains?.forEach(domain => {
-            newColorMap[domain] = colorMap[domain] || getRandomColor();
-        });
-        setColorMap(newColorMap);
-    }, [data]);
+        const usedColors = [];
 
+        domains?.forEach(domain => {
+            if (!colorMap[domain]) {
+                const color = getRandomLightColor(usedColors);
+                newColorMap[domain] = color;
+                usedColors.push(color);
+            } else {
+                newColorMap[domain] = colorMap[domain];
+                usedColors.push(colorMap[domain]);
+            }
+        });
+
+        setColorMap(newColorMap);
+
+    }, [data]);
 
     const datas = domain?.map((element, index) => ({
         name: element,
@@ -114,16 +202,21 @@ const ActiveDomains = () => {
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
-                                        fill="#8884d8"
                                         dataKey="value"
-                                        stroke="none"
+                                        stroke="#ffffff"
+                                        strokeWidth={1}
                                     >
                                         {datas?.map((entry, index) => (
-                                            <Cell key={`cell-${index}`}
+                                            <Cell
+                                                key={`cell-${index}`}
                                                 fill={colorMap[entry?.name]}
-                                                opacity={activeIndex === index ? 1 : 0.6}
+                                                opacity={activeIndex === index ? 1 : 0.95}
                                                 onMouseEnter={() => setActiveIndex(index)}
                                                 onMouseLeave={() => setActiveIndex(null)}
+                                                style={{
+                                                    transition: 'opacity 0.2s ease',
+                                                    cursor: 'pointer'
+                                                }}
                                             />
                                         ))}
                                     </Pie>
@@ -138,7 +231,7 @@ const ActiveDomains = () => {
                                         onClick={() => handleToggle(name)}
                                     >
                                         <span
-                                            className="w-4 h-4 rounded-full"
+                                            className="w-4 h-4 rounded-full opacity-75"
                                             style={{ backgroundColor: colorMap[name] }}
                                         ></span>
                                         <span
@@ -158,18 +251,3 @@ const ActiveDomains = () => {
 }
 
 export default ActiveDomains
-
-
-
-// {/* <div className="flex flex-wrap gap-5">
-//     {domain?.map((name, index) => (
-//         <label key={index} className="flex items-center gap-1">
-//             <input
-//                 type="checkbox"
-//                 checked={visibleDomains.has(name)}
-//                 onChange={() => handleToggle(name)}
-//             />
-//             {name}
-//         </label>
-//     ))}
-// </div> */}
