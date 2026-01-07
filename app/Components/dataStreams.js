@@ -38,7 +38,7 @@ const DataStreams = () => {
         Tagging & Configuration
       </h1>
       <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-        <h2 className="pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center">
+        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center">
           Data Streams
         </h2>
 
@@ -46,9 +46,9 @@ const DataStreams = () => {
           <thead>
             <tr>
               <th></th>
-              <th className="text-sm text-center">Android Streams</th>
-              <th className="text-sm text-center">Web Streams</th>
-              <th className="text-sm text-center">iOS Streams</th>
+              <th className="text-xl text-center">Web Streams</th>
+              <th className="text-xl text-center">Android Streams</th>
+              <th className="text-xl text-center">iOS Streams</th>
             </tr>
           </thead>
           <tbody>
@@ -56,13 +56,13 @@ const DataStreams = () => {
               <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
                 # of streams
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
-                Android configured streams
-              </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
+              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
                 Web configured stream
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
+              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
+                Android configured streams
+              </td>
+              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
                 iOS configured streams
               </td>
             </tr>
@@ -71,10 +71,10 @@ const DataStreams = () => {
                 Active streams
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
-                {androidStreams}
+                {webStreams}
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
-                {webStreams}
+                {androidStreams}
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
                 {iosStreams}
@@ -85,10 +85,10 @@ const DataStreams = () => {
                 Measurement Id / App Id
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
-                {androidMeasurementId}
+                {webMeasurementId}
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
-                {webMeasurementId}
+                {androidMeasurementId}
               </td>
               <td className="h-[3.8rem] border-b border-gray-800 text-center">
                 {iosMeasurementId}
