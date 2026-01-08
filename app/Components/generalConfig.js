@@ -40,53 +40,90 @@ const GeneralConfig = () => {
         }
     }, [category])
 
+    const { auditData } = useAccountStore();
+    const [dataRetentionMood, setDataRetentionMood] = useState(true);
+    const [googleSignalMood, setGoogleSignalMood] = useState(true);
+    const dataretention = auditData?.dataRetentionSettings?.userDataRetention?.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'undefined';
+    const googlesignaldetails = auditData?.googleSignalsSettings?.state?.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'undefined';
+
+    useEffect(() => {
+        if (dataretention !== "Two Months") {
+            setDataRetentionMood(true);
+        } else {
+            setDataRetentionMood(false)
+        }
+    }, [dataretention])
+
+    useEffect(() => {
+        if (googlesignaldetails == "Google Signals Enabled") {
+            setGoogleSignalMood(true);
+        } else {
+            setGoogleSignalMood(false)
+        }
+    }, [googlesignaldetails])
 
     return (
         <div>
-            <div>
-                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <div className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>General Configuration</div>
-                    <div >
-                        <table className='w-full'>
-                            <thead>
-                                <tr>
-                                    <th className='text-sm text-center w-[15%] xl:w-[20%]'>Status</th>
-                                    <th className='text-sm text-center w-[15%] xl:w-[20%]'>Check</th>
-                                    <th className='text-sm text-center w-[70%] xl:w-[50%]'>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td id="time" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{timezoneMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Time Zone </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
-                                </tr>
-                                <tr>
-                                    <td id="currency" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{currenyMood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Currency Code </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="industry" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{categorymood ? <div className="p-2 rounded-lg bg-green-500" >
-                                        <Smile className="w-5 h-5 text-white" />
-                                    </div> : <div className="p-2 rounded-lg bg-red-500">
-                                        <Frown className="w-5 h-5 text-white" />
-                                    </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Industry Category </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+                <div className='pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center'>General Configuration</div>
+                <div >
+                    <table className='w-full'>
+                        <thead>
+                            <tr>
+                                <th className='text-sm text-center w-[15%] xl:w-[20%]'>Check</th>
+                                <th className='text-sm text-center w-[15%] xl:w-[20%]'>Status</th>
+                                <th className='text-sm text-center w-[70%] xl:w-[50%]'>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Time Zone </td>
+                                <td id="time" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{timezoneMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
+                            </tr>
+                            <tr>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Currency Code </td>
+                                <td id="currency" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{currenyMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Industry Category </td>
+                                <td id="industry" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{categorymood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
+                            </tr>
+                            <tr>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
+                                <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
+                            </tr>
+                            <tr>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
+                                <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{googleSignalMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div> : <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>}</td>
+                                <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
