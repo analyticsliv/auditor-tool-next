@@ -63,8 +63,35 @@ const ConversionAnomaly = () => {
                     Conversions - Anomaly Detection
                 </h1>
                 {(!totalConvData?.rows || totalConvData?.rows?.length === 0) ?
-                    <div className='text-red-400 text-center text-base'>
-                        There is some issue to fetching data related to this section or data not present sorry for inconvenience
+                    <div className="mx-auto max-w-3xl bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-inner">
+
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-9 h-9 rounded-xl bg-indigo-500 text-white flex items-center justify-center text-sm shadow">
+                                !
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-800">
+                                No Conversion Trend Available
+                            </h3>
+                        </div>
+
+                        <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                            We couldn’t generate the anomaly graph because there is not enough
+                            purchase or key-event data for this GA4 property in the selected date range.
+                        </p>
+
+                        <div className="bg-white/70 rounded-xl px-4 py-3 text-sm text-gray-700">
+                            <p className="font-semibold text-gray-800 mb-1">Possible reasons:</p>
+                            <ul className="list-disc list-inside space-y-0.5">
+                                <li>Conversions are not marked or not firing in GA4</li>
+                                <li>The property is new or has very low traffic</li>
+                                <li>No purchases occurred in this time period</li>
+                            </ul>
+                        </div>
+
+                        <p className="text-xs text-gray-500 mt-3">
+                            Recommendation: Verify your conversion setup in GA4 before relying on anomaly detection.
+                        </p>
+
                     </div>
                     :
                     <div className='flex justify-between 2xl:justify-around items-center'>
