@@ -13,7 +13,7 @@ const Acquisitions = () => {
         let positionOfDirectNone = null;
         let positionOfNotSet = null;
 
-        const rows = userAcquisitionData.rows.map((row, index) => {
+        const rows = userAcquisitionData?.rows?.map((row, index) => {
             const dimension = row?.dimensionValues[0]?.value || "N/A";
             const metrics = row?.metricValues?.map((m) => m?.value || "0");
 
@@ -30,7 +30,8 @@ const Acquisitions = () => {
             );
         });
 
-        let message = "Everything is fine";
+        let message =
+            "Your First Click User Acquisition data looks healthy, with no major '(direct) / (none)' or '(not set)' dominance in top sources.";
         if (positionOfDirectNone && positionOfNotSet) {
             message = `In your First Click User Acquisition report, <strong>(direct) / (none)</strong> is at position <strong>${positionOfDirectNone}</strong>, and <strong>(not set)</strong> is at position <strong>${positionOfNotSet}</strong>. This is a critical issue.`;
         } else if (positionOfDirectNone) {
@@ -38,6 +39,10 @@ const Acquisitions = () => {
         } else if (positionOfNotSet) {
             message = `In your First Click User Acquisition report, <strong>(not set)</strong> is at position <strong>${positionOfNotSet}</strong>.`;
         }
+        let insightStatus = 'good';
+
+        if (positionOfDirectNone && positionOfNotSet) insightStatus = 'critical';
+        else if (positionOfDirectNone || positionOfNotSet) insightStatus = 'warning';
 
         return (
             <div className="flex w-full gap-10">
@@ -53,15 +58,24 @@ const Acquisitions = () => {
                     <tbody>{rows}</tbody>
                 </table>
 
-                <div className="w-[270px] flex flex-col">
+                <div className="w-[350px] flex flex-col">
                     <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
                         Insights
                     </h3>
-                    <div className="flex-1 flex items-center">
-                        <p className="text-base 2xl:text-lg leading-relaxed text-left"
+                    <div
+                        className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
+                            ? 'bg-red-50 border-red-500 text-red-800'
+                            : insightStatus === 'warning'
+                                ? 'bg-amber-50 border-amber-500 text-amber-800'
+                                : 'bg-green-50 border-green-500 text-green-800'
+                            }`}
+                    >
+                        <p
+                            className="text-sm xl:text-base 2xl:text-lg leading-relaxed text-left"
                             dangerouslySetInnerHTML={{ __html: message }}
                         />
                     </div>
+
                 </div>
             </div>
         );
@@ -73,7 +87,7 @@ const Acquisitions = () => {
         let positionOfDirect = null;
         let positionOfUnassigned = null;
 
-        const rows = trafficAcquisitionData.rows.map((row, index) => {
+        const rows = trafficAcquisitionData?.rows?.map((row, index) => {
             const dimension = row?.dimensionValues[0]?.value || "N/A";
             const metrics = row?.metricValues?.map((m) => m?.value || "0");
 
@@ -90,7 +104,8 @@ const Acquisitions = () => {
             );
         });
 
-        let message = "Everything is fine";
+        let message =
+            "Your Traffic Channel Attribution looks healthy, with no major impact from 'Direct' or 'Unassigned' traffic in top positions.";
         if (positionOfDirect && positionOfUnassigned) {
             message = `In your Traffic Attribution Channel reporting, <strong>Direct</strong> is at position <strong>${positionOfDirect}</strong>, <strong>Unassigned</strong> is at position <strong>${positionOfUnassigned}</strong>. Needs attention.`;
         } else if (positionOfDirect) {
@@ -98,6 +113,10 @@ const Acquisitions = () => {
         } else if (positionOfUnassigned) {
             message = `In your Traffic Attribution Channel reporting, <strong>Unassigned</strong> is at position <strong>${positionOfUnassigned}</strong>.`;
         }
+        let insightStatus = 'good';
+
+        if (positionOfDirect && positionOfUnassigned) insightStatus = 'critical';
+        else if (positionOfDirect || positionOfUnassigned) insightStatus = 'warning';
 
         return (
             <div className="flex w-full gap-10">
@@ -111,16 +130,24 @@ const Acquisitions = () => {
                     </thead>
                     <tbody>{rows}</tbody>
                 </table>
-                <div className="w-[270px] flex flex-col">
+                <div className="w-[350px] flex flex-col">
                     <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
                         Insights
                     </h3>
-                    <div className="flex-1 flex items-center">
+                    <div
+                        className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
+                            ? 'bg-red-50 border-red-500 text-red-800'
+                            : insightStatus === 'warning'
+                                ? 'bg-amber-50 border-amber-500 text-amber-800'
+                                : 'bg-green-50 border-green-500 text-green-800'
+                            }`}
+                    >
                         <p
                             className="text-base 2xl:text-lg leading-relaxed text-left"
                             dangerouslySetInnerHTML={{ __html: message }}
                         />
                     </div>
+
                 </div>
             </div>
         );

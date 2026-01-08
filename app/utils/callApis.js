@@ -240,6 +240,9 @@ export const runCallApiInChunks = async (batchIndex) => {
       await reportEndApiCall("ConversionAnomaly", ConversionAnomaly);
     },
     async () => {
+
+      await reportEndApiCall("userAcquisition", userAcquisition);
+      await reportEndApiCall("trafficAcquisition", trafficAcquisition);
       // Execute ecommerce APIs sequentially if isEcommerce is true
       if (isEcommerce) {
         await reportEndApiCall("ecomTracking", ecomTracking);
@@ -254,8 +257,6 @@ export const runCallApiInChunks = async (batchIndex) => {
       }
 
       // Execute remaining APIs sequentially
-      await reportEndApiCall("userAcquisition", userAcquisition);
-      await reportEndApiCall("trafficAcquisition", trafficAcquisition);
       await fetchAuditData("customDimensions", "customDimensions");
       await fetchAuditData("customMetrics", "customMetrics");
 

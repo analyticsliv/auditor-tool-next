@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { FaLaugh } from 'react-icons/fa';
-import { HiEmojiSad } from 'react-icons/hi';
-import { Frown, Smile } from 'lucide-react';
+import { Frown, Smile, Share2, MousePointerClick, TrendingUp } from 'lucide-react';
 
 const AttributionSetting = () => {
 
@@ -41,6 +39,8 @@ const AttributionSetting = () => {
         }
     }, [data?.otherConversionEventLookbackWindow])
 
+    const cardBase =
+        'relative flex flex-col text-center items-center bg-white border border-gray-200 rounded-b-3xl py-8 px-6 2xl:px-10 justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full';
 
     return (
         <div>
@@ -49,49 +49,76 @@ const AttributionSetting = () => {
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>Attribution Setting Details</h1>
                     <div>
                         <div className='flex justify-evenly gap-10'>
-                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{modelMood ?                   <div className="p-2 rounded-lg bg-green-500" >
-                    <Smile className="w-5 h-5 text-white" />
-                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                  </div>}</span>
-                                <div>
-                                    <div>
-                                        <h2 className='font-bold text-2xl pb-2'>Model</h2>
-                                        <h3>Your attribution model is set to <b>{model}</b></h3>
-                                    </div>
-                                </div>
+                            <div className={cardBase}>
+                                <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-3xl" />
+
+                                <span className="pb-3">
+                                    {modelMood ? (
+                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
+                                            <Smile className="w-5 h-5 text-white" />
+                                        </div>
+                                    ) : (
+                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
+                                            <Frown className="w-5 h-5 text-white" />
+                                        </div>
+                                    )}
+                                </span>
+                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Model</h2>
+
+                                <Share2 className="w-14 h-14 text-indigo-500 mb-3 opacity-90" />
+
+                                <h3 className="text-base text-gray-600">
+                                    Your attribution model is set to <b className="text-gray-800">{model}</b>
+                                </h3>
                             </div>
 
-                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{acquisitionWindowMood ?                   <div className="p-2 rounded-lg bg-green-500" >
-                    <Smile className="w-5 h-5 text-white" />
-                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                  </div>}</span>
-                                <div>
-                                    <div>
-                                        <h2 className='font-bold text-2xl pb-2'>Acquisition Window
-                                        </h2>
-                                        <h3>Your <b>{acquisitionWindow}</b></h3>
-                                    </div>
-                                </div>
+                            <div className={cardBase}>
+                                <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-t-3xl" />
+
+                                <span className="pb-3">
+                                    {acquisitionWindowMood ? (
+                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
+                                            <Smile className="w-5 h-5 text-white" />
+                                        </div>
+                                    ) : (
+                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
+                                            <Frown className="w-5 h-5 text-white" />
+                                        </div>
+                                    )}
+                                </span>
+
+                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Acquisition Window</h2>
+
+                                <MousePointerClick className="w-14 h-14 text-emerald-500 mb-3 opacity-90" />
+
+                                <h3 className="text-base text-gray-600">
+                                    Your <b className="text-gray-800">{acquisitionWindow}</b>
+                                </h3>
                             </div>
 
-                            <div className='flex flex-col text-center items-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7 justify-around'>
-                                <span>{conversionWindowMood ?                   <div className="p-2 rounded-lg bg-green-500" >
-                    <Smile className="w-5 h-5 text-white" />
-                  </div> :                   <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                  </div>}</span>
-                                <div>
-                                    <div>
-                                        <h2 className='font-bold text-2xl pb-2'>Conversion Window</h2>
-                                        <h3>Your <b>{conversionWindow}</b></h3>
-                                    </div>
-                                </div>
-                            </div>
+                            <div className={cardBase}>
+                                <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-orange-500 to-pink-500 rounded-t-3xl" />
 
+                                <span className="pb-3">
+                                    {conversionWindowMood ? (
+                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
+                                            <Smile className="w-5 h-5 text-white" />
+                                        </div>
+                                    ) : (
+                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
+                                            <Frown className="w-5 h-5 text-white" />
+                                        </div>
+                                    )}
+                                </span>
+
+                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Conversion Window</h2>
+
+                                <TrendingUp className="w-14 h-14 text-orange-500 mb-3 opacity-90" />
+
+                                <h3 className="text-base text-gray-600">
+                                    Your <b className="text-gray-800">{conversionWindow}</b>
+                                </h3>
+                            </div>
                         </div>
                     </div>
                 </div>

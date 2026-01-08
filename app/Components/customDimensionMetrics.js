@@ -43,13 +43,14 @@ const CustomDimensionMetrics = () => {
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th className='text-center'>Status</th>
                             <th className='text-center'>Check</th>
+                            <th className='text-center'>Status</th>
                             <th className='text-center'>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
+                            <td>Custom Dimensions</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
                                 {dimensions?.length ? <div className="p-2 rounded-lg bg-green-500" >
                                     <Smile className="w-5 h-5 text-white" />
@@ -57,7 +58,6 @@ const CustomDimensionMetrics = () => {
                                     <Frown className="w-5 h-5 text-white" />
                                 </div>}
                             </td>
-                            <td>Custom Dimensions</td>
                             <td>
                                 {dimensions?.length > 0
                                     ? (
@@ -74,6 +74,7 @@ const CustomDimensionMetrics = () => {
                             </td>
                         </tr>
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
+                            <td>Custom Metrics</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
                                 {metrics?.length ? <div className="p-2 rounded-lg bg-green-500" >
                                     <Smile className="w-5 h-5 text-white" />
@@ -81,7 +82,6 @@ const CustomDimensionMetrics = () => {
                                     <Frown className="w-5 h-5 text-white" />
                                 </div>}
                             </td>
-                            <td>Custom Metrics</td>
                             <td>
                                 {metrics?.length > 0
                                     ? (

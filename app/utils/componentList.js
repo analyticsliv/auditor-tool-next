@@ -29,7 +29,7 @@ export const getComponentsList = (isEcommerceOverride) => {
     const baseComponents = [
         DataStreams,
         GeneralConfig,
-        DataCollectionRetention,
+        // DataCollectionRetention,
         AttributionSetting,
         ActiveDomains,
         ProductLinks,
@@ -59,7 +59,7 @@ export const getComponentsList = (isEcommerceOverride) => {
 export default [
     DataStreams,
     GeneralConfig,
-    DataCollectionRetention,
+    // DataCollectionRetention,
     AttributionSetting,
     ActiveDomains,
     ProductLinks,
