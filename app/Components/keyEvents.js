@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
+import { ListChecks, Zap, TrendingUp } from 'lucide-react';
 
 const KeyEvents = () => {
 
@@ -28,40 +29,125 @@ const KeyEvents = () => {
         if (value != 0) {
             nameofkeyevents.push(keyeventname);
         }
-
     }
 
+    const events = keyEventData?.rows?.map(
+        (row) => row?.dimensionValues?.[0]?.value
+    ) || [];
+
+    const showLimited = events.length > 4;
+    const visibleEvents = showLimited ? events.slice(0, 4) : events;
+
+    const configuredCount = eventNames?.length || 0;
+    const activeCount = keyEventData?.rows?.length || 0;
+    const valueCount = nameofkeyevents?.length || 0;
+
+    let auditStatus = 'good';
+    let auditMessage = '';
+
+    if (configuredCount >= 1 && activeCount === 0) {
+        auditStatus = 'bad';
+        auditMessage =
+            'You have configured conversion events but none of them are active. This indicates serious tracking issues. Please check your GA4 and GTM implementation.';
+    } else if (configuredCount < 6 && configuredCount > 3 && activeCount < 2) {
+        auditStatus = 'bad';
+        auditMessage =
+            'You have multiple configured conversions but fewer than 2 active ones. At least 2 active conversions are recommended for meaningful GA4 insights.';
+    } else if (configuredCount >= 6 && activeCount < 3) {
+        auditStatus = 'bad';
+        auditMessage =
+            'You have many configured conversions, but fewer than 3 are active. This is not ideal for GA4 reporting and optimization. Check whether events are firing correctly.';
+    } else if (configuredCount >= 1 && !activeCount) {
+        auditStatus = 'bad';
+        auditMessage =
+            'You have many configured conversions, but doesn\'t have any active ones. This is not ideal for GA4 reporting and optimization. Check whether events are firing correctly.';
+    } else {
+        auditStatus = 'good';
+        auditMessage =
+            'Your conversion setup looks healthy. You have a good balance between configured and active conversion events for reliable GA4 measurement.';
+    }
+
+    const cardBase =
+        'relative flex flex-col w-[33%] text-center items-center bg-white border border-gray-200 rounded-b-3xl py-8 px-6 2xl:px-10 justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1';
 
     return (
         <div className='parent-div bg-white rounded-3xl p-8 mt-10'>
             <div>
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Key Events</h1>
-                <h3 className='text-sm pb-12 text-center'>Reviewing your configured conversion
-                    events,
-                    ensuring that
-                    they are active and,
-                    <br></br>whenever possible, have conversion values assigned to them.
+                <div className='flex justify-center items-start gap-10 pb-5'>
+                    <h1 className='text-gray-800 font-extrabold text-[1.8rem] text-center'>Key Events - </h1>
+                    <h3 className='text-sm text-left'>Reviewing your configured conversion
+                        events,
+                        ensuring that
+                        they are active and,
+                        <br></br>whenever possible, have conversion values assigned to them.
+                    </h3>
+                </div>
+                {/* Audit Finding */}
+                <div
+                    className={`mb-5 p-6 rounded-2xl text-center border ${auditStatus === 'good'
+                        ? 'bg-green-50 border-green-300 text-green-800'
+                        : 'bg-red-50 border-red-300 text-red-800'
+                        }`}
+                >
+                    <h3 className="text-lg font-bold mb-2">
+                        {auditStatus === 'good' ? '✅ Audit Finding' : '⚠️ Audit Finding'}
+                    </h3>
+                    <p className="text-sm leading-relaxed">{auditMessage}</p>
+                </div>
 
-                </h3>
                 <div>
                     <div className='flex justify-evenly gap-10'>
-                        <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
-                            <h2 className='font-bold text-2xl pb-2'>Configured <br></br>Conversions</h2>
-                            <h3 className='text-center text-sm'>You have configured <b id="keyeventcount">{eventNames?.length}</b> conversion events which is
-                                great! At least <b>3</b> conversions are generally recommended in addition to default conversions
+                        <div className={cardBase}>
+                            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-t-3xl" />
+
+                            <h2 className="font-bold text-2xl pb-1 text-gray-800">
+                                Configured<br />Conversions
+                            </h2>
+
+                            <ListChecks className="w-14 h-14 text-blue-500 my-3 opacity-90" />
+
+                            <h3 className="text-base text-gray-600">
+                                You have configured <b className="text-gray-800">{eventNames?.length || 'NA'}</b> conversion
+                                events. At least <b className="text-gray-800">3</b> are recommended in addition to default
+                                conversions.
                             </h3>
                         </div>
 
-                        <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
-                            <h2 className='font-bold text-2xl pb-2'>Active <br></br>Conversions</h2>
-                            <h3 className='text-center text-sm'>You have <b id="activekeyeventcount">{keyEventData?.rows?.length}</b> active conversions.
+                        <div className={cardBase}>
+                            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-t-3xl" />
+
+                            <h2 className="font-bold text-2xl pb-1 text-gray-800">
+                                Active<br />Conversions
+                            </h2>
+
+                            <Zap className="w-14 h-14 text-purple-500 my-3 opacity-90" />
+
+                            <h3 className="text-base text-gray-600 pb-2">
+                                You have <b className="text-gray-800">{keyEventData?.rows?.length || 'NA'}</b> active conversions.
+                            </h3>
+
+                            <h3 className="text-base text-gray-500">
+                                {showLimited ? "Some of them are:" : "These are:"}{" "}
+                                <b className="text-gray-700">
+                                    {visibleEvents.join(", ")}
+                                    {showLimited && " etc.."}
+                                </b>
                             </h3>
                         </div>
 
-                        <div className='flex flex-col w-[33%] text-center bg-red-200 rounded-3xl py-5 px-4 2xl:px-7'>
-                            <h2 className='font-bold text-2xl pb-2'>Conversions <br></br>Value</h2>
-                            <h3 className='text-center text-sm'>You have <b id="activekeyeventvalue">{nameofkeyevents?.length}</b> conversions out of <b
-                                id="activekeyeventcount1">{keyEventData?.rows?.length}</b> active conversions have a value assigned to them.
+                        <div className={cardBase}>
+                            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-3xl" />
+
+                            <h2 className="font-bold text-2xl pb-1 text-gray-800">
+                                Conversion<br />Value
+                            </h2>
+
+                            <TrendingUp className="w-14 h-14 text-amber-500 my-3 opacity-90" />
+
+                            <h3 className="text-base text-gray-600">
+                                <b className="text-gray-800">{nameofkeyevents?.length || 'NA'}</b> out of{" "}
+                                <b className="text-gray-800">{keyEventData?.rows?.length || 'NA'}</b> active conversions
+                                have a value assigned.
                             </h3>
                         </div>
                     </div>
@@ -72,89 +158,3 @@ const KeyEvents = () => {
 }
 
 export default KeyEvents
-// {
-//     "dimensionHeaders": [
-//         {
-//             "name": "eventName"
-//         }
-//     ],
-//     "metricHeaders": [
-//         {
-//             "name": "keyEvents",
-//             "type": "TYPE_FLOAT"
-//         },
-//         {
-//             "name": "eventvalue",
-//             "type": "TYPE_FLOAT"
-//         }
-//     ],
-//     "rows": [
-//         {
-//             "dimensionValues": [
-//                 {
-//                     "value": "purchase"
-//                 }
-//             ],
-//             "metricValues": [
-//                 {
-//                     "value": "142"
-//                 },
-//                 {
-//                     "value": "79002.31"
-//                 }
-//             ]
-//         },
-//         {
-//             "dimensionValues": [
-//                 {
-//                     "value": "call_click"
-//                 }
-//             ],
-//             "metricValues": [
-//                 {
-//                     "value": "124"
-//                 },
-//                 {
-//                     "value": "0"
-//                 }
-//             ]
-//         },
-//         {
-//             "dimensionValues": [
-//                 {
-//                     "value": "create_account"
-//                 }
-//             ],
-//             "metricValues": [
-//                 {
-//                     "value": "100"
-//                 },
-//                 {
-//                     "value": "0"
-//                 }
-//             ]
-//         },
-//         {
-//             "dimensionValues": [
-//                 {
-//                     "value": "subscribe"
-//                 }
-//             ],
-//             "metricValues": [
-//                 {
-//                     "value": "26"
-//                 },
-//                 {
-//                     "value": "0"
-//                 }
-//             ]
-//         }
-//     ],
-//     "rowCount": 4,
-//     "metadata": {
-//         "schemaRestrictionResponse": {},
-//         "currencyCode": "USD",
-//         "timeZone": "America/New_York"
-//     },
-//     "kind": "analyticsData#runReport"
-// }
