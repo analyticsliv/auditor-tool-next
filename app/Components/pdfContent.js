@@ -46,9 +46,9 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
             <div><InfoComponent previousAudit={true} /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><DataStreams /></div>
             <div><GeneralConfig /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><DataCollectionRetention /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><AttributionSetting /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><ActiveDomains /></div>
+            {/* <div className="page-break" style={{ pageBreakAfter: "always" }}><DataCollectionRetention /></div> */}
+            <div><AttributionSetting /></div>
+            <div><ActiveDomains /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><ProductLinks /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><EngagementRate /></div>
             <div><EventsTracking /></div>
@@ -79,7 +79,7 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
             <div><CustomDimensionMetrics /></div>
             <div><CoreMetrics /></div>
             <div><EngagementMetrics /></div>
-            <div><ConversionAnomaly /></div>
+            <div className="page-break" style={{ pageBreakAfter: "always" }}><ConversionAnomaly /></div>
             <div><AnalyzerResults /></div>
         </div>
     );
