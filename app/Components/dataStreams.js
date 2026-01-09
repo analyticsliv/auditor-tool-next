@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useAccountStore } from "../store/useAccountStore";
+import { Frown, Smile, Meh } from 'lucide-react';
 
 const DataStreams = () => {
   const { auditData } = useAccountStore();
@@ -32,13 +33,52 @@ const DataStreams = () => {
     }
   });
 
+  // Calculate mood based on available streams
+  const hasWeb = webStreams !== "Not Available";
+  const hasAndroid = androidStreams !== "Not Available";
+  const hasIOS = iosStreams !== "Not Available";
+
+  const availableStreamsCount = [hasWeb, hasAndroid, hasIOS].filter(Boolean).length;
+
+  let mood = 'sad'; // Default to sad
+  if (availableStreamsCount >= 2) {
+    mood = 'happy'; // At least 2 streams available
+  } else if (hasWeb && !hasAndroid && !hasIOS) {
+    mood = 'mediator'; // Only web streams available
+  } else if (availableStreamsCount === 0) {
+    mood = 'sad'; // No streams available
+  }
+
+  const getMoodIcon = () => {
+    if (mood === 'happy') {
+      return (
+        <div className="p-2 rounded-lg bg-green-500">
+          <Smile className="w-5 h-5 text-white" />
+        </div>
+      );
+    } else if (mood === 'mediator') {
+      return (
+        <div className="p-2 rounded-lg bg-orange-500">
+          <Meh className="w-5 h-5 text-white" />
+        </div>
+      );
+    } else {
+      return (
+        <div className="p-2 rounded-lg bg-red-500">
+          <Frown className="w-5 h-5 text-white" />
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="">
       <h1 className="pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem] ">
         Tagging & Configuration
       </h1>
       <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center">
+        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3">
+          {getMoodIcon()}
           Data Streams
         </h2>
 

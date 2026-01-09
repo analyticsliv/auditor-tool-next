@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile } from 'lucide-react';
+import { Frown, Smile, Meh } from 'lucide-react';
 
 const ProductLinks = () => {
 
@@ -107,6 +107,31 @@ const ProductLinks = () => {
 
     }, [dv360LinksData])
 
+    // Calculate overall mood based on how many products are linked
+    const linkedCount = [gaLinkMood, bqLinkMood, firebaseLinkMood, sa360LinkMood, dv360LinkMood].filter(Boolean).length;
+
+    const getOverallMoodIcon = () => {
+        if (linkedCount >= 4) {
+            return (
+                <div className="p-2 rounded-lg bg-green-500">
+                    <Smile className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else if (linkedCount >= 2) {
+            return (
+                <div className="p-2 rounded-lg bg-orange-500">
+                    <Meh className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else {
+            return (
+                <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                </div>
+            );
+        }
+    };
+
     return (
         <div>
             <div>
@@ -114,7 +139,8 @@ const ProductLinks = () => {
                     & Integration
                 </h1>
                 <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                        {getOverallMoodIcon()}
                         Product links
                     </h1>
                     <h3 className='text-center pb-10'>Ensuring that your Google Ads accounts are

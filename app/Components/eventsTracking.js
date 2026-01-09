@@ -242,7 +242,18 @@ const EventsTracking = () => {
             <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <div>
                     <div>
-                        <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Events Naming Convention</h1>
+                        <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                            {caseSensitiveMood ? (
+                                <div className="p-2 rounded-lg bg-green-500">
+                                    <Smile className="w-5 h-5 text-white" />
+                                </div>
+                            ) : (
+                                <div className="p-2 rounded-lg bg-red-500">
+                                    <Frown className="w-5 h-5 text-white" />
+                                </div>
+                            )}
+                            Events Naming Convention
+                        </h1>
                         <h3 className='text-sm pb-14 text-center'>The best practice for naming your events is
                             to follow the <b>&apos;Snake Case&apos;</b> rule, where yo can use event names in lowercase and spenated
                             with underscore(&apos;_&apos;).

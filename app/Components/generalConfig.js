@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile } from 'lucide-react';
+import { Frown, Smile, Meh } from 'lucide-react';
 
 const GeneralConfig = () => {
     const { endApiData, selectedProperty } = useAccountStore();
@@ -62,10 +62,38 @@ const GeneralConfig = () => {
         }
     }, [googlesignaldetails])
 
+    // Calculate overall mood based on how many checks are positive
+    const positiveChecks = [timezoneMood, currenyMood, categorymood, dataRetentionMood, googleSignalMood].filter(Boolean).length;
+
+    const getOverallMoodIcon = () => {
+        if (positiveChecks >= 4) {
+            return (
+                <div className="p-2 rounded-lg bg-green-500">
+                    <Smile className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else if (positiveChecks >= 2 && positiveChecks <= 3) {
+            return (
+                <div className="p-2 rounded-lg bg-orange-500">
+                    <Meh className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else {
+            return (
+                <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                </div>
+            );
+        }
+    };
+
     return (
         <div>
             <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <div className='pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center'>General Configuration</div>
+                <div className='pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                    {getOverallMoodIcon()}
+                    General Configuration
+                </div>
                 <div >
                     <table className='w-full'>
                         <thead>
