@@ -1,27 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile } from 'lucide-react';
-
-const MoodIcon = ({ type }) => {
-    const mood = type === 'bad' ? 'mood_bad' : 'mood';
-    const bgColor = type === 'bad' ? '#ff321f' : '#015fff';
-
-    return (
-        <span
-            className="material-symbols-outlined rounded-full p-3"
-            style={{
-                backgroundColor: bgColor,
-                padding: '0.3rem',
-                color: '#fff',
-                fontSize: '1.7rem',
-                borderRadius: '0.2rem',
-            }}
-        >
-            {mood}
-        </span>
-    );
-};
+import { Frown, Smile, Meh } from 'lucide-react';
 
 const CustomDimensionMetrics = () => {
     const { auditData } = useAccountStore();
@@ -29,10 +9,39 @@ const CustomDimensionMetrics = () => {
     const dimensions = auditData?.customDimensions?.customDimensions || [];
     const metrics = auditData?.customMetrics || [];
 
+    // Calculate mood based on whether both, one, or neither are present
+    const hasDimensions = dimensions?.length > 0;
+    const hasMetrics = metrics?.length > 0;
+
+    const getMoodIcon = () => {
+        if (hasDimensions && hasMetrics) {
+            return (
+                <div className="p-2 rounded-lg bg-green-500">
+                    <Smile className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else if (hasDimensions || hasMetrics) {
+            return (
+                <div className="p-2 rounded-lg bg-orange-500">
+                    <Meh className="w-5 h-5 text-white" />
+                </div>
+            );
+        } else {
+            return (
+                <div className="p-2 rounded-lg bg-red-500">
+                    <Frown className="w-5 h-5 text-white" />
+                </div>
+            );
+        }
+    };
+
     return (
         <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
 
-            <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>Custom Dimensions & Metrics</h1>
+            <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                {getMoodIcon()}
+                Custom Dimensions & Metrics
+            </h1>
             <h3 className='text-center px-[10%]'>
                 Custom dimensions and metrics are crucial in GA4 as they enable businesses to
                 track and analyze specific, unique data points that align with their specific
