@@ -1,7 +1,7 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile, Meh } from 'lucide-react';
+import MoodIcon from './MoodIcon';
 
 const CustomDimensionMetrics = () => {
     const { auditData } = useAccountStore();
@@ -13,33 +13,13 @@ const CustomDimensionMetrics = () => {
     const hasDimensions = dimensions?.length > 0;
     const hasMetrics = metrics?.length > 0;
 
-    const getMoodIcon = () => {
-        if (hasDimensions && hasMetrics) {
-            return (
-                <div className="p-2 rounded-lg bg-green-500">
-                    <Smile className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else if (hasDimensions || hasMetrics) {
-            return (
-                <div className="p-2 rounded-lg bg-orange-500">
-                    <Meh className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else {
-            return (
-                <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                </div>
-            );
-        }
-    };
+    const overallMood = (hasDimensions && hasMetrics) ? 'good' : (hasDimensions || hasMetrics) ? 'warning' : 'bad';
 
     return (
         <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
 
             <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
-                {getMoodIcon()}
+                <MoodIcon mood={overallMood} />
                 Custom Dimensions & Metrics
             </h1>
             <h3 className='text-center px-[10%]'>
@@ -61,11 +41,7 @@ const CustomDimensionMetrics = () => {
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
                             <td>Custom Dimensions</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
-                                {dimensions?.length ? <div className="p-2 rounded-lg bg-green-500" >
-                                    <Smile className="w-5 h-5 text-white" />
-                                </div> : <div className="p-2 rounded-lg bg-red-500">
-                                    <Frown className="w-5 h-5 text-white" />
-                                </div>}
+                                <MoodIcon mood={dimensions?.length ? 'good' : 'bad'} />
                             </td>
                             <td>
                                 {dimensions?.length > 0
@@ -85,11 +61,7 @@ const CustomDimensionMetrics = () => {
                         <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
                             <td>Custom Metrics</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
-                                {metrics?.length ? <div className="p-2 rounded-lg bg-green-500" >
-                                    <Smile className="w-5 h-5 text-white" />
-                                </div> : <div className="p-2 rounded-lg bg-red-500">
-                                    <Frown className="w-5 h-5 text-white" />
-                                </div>}
+                                <MoodIcon mood={metrics?.length ? 'good' : 'bad'} />
                             </td>
                             <td>
                                 {metrics?.length > 0

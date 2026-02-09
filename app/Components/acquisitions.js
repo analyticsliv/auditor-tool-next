@@ -1,34 +1,12 @@
 'use client';
 import React from 'react';
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile, Meh } from 'lucide-react';
+import MoodIcon from './MoodIcon';
 
 const Acquisitions = () => {
     const { endApiData } = useAccountStore();
     const userAcquisitionData = endApiData?.userAcquisition;
     const trafficAcquisitionData = endApiData?.trafficAcquisition;
-
-    const getMoodIcon = (status) => {
-        if (status === 'good') {
-            return (
-                <div className="p-2 rounded-lg bg-green-500">
-                    <Smile className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else if (status === 'warning') {
-            return (
-                <div className="p-2 rounded-lg bg-orange-500">
-                    <Meh className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else {
-            return (
-                <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                </div>
-            );
-        }
-    };
 
     const renderUserAcquisitionTable = () => {
         if (!userAcquisitionData?.rows) return null;
@@ -189,14 +167,14 @@ const Acquisitions = () => {
         <div>
             <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
-                    {userAcquisitionResult && getMoodIcon(userAcquisitionResult.insightStatus)}
+                    {userAcquisitionResult && <MoodIcon mood={userAcquisitionResult.insightStatus} />}
                     User Acquisition
                 </h1>
                 {userAcquisitionResult?.content}
             </section>
             <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
                 <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
-                    {trafficAcquisitionResult && getMoodIcon(trafficAcquisitionResult.insightStatus)}
+                    {trafficAcquisitionResult && <MoodIcon mood={trafficAcquisitionResult.insightStatus} />}
                     Traffic Acquisition
                 </h1>
                 {trafficAcquisitionResult?.content}

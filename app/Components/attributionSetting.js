@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile, Meh, Share2, MousePointerClick, TrendingUp } from 'lucide-react';
+import { Share2, MousePointerClick, TrendingUp } from 'lucide-react';
+import MoodIcon from './MoodIcon';
 
 const AttributionSetting = () => {
 
@@ -45,34 +46,14 @@ const AttributionSetting = () => {
     // Calculate overall mood based on how many checks are positive
     const positiveChecks = [modelMood, acquisitionWindowMood, conversionWindowMood].filter(Boolean).length;
 
-    const getOverallMoodIcon = () => {
-        if (positiveChecks === 3) {
-            return (
-                <div className="p-2 rounded-lg bg-green-500">
-                    <Smile className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else if (positiveChecks === 2) {
-            return (
-                <div className="p-2 rounded-lg bg-orange-500">
-                    <Meh className="w-5 h-5 text-white" />
-                </div>
-            );
-        } else {
-            return (
-                <div className="p-2 rounded-lg bg-red-500">
-                    <Frown className="w-5 h-5 text-white" />
-                </div>
-            );
-        }
-    };
+    const overallMood = positiveChecks === 3 ? 'good' : positiveChecks === 2 ? 'warning' : 'bad';
 
     return (
         <div>
             <div>
                 <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
                     <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
-                        {getOverallMoodIcon()}
+                        <MoodIcon mood={overallMood} />
                         Attribution Setting Details
                     </h1>
                     <div>
@@ -81,15 +62,7 @@ const AttributionSetting = () => {
                                 <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-3xl" />
 
                                 <span className="pb-3">
-                                    {modelMood ? (
-                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
-                                            <Smile className="w-5 h-5 text-white" />
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
-                                            <Frown className="w-5 h-5 text-white" />
-                                        </div>
-                                    )}
+                                    <MoodIcon mood={modelMood ? 'good' : 'bad'} variant="card" />
                                 </span>
                                 <h2 className="font-bold text-2xl pb-2 text-gray-800">Model</h2>
 
@@ -104,15 +77,7 @@ const AttributionSetting = () => {
                                 <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-t-3xl" />
 
                                 <span className="pb-3">
-                                    {acquisitionWindowMood ? (
-                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
-                                            <Smile className="w-5 h-5 text-white" />
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
-                                            <Frown className="w-5 h-5 text-white" />
-                                        </div>
-                                    )}
+                                    <MoodIcon mood={acquisitionWindowMood ? 'good' : 'bad'} variant="card" />
                                 </span>
 
                                 <h2 className="font-bold text-2xl pb-2 text-gray-800">Acquisition Window</h2>
@@ -128,15 +93,7 @@ const AttributionSetting = () => {
                                 <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-orange-500 to-pink-500 rounded-t-3xl" />
 
                                 <span className="pb-3">
-                                    {conversionWindowMood ? (
-                                        <div className="p-2 rounded-xl bg-green-500 shadow-md">
-                                            <Smile className="w-5 h-5 text-white" />
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 rounded-xl bg-red-500 shadow-md">
-                                            <Frown className="w-5 h-5 text-white" />
-                                        </div>
-                                    )}
+                                    <MoodIcon mood={conversionWindowMood ? 'good' : 'bad'} variant="card" />
                                 </span>
 
                                 <h2 className="font-bold text-2xl pb-2 text-gray-800">Conversion Window</h2>
