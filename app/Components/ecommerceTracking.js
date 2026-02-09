@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import { useAccountStore } from '../store/useAccountStore'
-import { Frown, Smile } from 'lucide-react';
+import { Frown } from 'lucide-react';
+import MoodIcon from './MoodIcon';
 
 const EcommerceTracking = () => {
     const { endApiData, selectedProperty } = useAccountStore();
@@ -78,10 +79,37 @@ const EcommerceTracking = () => {
 
     }, [trackingData?.rows]);
 
+    // Calculate overall mood based on how many checks are passing (smile)
+    const getEcomMood = () => {
+        if (!isEcomDataAvailable) return null;
+
+        let smileCount = 0;
+
+        // Check 1: Collecting Transactions - always smile
+        smileCount++;
+
+        // Check 2: Transactions without IDs - smile if notSetCount === 0
+        if (notSetCount === 0) smileCount++;
+
+        // Check 3: Duplicate Transactions - smile if duplicateArray.length === 0
+        if (duplicateArray.length === 0) smileCount++;
+
+        // Check 4: Transactions Revenue - always smile
+        smileCount++;
+
+        // At least 3 smiles = good, 2 smiles = warning, else bad
+        if (smileCount >= 3) return 'good';
+        if (smileCount === 2) return 'warning';
+        return 'bad';
+    };
+
+    const ecomMood = getEcomMood();
+
     return (
         <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
             <div className="streams">
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                    {ecomMood && <MoodIcon mood={ecomMood} />}
                     E-Commerce Tracking
                 </h1>
                 <h3 className="pb-6 text-center">Analyzing transaction and revenue data, making sure it&apos;s working properly.</h3>
@@ -104,34 +132,28 @@ const EcommerceTracking = () => {
                         <table className='w-full'>
                             <thead>
                                 <tr className="">
-                                    <th className='text-sm text-center'>Status</th>
                                     <th className='text-sm text-center'>Check</th>
+                                    <th className='text-sm text-center'>Status</th>
                                     <th className='text-sm text-center'>Description</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Collecting Transactions</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div>
+                                            <MoodIcon mood="good" />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Collecting Transactions</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>You have <b>{trackingData?.rows?.length}</b> transactions during reporting period.</td>
                                 </tr>
                                 <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions without IDs</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            {notSetCount > 0 ? <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div> : <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div>}
+                                            <MoodIcon mood={notSetCount > 0 ? 'bad' : 'good'} />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions without IDs</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         {notSetCount > 0 ? (
                                             <>You have <b>{notSetCount}</b> transactions without transaction ID.</>
@@ -141,16 +163,12 @@ const EcommerceTracking = () => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Duplicate Transactions</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            {duplicateArray.length > 0 ? <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div> : <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div>}
+                                            <MoodIcon mood={duplicateArray.length > 0 ? 'bad' : 'good'} />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Duplicate Transactions</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         {duplicateArray.length > 0 ? (
                                             <>You have <b>{duplicateArray.length}</b> duplicate transactions.</>
@@ -160,14 +178,12 @@ const EcommerceTracking = () => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions Revenue</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div>
+                                            <MoodIcon mood="good" />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions Revenue</td>
                                     <td className='h-[3.8rem] border-b border-gray-800 text-center'>
                                         You have <b>{totalRevenue.toFixed(2)} {currency}</b> revenue during the reporting period.
                                     </td>

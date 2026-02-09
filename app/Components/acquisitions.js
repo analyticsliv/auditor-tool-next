@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useAccountStore } from '../store/useAccountStore';
+import MoodIcon from './MoodIcon';
 
 const Acquisitions = () => {
     const { endApiData } = useAccountStore();
@@ -44,41 +45,44 @@ const Acquisitions = () => {
         if (positionOfDirectNone && positionOfNotSet) insightStatus = 'critical';
         else if (positionOfDirectNone || positionOfNotSet) insightStatus = 'warning';
 
-        return (
-            <div className="flex w-full gap-10">
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th className="text-center">First user source/medium</th>
-                            <th className="text-center">Sessions</th>
-                            <th className="text-center">Total Users</th>
-                            <th className="text-center">New Users</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </table>
+        return {
+            insightStatus,
+            content: (
+                <div className="flex w-full gap-10">
+                    <table className="w-full">
+                        <thead>
+                            <tr>
+                                <th className="text-center">First user source/medium</th>
+                                <th className="text-center">Sessions</th>
+                                <th className="text-center">Total Users</th>
+                                <th className="text-center">New Users</th>
+                            </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </table>
 
-                <div className="w-[350px] flex flex-col">
-                    <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
-                        Insights
-                    </h3>
-                    <div
-                        className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
-                            ? 'bg-red-50 border-red-500 text-red-800'
-                            : insightStatus === 'warning'
-                                ? 'bg-amber-50 border-amber-500 text-amber-800'
-                                : 'bg-green-50 border-green-500 text-green-800'
-                            }`}
-                    >
-                        <p
-                            className="text-sm xl:text-base 2xl:text-lg leading-relaxed text-left"
-                            dangerouslySetInnerHTML={{ __html: message }}
-                        />
+                    <div className="w-[350px] flex flex-col">
+                        <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
+                            Insights
+                        </h3>
+                        <div
+                            className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
+                                ? 'bg-red-50 border-red-500 text-red-800'
+                                : insightStatus === 'warning'
+                                    ? 'bg-amber-50 border-amber-500 text-amber-800'
+                                    : 'bg-green-50 border-green-500 text-green-800'
+                                }`}
+                        >
+                            <p
+                                className="text-sm xl:text-base 2xl:text-lg leading-relaxed text-left"
+                                dangerouslySetInnerHTML={{ __html: message }}
+                            />
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
-        );
+            )
+        };
     };
 
     const renderTrafficAcquisitionTable = () => {
@@ -118,50 +122,62 @@ const Acquisitions = () => {
         if (positionOfDirect && positionOfUnassigned) insightStatus = 'critical';
         else if (positionOfDirect || positionOfUnassigned) insightStatus = 'warning';
 
-        return (
-            <div className="flex w-full gap-10">
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th className="text-center">Session default channel group</th>
-                            <th className="text-center">Sessions</th>
-                            <th className="text-center">Engaged Sessions</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </table>
-                <div className="w-[350px] flex flex-col">
-                    <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
-                        Insights
-                    </h3>
-                    <div
-                        className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
-                            ? 'bg-red-50 border-red-500 text-red-800'
-                            : insightStatus === 'warning'
-                                ? 'bg-amber-50 border-amber-500 text-amber-800'
-                                : 'bg-green-50 border-green-500 text-green-800'
-                            }`}
-                    >
-                        <p
-                            className="text-base 2xl:text-lg leading-relaxed text-left"
-                            dangerouslySetInnerHTML={{ __html: message }}
-                        />
-                    </div>
+        return {
+            insightStatus,
+            content: (
+                <div className="flex w-full gap-10">
+                    <table className="w-full">
+                        <thead>
+                            <tr>
+                                <th className="text-center">Session default channel group</th>
+                                <th className="text-center">Sessions</th>
+                                <th className="text-center">Engaged Sessions</th>
+                            </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </table>
+                    <div className="w-[350px] flex flex-col">
+                        <h3 className="text-center font-semibold text-base 2xl:text-lg mb-4">
+                            Insights
+                        </h3>
+                        <div
+                            className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
+                                ? 'bg-red-50 border-red-500 text-red-800'
+                                : insightStatus === 'warning'
+                                    ? 'bg-amber-50 border-amber-500 text-amber-800'
+                                    : 'bg-green-50 border-green-500 text-green-800'
+                                }`}
+                        >
+                            <p
+                                className="text-base 2xl:text-lg leading-relaxed text-left"
+                                dangerouslySetInnerHTML={{ __html: message }}
+                            />
+                        </div>
 
+                    </div>
                 </div>
-            </div>
-        );
+            )
+        };
     };
+
+    const userAcquisitionResult = renderUserAcquisitionTable();
+    const trafficAcquisitionResult = renderTrafficAcquisitionTable();
 
     return (
         <div>
             <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>User Acquisition</h1>
-                {renderUserAcquisitionTable()}
+                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                    {userAcquisitionResult && <MoodIcon mood={userAcquisitionResult.insightStatus} />}
+                    User Acquisition
+                </h1>
+                {userAcquisitionResult?.content}
             </section>
             <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center'>Traffic Acquisition</h1>
-                {renderTrafficAcquisitionTable()}
+                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                    {trafficAcquisitionResult && <MoodIcon mood={trafficAcquisitionResult.insightStatus} />}
+                    Traffic Acquisition
+                </h1>
+                {trafficAcquisitionResult?.content}
             </section>
         </div>
     );

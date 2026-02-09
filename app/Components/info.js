@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Smile, Frown, Calendar, Info, Clock } from "lucide-react";
+import { Smile, Frown, Meh, Calendar, Info, Clock } from "lucide-react";
 import { useAccountStore } from "../store/useAccountStore";
 import moment from "moment";
 import { Eye, Building, Globe, ChevronRight } from "lucide-react";
@@ -38,14 +38,14 @@ const InfoComponent = ({ previousAudit }) => {
           </h1>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 items-center">
+        <div className="grid grid-cols-4 xl:grid-cols-5 gap-6 items-center">
           {/* Status Indicators */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="col-span-2 xl:col-span-3 space-y-4">
 
             {/* Status Cards */}
-            <div className="space-y-3">
+            <div className="space-y-5">
               <div
-                className={`p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${status === "fine"
+                className={`p-4 rounded-xl border-2 transition-all duration-300 ${status === "fine"
                   ? "bg-green-50 border-green-200 shadow-md"
                   : "bg-white border-slate-200 hover:border-green-200"
                   }`}
@@ -66,9 +66,30 @@ const InfoComponent = ({ previousAudit }) => {
               </div>
 
               <div
-                className={`p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${status === "fine"
+                className={`p-4 rounded-xl border-2 ${status === "fine"
+                  ? "bg-orange-50 border-orange-200 shadow-md"
+                  : "bg-white border-slate-200"
+                  }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-lg bg-orange-500">
+                    <Meh className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800">
+                      Needs Attention
+                    </h3>
+                  </div>
+                  <div className="ml-auto">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`p-4 rounded-xl border-2 ${status === "fine"
                   ? "bg-red-50 border-red-200 shadow-md"
-                  : "bg-white border-slate-200 hover:border-red-200"
+                  : "bg-white border-slate-200"
                   }`}
               >
                 <div className="flex items-center gap-4">
@@ -87,25 +108,17 @@ const InfoComponent = ({ previousAudit }) => {
               </div>
             </div>
 
-            {/* Data Range Info */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">
-                    Date Range Information
-                  </h3>
-                  <p className="text-sm text-blue-700">
-                    We are using 30 days of data in most reports, except anomaly
-                    detection reports.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Date Range Display */}
-          <div className="bg-white rounded-xl border border-slate-200 p-5 h-fit">
+          <div className="col-span-2 bg-white rounded-xl border border-slate-200 p-4 h-fit">
+            <div className="flex items-start gap-3 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <Clock className="w-4 h-4 text-blue-600 mt-0.5" />
+              <p className="text-sm text-blue-700">
+                We are using 30 days of data in most reports, except anomaly
+                detection reports.
+              </p>
+            </div>
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="w-5 h-5 text-slate-600" />
               <h3 className="font-semibold text-slate-800">Date Range</h3>
@@ -113,7 +126,7 @@ const InfoComponent = ({ previousAudit }) => {
 
             <div className="space-y-4">
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 border border-slate-200 bg-slate-100 rounded-lg">
                   <span className="text-sm font-medium text-slate-600">
                     Start Date:
                   </span>
@@ -122,7 +135,7 @@ const InfoComponent = ({ previousAudit }) => {
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 border border-slate-200 bg-slate-100 rounded-lg">
                   <span className="text-sm font-medium text-slate-600">
                     End Date:
                   </span>

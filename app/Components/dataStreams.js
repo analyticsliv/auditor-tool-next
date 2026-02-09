@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useAccountStore } from "../store/useAccountStore";
+import MoodIcon from './MoodIcon';
 
 const DataStreams = () => {
   const { auditData } = useAccountStore();
@@ -32,13 +33,30 @@ const DataStreams = () => {
     }
   });
 
+  // Calculate mood based on available streams
+  const hasWeb = webStreams !== "Not Available";
+  const hasAndroid = androidStreams !== "Not Available";
+  const hasIOS = iosStreams !== "Not Available";
+
+  const availableStreamsCount = [hasWeb, hasAndroid, hasIOS].filter(Boolean).length;
+
+  let mood = 'bad'; // Default to bad
+  if (availableStreamsCount >= 2) {
+    mood = 'good'; // At least 2 streams available
+  } else if (hasWeb && !hasAndroid && !hasIOS) {
+    mood = 'warning'; // Only web streams available
+  } else if (availableStreamsCount === 0) {
+    mood = 'bad'; // No streams available
+  }
+
   return (
     <div className="">
       <h1 className="pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem] ">
         Tagging & Configuration
       </h1>
       <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center">
+        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3">
+          <MoodIcon mood={mood} />
           Data Streams
         </h2>
 

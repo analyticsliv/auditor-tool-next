@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
-import { Frown, Smile } from 'lucide-react';
+import MoodIcon from './MoodIcon';
 
 const ProductLinks = () => {
 
@@ -107,6 +107,11 @@ const ProductLinks = () => {
 
     }, [dv360LinksData])
 
+    // Calculate overall mood based on how many products are linked
+    const linkedCount = [gaLinkMood, bqLinkMood, firebaseLinkMood, sa360LinkMood, dv360LinkMood].filter(Boolean).length;
+
+    const overallMood = linkedCount >= 4 ? 'good' : linkedCount >= 2 ? 'warning' : 'bad';
+
     return (
         <div>
             <div>
@@ -114,7 +119,8 @@ const ProductLinks = () => {
                     & Integration
                 </h1>
                 <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                        <MoodIcon mood={overallMood} />
                         Product links
                     </h1>
                     <h3 className='text-center pb-10'>Ensuring that your Google Ads accounts are
@@ -135,75 +141,50 @@ const ProductLinks = () => {
                                 <tr>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>Google Ads Links </td>
                                     <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
-                                        {gaLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div><div>{'Linked'}</div>
-                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
-                                            <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div><div>{'Not Linked'}</div>
-                                        </div>}
+                                        <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <MoodIcon mood={gaLinkMood ? 'good' : 'bad'} />
+                                            <div>{gaLinkMood ? 'Linked' : 'Not Linked'}</div>
+                                        </div>
                                     </td>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>{gaLinkText}</td>
                                 </tr>
                                 <tr>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>BigQuery Links </td>
                                     <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
-                                        {bqLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div><div>{'Linked'}</div>
-                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
-                                            <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div><div>{'Not Linked'}</div>
-                                        </div>}
+                                        <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <MoodIcon mood={bqLinkMood ? 'good' : 'bad'} />
+                                            <div>{bqLinkMood ? 'Linked' : 'Not Linked'}</div>
+                                        </div>
                                     </td>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>{bqLinkText}</td>
                                 </tr>
                                 <tr>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>Firebase Links </td>
                                     <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
-                                        {firebaseLinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div><div>{'Linked'}</div>
-                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
-                                            <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div><div>{'Not Linked'}</div>
-                                        </div>}
+                                        <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <MoodIcon mood={firebaseLinkMood ? 'good' : 'bad'} />
+                                            <div>{firebaseLinkMood ? 'Linked' : 'Not Linked'}</div>
+                                        </div>
                                     </td>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>{firebaseLinkText}</td>
                                 </tr>
                                 <tr>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>Search Ads 360 Links </td>
                                     <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
-                                        {sa360LinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div><div>{'Linked'}</div>
-                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
-                                            <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div><div>{'Not Linked'}</div>
-                                        </div>}
+                                        <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <MoodIcon mood={sa360LinkMood ? 'good' : 'bad'} />
+                                            <div>{sa360LinkMood ? 'Linked' : 'Not Linked'}</div>
+                                        </div>
                                     </td>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>{sa360LinkText}</td>
                                 </tr>
                                 <tr>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>Display & Video 360 links</td>
                                     <td className='h-[3.2rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
-                                        {dv360LinkMood ? <div className="flex items-center justify-start w-[140px] gap-2" >
-                                            <div className="p-2 rounded-lg bg-green-500" >
-                                                <Smile className="w-5 h-5 text-white" />
-                                            </div><div>{'Linked'}</div>
-                                        </div> : <div className="flex items-center justify-start w-[140px] gap-2">
-                                            <div className="p-2 rounded-lg bg-red-500">
-                                                <Frown className="w-5 h-5 text-white" />
-                                            </div><div>{'Not Linked'}</div>
-                                        </div>}
+                                        <div className="flex items-center justify-start w-[140px] gap-2">
+                                            <MoodIcon mood={dv360LinkMood ? 'good' : 'bad'} />
+                                            <div>{dv360LinkMood ? 'Linked' : 'Not Linked'}</div>
+                                        </div>
                                     </td>
                                     <td className='h-[3.2rem] border-b border-gray-800 text-center'>{dv360LinkText}</td>
                                 </tr>
