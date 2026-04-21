@@ -18,7 +18,7 @@ export const authOptions = {
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours - update session if older than this
+    updateAge: 0, // always re-run JWT callback to check token expiry on every request
   },
   pages: {
     signIn: "/login",
@@ -29,7 +29,13 @@ export const authOptions = {
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        token.expiresAt = Date.now() + account.expires_in * 1000;
+        token.expiresAt = account.expires_at
+          ? account.expires_at * 1000
+          : account.expires_in
+          ? Date.now() + account.expires_in * 1000
+          : account.expires
+          ? account.expires * 1000
+          : Date.now() + 3600 * 1000;
         token.email = user?.email;
         token.name = user?.name;
         token.picture = user?.image;
@@ -38,6 +44,10 @@ export const authOptions = {
       // Return token if it's still valid (not expired)
       if (!token.expiresAt || Date.now() < token.expiresAt) {
         return token;
+      }
+
+      if (!token.refreshToken) {
+        return { ...token, error: "RefreshAccessTokenError" };
       }
 
       try {
@@ -60,11 +70,16 @@ export const authOptions = {
         if (!response.ok) throw refreshedTokens;
 
         token.accessToken = refreshedTokens.access_token;
-        token.expiresAt = Date.now() + refreshedTokens.expires_in * 1000;
+        token.expiresAt = refreshedTokens.expires_at
+          ? refreshedTokens.expires_at * 1000
+          : refreshedTokens.expires_in
+          ? Date.now() + refreshedTokens.expires_in * 1000
+          : refreshedTokens.expires
+          ? refreshedTokens.expires * 1000
+          : Date.now() + 3600 * 1000;
 
         return token;
       } catch (error) {
-        console.error("Error refreshing access token:", error);
         return { ...token, error: "RefreshAccessTokenError" };
       }
     },
