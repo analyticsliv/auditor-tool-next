@@ -1,3 +1,5 @@
+import { getSession } from "next-auth/react";
+
 export async function sendUserData(userDetail, accountSummaries) {
     // Function to transform the input array
     function transformAccounts(inputArray) {
@@ -34,7 +36,8 @@ export async function sendUserData(userDetail, accountSummaries) {
         "name": name,
         "accounts": transformedArray
     };
-    const accessToken = localStorage.getItem("accessToken");
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     try {
         const apiUrl = `/api/user`;
 

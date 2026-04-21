@@ -1,7 +1,9 @@
 import { useAccountStore } from "../store/useAccountStore";
+import { getSession } from "next-auth/react";
 
 export async function analyzeAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce) {
-    const accessToken = localStorage.getItem('accessToken');
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     const { auditData, endApiData } = useAccountStore.getState();
 
     const rawData = {

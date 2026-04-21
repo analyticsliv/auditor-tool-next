@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { getSession } from 'next-auth/react';
 
 export const useChatbot = () => {
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const accessToken = localStorage.getItem('accessToken');
 
     const sendMessage = async (query, propertyId) => {
+        const session = await getSession();
+        const accessToken = session?.accessToken;
         if (!query.trim() || !propertyId) return;
 
         // Add user message

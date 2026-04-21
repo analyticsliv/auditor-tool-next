@@ -1,8 +1,10 @@
 import { getUserSession } from "./user";
+import { getSession } from "next-auth/react";
 
 export async function GetAuditById(id) {
     const user = getUserSession();
-    const accessToken = localStorage.getItem('accessToken');
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     try {
         const apiUrl = `/api/audit/${id}`;
 

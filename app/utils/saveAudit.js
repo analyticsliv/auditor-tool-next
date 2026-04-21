@@ -1,10 +1,12 @@
 import { useAccountStore } from "../store/useAccountStore";
 import { getUserSession } from "./user";
+import { getSession } from "next-auth/react";
 
 export async function saveAudit(accountId, propertyId, selectedAccount, selectedProperty, isEcommerce, analyzerData = null) {
     const { auditData, endApiData } = useAccountStore.getState();
 
-    const accessToken = localStorage.getItem('accessToken');
+    const session = await getSession();
+    const accessToken = session?.accessToken;
 
     const data = {
         "accountId": accountId,

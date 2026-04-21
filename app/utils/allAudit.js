@@ -1,7 +1,9 @@
 import { getUserSession } from "./user";
+import { getSession } from "next-auth/react";
 
 export async function AllAudit() {
-    const accessToken = localStorage.getItem('accessToken');
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     try {
         const user = getUserSession();
 
