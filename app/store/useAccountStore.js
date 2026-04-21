@@ -73,9 +73,9 @@ export const useAccountStore = create((set, get) => ({
             return;
         }
 
-        if (!session.accessToken) {
-            console.error("❌ No access token in session:", session);
-            alert("Access token missing. Please sign out and sign in again.");
+        if (!session.accessToken || session.error === 'RefreshAccessTokenError') {
+            console.error("❌ Access token missing or refresh failed:", session.error);
+            alert("Your session has expired. Please sign in again.");
             await signOut({ redirect: false });
             router.push("/login");
             return;
