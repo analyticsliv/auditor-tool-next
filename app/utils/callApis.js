@@ -155,6 +155,7 @@ export const runCallApiInChunks = async (batchIndex) => {
     metrics: [{ name: "transactions" }, { name: "totalRevenue" }],
     dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
     keepEmptyRows: true,
+    limit: "250000",
   };
 
   const dimensionFilterFactory = (eventName) => ({
