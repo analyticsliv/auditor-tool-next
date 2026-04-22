@@ -1,18 +1,21 @@
-import { authenticateUser } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Audit from '@/models/audit';
 import { NextResponse } from 'next/server';
 
 export async function GET(request, context) {
     try {
-        // await connectDB();
+        await connectDB();
 
         const { params } = context;
         const { id } = params;
 
-        const { user } = await authenticateUser(request);
+        const accessToken = request.headers.get("Authorization")?.replace("Bearer ", "");
 
-        const auditRecord = await Audit.findOne({ _id: id, user: user._id }).exec();
+        if (!accessToken) {
+            return NextResponse.json({ message: 'Authorization header with Bearer token is required' }, { status: 401 });
+        }
+
+        const auditRecord = await Audit.findOne({ _id: id }).exec();
 
         if (!auditRecord) {
             return NextResponse.json({ message: 'Audit record not found' }, { status: 404 });
