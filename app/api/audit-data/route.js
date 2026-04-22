@@ -10,12 +10,15 @@ export async function GET(req) {
         if (!accessToken) {
             return NextResponse.json({ error: "Access token is missing" }, { status: 401 });
         }
-        if (!propertyId || !path) {
+        if (!propertyId || path === null) {
             return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
         }
 
-        const response = await fetch(
-            `https://analyticsadmin.googleapis.com/v1alpha/properties/${propertyId}/${path}`,
+        const url = path
+            ? `https://analyticsadmin.googleapis.com/v1alpha/properties/${propertyId}/${path}`
+            : `https://analyticsadmin.googleapis.com/v1beta/properties/${propertyId}`;
+
+        const response = await fetch(url,
             {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`

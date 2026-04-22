@@ -212,6 +212,7 @@ export const runCallApiInChunks = async (batchIndex) => {
   const callApiBatches = [
     async () => {
       fetchAuditData("dataStreams", "dataStreams");
+      fetchAuditData("propertyDetails", "");
       await reportEndApiCall("generalConfig", endapiall);
       fetchAuditData("dataRetentionSettings", "dataRetentionSettings");
       fetchAuditData("attributionSettings", "attributionSettings");

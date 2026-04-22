@@ -5,7 +5,7 @@ import { useAccountStore } from '../store/useAccountStore';
 import MoodIcon from './MoodIcon';
 
 const GeneralConfig = () => {
-    const { endApiData, selectedProperty } = useAccountStore();
+    const { endApiData, auditData,selectedProperty } = useAccountStore();
     const dataStreams = endApiData?.generalConfig || [];
 
     const [timezoneMood, setTimezoneMood] = useState(true);
@@ -14,7 +14,7 @@ const GeneralConfig = () => {
 
     let timezone = endApiData?.generalConfig?.metadata?.timeZone || 'Not Defined';
     let currencyCode = endApiData?.generalConfig?.metadata?.currencyCode || 'Not Defined';
-    let category = endApiData?.generalConfig?.industryCategory || 'Not Defined';
+    let category = auditData?.propertyDetails?.industryCategory || 'Not Defined';
 
     useEffect(() => {
         if (timezone != undefined) {
@@ -40,7 +40,6 @@ const GeneralConfig = () => {
         }
     }, [category])
 
-    const { auditData } = useAccountStore();
     const [dataRetentionMood, setDataRetentionMood] = useState(true);
     const [googleSignalMood, setGoogleSignalMood] = useState(true);
     const dataretention = auditData?.dataRetentionSettings?.userDataRetention?.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'undefined';
