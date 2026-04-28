@@ -155,6 +155,7 @@ export const runCallApiInChunks = async (batchIndex) => {
     metrics: [{ name: "transactions" }, { name: "totalRevenue" }],
     dateRanges: [{ startDate: formattedStartDate, endDate: formattedEndDate }],
     keepEmptyRows: true,
+    limit: "250000",
   };
 
   const dimensionFilterFactory = (eventName) => ({
@@ -212,6 +213,7 @@ export const runCallApiInChunks = async (batchIndex) => {
   const callApiBatches = [
     async () => {
       fetchAuditData("dataStreams", "dataStreams");
+      fetchAuditData("propertyDetails", "");
       await reportEndApiCall("generalConfig", endapiall);
       fetchAuditData("dataRetentionSettings", "dataRetentionSettings");
       fetchAuditData("attributionSettings", "attributionSettings");

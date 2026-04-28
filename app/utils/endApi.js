@@ -18,9 +18,6 @@ export async function reportEndApiCall(key, endapiall) {
 
         const accessToken = session.accessToken;
 
-        // Update localStorage with fresh token
-        localStorage.setItem("accessToken", accessToken);
-
         const response = await fetch("/api/report-end", {
             method: "POST",
             headers: {
@@ -68,9 +65,6 @@ export async function fetchAuditData(key, path) {
         }
 
         const accessToken = session.accessToken;
-
-        // Update localStorage with fresh token
-        localStorage.setItem("accessToken", accessToken);
 
         const response = await fetch(`/api/audit-data?propertyId=${propertyId}&path=${path}`, {
             headers: {

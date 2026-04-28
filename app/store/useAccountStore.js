@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import moment from "moment";
 import { signOut, getSession } from "next-auth/react";
 import { sendUserData } from "../utils/sendUserData";
@@ -85,7 +84,6 @@ export const useAccountStore = create((set, get) => ({
         console.log("✅ Using access token (first 20 chars):", accessToken.substring(0, 20) + "...");
 
         // Update localStorage with fresh token
-        localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("session", JSON.stringify(session));
 
         set({ loading: true });
@@ -157,8 +155,6 @@ export const useAccountStore = create((set, get) => ({
         const accessToken = session.accessToken;
 
         // Update localStorage with fresh token
-        localStorage.setItem("accessToken", accessToken);
-
         try {
             const response = await fetch(
                 `https://analyticsadmin.googleapis.com/v1alpha/properties?filter=parent:${accountName}`,
