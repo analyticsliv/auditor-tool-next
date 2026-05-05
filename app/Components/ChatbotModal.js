@@ -3,10 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useChatbot } from "../utils/useChatbot";
 import { useAccountStore } from "../store/useAccountStore";
+import { useUsage } from "../utils/useUsage";
+import ChatbotLimitModal from "./ChatbotLimitModal";
+import UsageBanner from "./UsageBanner";
 
 const ChatbotModal = ({ isOpen, onClose }) => {
     const [inputMessage, setInputMessage] = useState("");
-    const { messages, isLoading, sendMessage, clearMessages } = useChatbot();
+    const { usage, refetch: refetchUsage } = useUsage(isOpen);
+    const { messages, isLoading, sendMessage, clearMessages, limitReached, limitInfo, dismissLimit } = useChatbot(refetchUsage);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
@@ -73,8 +77,10 @@ const ChatbotModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const blockedByLimit = usage?.chatbot && !usage.chatbot.unlimited && usage.chatbot.blocked;
+
     const handleSend = async () => {
-        if (!inputMessage.trim() || !chatbotSelectedProperty || isLoading) return;
+        if (!inputMessage.trim() || !chatbotSelectedProperty || isLoading || blockedByLimit) return;
 
         const propertyId = chatbotSelectedProperty?.name?.split('/')[1];
         await sendMessage(inputMessage, propertyId);
@@ -225,6 +231,11 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                         </div>
                     </div>
                 </div>
+
+                {/* Low quota warning */}
+                {usage?.chatbot && !usage.chatbot.unlimited && (
+                    <UsageBanner used={usage.chatbot.used} limit={usage.chatbot.limit} kind="messages" />
+                )}
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
@@ -384,13 +395,13 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            placeholder={propertyId ? "Ask a question about your analytics..." : "Please select a property first"}
-                            disabled={!propertyId || isLoading}
+                            placeholder={blockedByLimit ? "Message limit reached" : (propertyId ? "Ask a question about your analytics..." : "Please select a property first")}
+                            disabled={!propertyId || isLoading || blockedByLimit}
                             className="flex-1 px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
                         />
                         <button
                             onClick={handleSend}
-                            disabled={!inputMessage.trim() || !propertyId || isLoading}
+                            disabled={!inputMessage.trim() || !propertyId || isLoading || blockedByLimit}
                             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg disabled:shadow-none flex items-center gap-2"
                         >
                             {isLoading ? (
@@ -419,6 +430,14 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                     )}
                 </div>
             </div>
+
+            <ChatbotLimitModal
+                isOpen={limitReached || blockedByLimit}
+                onClose={dismissLimit}
+                onRequestMore={() => { window.location.href = 'mailto:data.analytics@analyticsliv.com?subject=Chatbot%20limit%20increase'; }}
+                chatbotCount={limitInfo?.chatbotCount ?? usage?.chatbot?.used ?? 0}
+                chatbotLimit={limitInfo?.chatbotLimit ?? usage?.chatbot?.limit ?? 0}
+            />
         </div>
     );
 };

@@ -1,90 +1,85 @@
 import connectDB from '@/lib/mongodb';
 import User from '@/models/user';
 import { NextResponse } from 'next/server';
+import { SUPER_ADMIN_EMAIL, PLANS, ROLES, QUOTA_WINDOW_DAYS, addDays } from '@/app/config/plans';
+import { logActivity } from '@/app/utils/activityLogger';
 
 export async function POST(request) {
     try {
         await connectDB();
         const { email, name, accounts } = await request.json();
 
-        // Enhanced validation
         if (!email) {
-            return NextResponse.json({
-                error: 'Email is required'
-            }, { status: 400 });
+            return NextResponse.json({ error: 'Email is required' }, { status: 400 });
         }
 
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return NextResponse.json({
-                error: 'Please provide a valid email address'
-            }, { status: 400 });
+            return NextResponse.json({ error: 'Please provide a valid email address' }, { status: 400 });
         }
 
-        // Prepare update object
+        const normalized = email.toLowerCase().trim();
+        const isSuperAdmin = normalized === SUPER_ADMIN_EMAIL;
+        const now = new Date();
+
         const update = {
-            email: email.toLowerCase().trim(),
-            lastLogin: new Date(),
+            email: normalized,
+            lastLogin: now,
             $setOnInsert: {
+                role: isSuperAdmin ? ROLES.SUPER_ADMIN : ROLES.FREE_USER,
                 auditCount: 0,
-                auditLimit: 5
-            }
+                auditLimit: PLANS.free.auditLimit,
+                chatbotCount: 0,
+                chatbotLimit: PLANS.free.chatbotLimit,
+                quotaStartDate: now,
+                quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+                status: 'active',
+            },
         };
 
-        // Only add name if provided
-        if (name) {
-            update.name = name.trim();
-        }
-
-        // Only add accounts if provided and is an array
+        if (name) update.name = name.trim();
         if (accounts) {
-            if (Array.isArray(accounts)) {
-                update.accounts = accounts;
-            } else {
-                return NextResponse.json({
-                    error: 'Accounts must be an array'
-                }, { status: 400 });
+            if (!Array.isArray(accounts)) {
+                return NextResponse.json({ error: 'Accounts must be an array' }, { status: 400 });
             }
+            update.accounts = accounts;
         }
 
-        const options = {
-            new: true,      // Return the updated document
-            upsert: true,   // Create a new document if no match is found
-            runValidators: true // Run schema validators
-        };
+        const existing = await User.findOne({ email: normalized }).lean();
+        const isNew = !existing;
 
-        // Find or create user
         const user = await User.findOneAndUpdate(
-            { email: email.toLowerCase().trim() },
+            { email: normalized },
             update,
-            options
+            { new: true, upsert: true, runValidators: true }
         ).populate('accounts');
+
+        // Ensure super admin role stays elevated even if doc pre-existed
+        if (isSuperAdmin && user.role !== ROLES.SUPER_ADMIN) {
+            user.role = ROLES.SUPER_ADMIN;
+            await user.save();
+        }
+
+        await logActivity({
+            userEmail: normalized,
+            agencyId: user.agencyId || null,
+            action: isNew ? 'signup' : 'login',
+            metadata: { name: user.name },
+        });
 
         return NextResponse.json({
             message: 'User added or updated in db successfully',
-            user
+            user,
         }, { status: 200 });
 
     } catch (error) {
         console.error('Error adding or updating user:', error);
-
-        // Handle specific MongoDB errors
         if (error.name === 'ValidationError') {
-            return NextResponse.json({
-                error: 'Validation failed',
-                details: error.message
-            }, { status: 400 });
+            return NextResponse.json({ error: 'Validation failed', details: error.message }, { status: 400 });
         }
-
         if (error.name === 'CastError') {
-            return NextResponse.json({
-                error: 'Invalid data format'
-            }, { status: 400 });
+            return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
         }
-
-        return NextResponse.json({
-            error: 'Failed to add or update user'
-        }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to add or update user' }, { status: 500 });
     }
 }

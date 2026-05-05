@@ -5,14 +5,14 @@ import { logActivity } from '@/app/utils/activityLogger';
 import { ACTIONS } from '@/app/config/plans';
 
 function shape(quota) {
-    const a = quota.audit;
-    const limit = a.limit === Infinity ? null : a.limit;
-    const used = a.used ?? 0;
+    const c = quota.chatbot;
+    const limit = c.limit === Infinity ? null : c.limit;
+    const used = c.used ?? 0;
     return {
-        auditCount: used,
-        auditLimit: limit,
-        hasReachedLimit: a.blocked,
-        remainingAudits: a.remaining === Infinity ? null : Math.max(0, a.remaining ?? 0),
+        chatbotCount: used,
+        chatbotLimit: limit,
+        hasReachedLimit: c.blocked,
+        remainingMessages: c.remaining === Infinity ? null : Math.max(0, c.remaining ?? 0),
         scope: quota.scope,
         plan: quota.plan,
     };
@@ -31,7 +31,7 @@ async function handle(action, email, metadata) {
     }
 
     if (action === 'increment') {
-        const result = await incrementUsage(email, 'audit');
+        const result = await incrementUsage(email, 'chatbot');
         if (!result.ok) {
             return NextResponse.json(
                 { success: false, message: result.message, ...(result.quota ? shape(result.quota) : {}) },
@@ -41,13 +41,13 @@ async function handle(action, email, metadata) {
         await logActivity({
             userEmail: email,
             agencyId: result.quota.agencyId,
-            action: ACTIONS.AUDIT_RUN,
+            action: ACTIONS.CHATBOT_MESSAGE,
             metadata: metadata || {},
         });
         return NextResponse.json({
             success: true,
             action: 'increment',
-            message: 'Audit count incremented successfully',
+            message: 'Chatbot count incremented successfully',
             ...shape(result.quota),
         });
     }
@@ -65,7 +65,7 @@ export async function POST(req) {
         const body = await req.json();
         return await handle(action, body.email, body.metadata);
     } catch (error) {
-        console.error('Error in audit count management:', error);
+        console.error('Error in chatbot count management:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
     }
 }
@@ -76,7 +76,7 @@ export async function GET(req) {
         const email = searchParams.get('email');
         return await handle('check', email);
     } catch (error) {
-        console.error('Error checking audit count:', error);
+        console.error('Error checking chatbot count:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
     }
 }

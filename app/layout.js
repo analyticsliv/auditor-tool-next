@@ -8,8 +8,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "./utils/user";
 import { useAccountStore } from "./store/useAccountStore";
-import { Home, BarChart, LayoutDashboard, User, FileText, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, BarChart, LayoutDashboard, User, FileText, LogOut, ChevronLeft, ChevronRight, Building2 } from "lucide-react";
 import Loader from "./Components/loader";
+import { useRole } from "./utils/useRole";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,13 +32,16 @@ export default function RootLayout({ children }) {
     endApiData,
   } = useAccountStore();
 
+  const { role } = useRole();
+
   const menuItems = [
     { icon: <Home size={20} />, label: "Home", path: "/" },
     { icon: <BarChart size={20} />, label: "Audit Preview", path: "/auditPreview" },
-    { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
+    role === "superadmin" && { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
+    role === "agencyAdmin" && { icon: <Building2 size={20} />, label: "Agency", path: "/agency" },
     { icon: <User size={20} />, label: "Account Details", path: "/account" },
     { icon: <FileText size={20} />, label: "All Audits", path: "/previousAudit" },
-  ];
+  ].filter(Boolean);
 
 
   const [userSession, setUserSession] = useState(null);

@@ -11,6 +11,7 @@ const EventsTracking = () => {
     const [eventAnomalies, setEventAnomalies] = useState([]);
     const [eventstatus, setEventstatus] = useState([]);
     const [caseSensitiveMood, setCaseSensitiveMood] = useState(true);
+    const [categoryEvents, setCategoryEvents] = useState({ auto: [], enhanced: [], recommended: [], custom: [] });
 
     const { endApiData } = useAccountStore();
     const eventData = endApiData?.eventsTracking;
@@ -72,6 +73,13 @@ const EventsTracking = () => {
         }
         eventlength.push(automaticallyCollectedEvents1?.length, enhancedMeasurementEvents1?.length, recommendedEvents1?.length, customEvents?.length);
 
+        setCategoryEvents({
+            auto: automaticallyCollectedEvents1.slice(0, 20),
+            enhanced: enhancedMeasurementEvents1.slice(0, 20),
+            recommended: recommendedEvents1.slice(0, 20),
+            custom: customEvents.slice(0, 20),
+        });
+
         const formattedData = labels.map((label, index) => ({
             category: label,
             count: eventlength[index]
@@ -113,7 +121,7 @@ const EventsTracking = () => {
             (colIndex + 1) * rowsPerColumn
         ) || []
     );
-
+    console.log("eventChartDataeventChartDataeventChartData----", eventChartData)
     return (
         <>
             <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
@@ -123,27 +131,41 @@ const EventsTracking = () => {
                     </h1>
                     <div className='flex justify-between items-center'>
                         <div className='w-[40%] content-center text-sm 2xl:text-base text-left'>
-                            <h3><b>Automatically collected
-                                events</b> are events
-                                that are collected by default i.e page_view, app_update. You&apos;re
-                                tracking <b>{eventChartData?.[0]?.count}</b> events
-                                from this type.</h3>
-                            <h3 className='pt-3'><b>Enhanced measurement
-                                events</b> are events
-                                that are collected when enhanced measurement is enabled i.e file_download,
-                                scroll. You&apos;re
-                                tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
-                            <h3 className='pt-3'><b>Recommended events</b> are
-                                events
-                                that you
-                                implement, but that have predefined names i.e purchase, sign_up. You&apos;re
-                                tracking <b>{eventChartData?.[2]?.count}</b> events from this type.
-                            </h3>
-                            <h3 className='pt-3'><b>Custom events</b> are events
-                                that
-                                you define
-                                and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this
-                                type.</h3>
+                            <h3><b>Automatically collected events</b> are events collected by default i.e page_view, app_update. You&apos;re tracking <b>{eventChartData?.[0]?.count}</b> events from this type.</h3>
+                            {categoryEvents.auto.length > 0 && (
+                                <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
+                                    {categoryEvents.auto.map((e, i) => (
+                                        <span key={i} className='text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                    ))}
+                                </div>
+                            )}
+
+                            <h3 className='pt-3'><b>Enhanced measurement events</b> are collected when enhanced measurement is enabled i.e file_download, scroll. You&apos;re tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
+                            {categoryEvents.enhanced.length > 0 && (
+                                <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
+                                    {categoryEvents.enhanced.map((e, i) => (
+                                        <span key={i} className='text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                    ))}
+                                </div>
+                            )}
+
+                            <h3 className='pt-3'><b>Recommended events</b> are events that have predefined names i.e purchase, sign_up. You&apos;re tracking <b>{eventChartData?.[2]?.count}</b> events from this type.</h3>
+                            {categoryEvents.recommended.length > 0 && (
+                                <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
+                                    {categoryEvents.recommended.map((e, i) => (
+                                        <span key={i} className='text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                    ))}
+                                </div>
+                            )}
+
+                            <h3 className='pt-3'><b>Custom events</b> are events you define and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this type.</h3>
+                            {categoryEvents.custom.length > 0 && (
+                                <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
+                                    {categoryEvents.custom.map((e, i) => (
+                                        <span key={i} className='text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div className='min-w-[55%] content-center'>
                             <ResponsiveContainer height={400}>
