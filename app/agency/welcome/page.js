@@ -154,12 +154,21 @@ function Centered({ children }) {
 
 function Header({ icon: Icon, title, subtitle }) {
     return (
-        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-6 text-white">
-            <div className="w-12 h-12 bg-surface/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
-                <Icon size={22} strokeWidth={2} />
+        <div className="relative p-6 text-white overflow-hidden" style={{ backgroundColor: '#0F172A' }}>
+            {/* Solid corner accents — matches the landing/home page brand language */}
+            <div aria-hidden className="absolute top-0 left-0 w-1.5 h-full" style={{ backgroundColor: '#F97316' }} />
+            <div aria-hidden className="absolute top-0 left-0 h-1.5 w-20" style={{ backgroundColor: '#F97316' }} />
+            <div aria-hidden className="absolute bottom-0 right-0 w-1.5 h-10" style={{ backgroundColor: '#1A73E8' }} />
+            <div aria-hidden className="absolute bottom-0 right-0 h-1.5 w-20" style={{ backgroundColor: '#1A73E8' }} />
+
+            <div className="relative">
+                <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-3 text-white"
+                     style={{ backgroundColor: '#F97316' }}>
+                    <Icon size={20} strokeWidth={2.2} />
+                </div>
+                <h1 className="text-xl font-bold tracking-tight">{title}</h1>
+                {subtitle && <p className="text-sm text-slate-300 mt-1">{subtitle}</p>}
             </div>
-            <h1 className="text-xl font-bold">{title}</h1>
-            {subtitle && <p className="text-sm text-white/90 mt-1">{subtitle}</p>}
         </div>
     );
 }

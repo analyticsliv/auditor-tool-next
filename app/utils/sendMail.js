@@ -17,6 +17,17 @@ export const sendEmail = async (to, subject, html, from = 'noreply@analyticsliv.
         from: fromAddress,
         subject,
         html,
+        // Disable SendGrid's click-tracking + open-tracking so transactional
+        // links (invite acceptance, agency dashboard, etc.) point straight at
+        // our domain instead of being rewritten through the SendGrid proxy
+        // (urlNNN.analyticsliv.com), which has been throwing
+        // ERR_CERT_COMMON_NAME_INVALID for recipients.
+        trackingSettings: {
+            clickTracking:        { enable: false, enableText: false },
+            openTracking:         { enable: false },
+            subscriptionTracking: { enable: false },
+            ganalytics:           { enable: false },
+        },
     };
 
     try {

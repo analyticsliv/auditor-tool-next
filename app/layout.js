@@ -43,17 +43,36 @@ function AppShell({ children }) {
 
   const isPublicLanding = pathname === "/";
   const isAuditById = pathname === "/previous-audit";
+  // Semi-public routes — reachable without auth so users coming from email
+  // links can see the page and its built-in "Sign in with Google" CTA.
+  // /agency, /dashboard, /home and other protected pages bounce unauthenticated
+  // users back to "/" as before.
+  const isAgencyWelcome = pathname === "/agency/welcome";
+  const isInviteAccept  = !!pathname?.startsWith("/invite/");
+  const isOpenAccess    = isPublicLanding || isAgencyWelcome || isInviteAccept;
 
   const { auditData, endApiData } = useAccountStore();
-  const { role } = useRole();
+  const { role, loading: roleLoading } = useRole();
 
   const [toggle, setToggle] = useState(false);
+
+  // Role is fetched async via useRole(). Until it resolves, neither
+  // "Dashboard" nor "Agency" can be rendered — that's why the role-specific
+  // sidebar item used to briefly disappear on fresh sign-in. Reserve the slot
+  // with a skeleton placeholder so it's always present.
+  const roleSlot =
+    roleLoading
+      ? { skeleton: true, label: "role" }
+      : role === "superadmin"
+        ? { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" }
+        : role === "agencyAdmin"
+          ? { icon: <Building2 size={20} />, label: "Agency", path: "/agency" }
+          : null;
 
   const menuItems = [
     { icon: <Home size={20} />, label: "Home", path: "/home" },
     { icon: <BarChart size={20} />, label: "Audit Preview", path: "/auditPreview" },
-    role === "superadmin" && { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
-    role === "agencyAdmin" && { icon: <Building2 size={20} />, label: "Agency", path: "/agency" },
+    roleSlot,
     { icon: <User size={20} />, label: "Account Details", path: "/account" },
     { icon: <FileText size={20} />, label: "All Audits", path: "/previousAudit" },
   ].filter(Boolean);
@@ -69,10 +88,12 @@ function AppShell({ children }) {
     if (status === "loading") return;
     if (isPublicLanding && status === "authenticated") {
       router.replace("/home");
-    } else if (!isPublicLanding && status === "unauthenticated") {
+    } else if (!isOpenAccess && status === "unauthenticated") {
+      // Protected routes bounce unauthenticated users to landing.
+      // Open-access routes (welcome, invite) handle their own sign-in UI.
       router.replace("/");
     }
-  }, [status, isPublicLanding, router]);
+  }, [status, isPublicLanding, isOpenAccess, router]);
 
   const handleSignOut = async () => {
     try { localStorage.removeItem("accessToken"); } catch {}
@@ -85,9 +106,10 @@ function AppShell({ children }) {
   /* ---------- Render ---------- */
 
   // While next-auth is restoring the session — render a single loader.
-  // For the public landing, skip the loader entirely so the marketing page
-  // never flashes a spinner for cold visitors.
-  if (status === "loading" && !isPublicLanding) {
+  // Skip the full-screen loader for any open-access page (landing / welcome /
+  // invite); each renders its own page-level loading UI, so a layout-level
+  // spinner here would just flash on top of theirs.
+  if (status === "loading" && !isOpenAccess) {
     return (
       <div className="h-screen w-full flex flex-col justify-center items-center py-10">
         <Loader />
@@ -102,6 +124,15 @@ function AppShell({ children }) {
   // out because some children assume an unauthenticated context.
   if (isPublicLanding) {
     if (status === "authenticated") return null;
+    return <div>{children}</div>;
+  }
+
+  // Semi-public flows (welcome, invite-accept) render WITHOUT the
+  // sidebar/header chrome — they're standalone pages with their own
+  // sign-in CTA. They must work for both authenticated and unauthenticated
+  // visitors (since users typically arrive from an email link before
+  // signing in).
+  if (isAgencyWelcome || isInviteAccept) {
     return <div>{children}</div>;
   }
 
@@ -177,8 +208,26 @@ function AppShell({ children }) {
           <nav className="flex flex-col flex-1 overflow-hidden">
             <div className="flex-1 pt-3 px-2 space-y-1 overflow-y-auto">
               {menuItems?.map((item) => {
-                const isDisabled = disableMenus && item?.label !== "Home"
-                  && item?.label !== "Dashboard" && item?.label !== "Account Details" && item?.label !== "All Audits";
+                // Skeleton placeholder while role is being fetched.
+                if (item?.skeleton) {
+                  return (
+                    <div key="role-skeleton"
+                      className={`relative flex items-center gap-3 ${toggle ? "justify-center px-0" : "px-3"} py-2.5 rounded-lg`}>
+                      <span className="block w-5 h-5 rounded-md skeleton-shimmer shrink-0" />
+                      {!toggle && <span className="block h-3 flex-1 max-w-[80%] skeleton-shimmer rounded" />}
+                    </div>
+                  );
+                }
+                // Agency-admin's Agency page is a navigation destination, not
+                // an audit-result page — so it should NEVER be disabled by
+                // the missing-audit-data guard. Same logic for the other
+                // top-level destinations already in this whitelist.
+                const isDisabled = disableMenus
+                  && item?.label !== "Home"
+                  && item?.label !== "Dashboard"
+                  && item?.label !== "Agency"
+                  && item?.label !== "Account Details"
+                  && item?.label !== "All Audits";
                 const isActive = pathname === item.path;
                 return (
                   <Link key={item?.path} href={isDisabled ? "#" : item?.path}>
