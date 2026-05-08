@@ -151,17 +151,23 @@ function AppShell({ children }) {
           Clean white header with subtle border, indigo→cyan accent line.
           Modern SaaS-feel: minimal, restrained, no warm-beige tints. */}
       <header className="relative shrink-0">
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-indigo-500 via-indigo-400 to-cyan-400" />
+        {/* Solid 3-block brand stripe — matches landing/home pages, no gradient */}
+        <div className="absolute inset-x-0 top-0 h-[2px] flex">
+          <div className="flex-[3]" style={{ backgroundColor: "#F97316" }} />
+          <div className="flex-[2]" style={{ backgroundColor: "#1A73E8" }} />
+          <div className="flex-1"   style={{ backgroundColor: "#0F172A" }} />
+        </div>
         <div className="px-6 py-2.5 bg-surface border-b border-line flex justify-between items-center">
-          <h1 className="flex items-center gap-2.5">
+          {/* Wordmark — same composition as the / route navbar:
+              "GA4" in brand blue, "Auditor" in brand orange. No dot, no
+              competing size mixes; one weight, one size, two colours. */}
+          <Link href="/home" className="inline-flex items-center gap-2.5 group">
             <img src="/Audit_Logo_r.png" alt="GA4 Auditor Tool" className="h-8 w-auto" />
-            <span className="flex items-baseline gap-1.5">
-              <span className="text-xl font-bold tracking-tight text-content">GA4</span>
-              <span className="text-[10.5px] font-mono uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400 font-semibold translate-y-[-2px]">audit</span>
-              <span className="text-base font-medium text-content-subtle">·</span>
-              <span className="text-base font-medium text-content-muted">tool</span>
+            <span className="font-bold tracking-tight text-[15px] xl:text-base flex items-center gap-1">
+              <span style={{ color: "#1A73E8" }}>GA4</span>
+              <span style={{ color: "#F97316" }}>Auditor</span>
             </span>
-          </h1>
+          </Link>
 
           {/* Welcome pill */}
           <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-muted border border-line text-[12.5px]">
