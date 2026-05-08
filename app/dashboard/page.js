@@ -135,30 +135,31 @@ export default function SuperAdminDashboard() {
         }
     };
 
-    const updateAgencyPlan = async (id, plan) => {
-        const res = await fetch(`/api/admin/agencies/${id}`, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan }),
-        });
-        if (!res.ok) { const d = await res.json(); toast.show(d.error, 'error'); return; }
-        toast.show('Plan updated', 'success');
-        loadAll();
-    };
-
     const saveOverride = async () => {
         const t = overrideTarget;
         const url = t.kind === 'agency'
             ? `/api/admin/agencies/${t.id}`
             : `/api/admin/users/${encodeURIComponent(t.email)}`;
+        // Build the patch body — only include `plan` and `resetCounts` for
+        // agency targets (users don't have plans in this app).
+        const body = {
+            auditLimitOverride: t.auditLimitOverride === '' ? null : Number(t.auditLimitOverride),
+            chatbotLimitOverride: t.chatbotLimitOverride === '' ? null : Number(t.chatbotLimitOverride),
+        };
+        if (t.kind === 'agency') {
+            // Send plan only when it actually changed so the backend keeps
+            // the existing audit/chatbot counters intact.
+            if (t.plan && t.plan !== t.originalPlan) {
+                body.plan = t.plan;
+                if (t.resetCounts) body.resetCounts = true;
+            }
+        }
         const res = await fetch(url, {
             method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                auditLimitOverride: t.auditLimitOverride === '' ? null : Number(t.auditLimitOverride),
-                chatbotLimitOverride: t.chatbotLimitOverride === '' ? null : Number(t.chatbotLimitOverride),
-            }),
+            body: JSON.stringify(body),
         });
         if (!res.ok) { const d = await res.json(); toast.show(d.error, 'error'); return; }
-        toast.show('Limits updated', 'success');
+        toast.show(body.plan ? 'Plan & limits updated' : 'Limits updated', 'success');
         setOverrideTarget(null);
         loadAll();
     };
@@ -280,11 +281,18 @@ export default function SuperAdminDashboard() {
                                                 )}
                                             </Td>
                                             <Td>
-                                                <select value={a.plan} onChange={(e) => updateAgencyPlan(a.agencyId, e.target.value)}
-                                                    className="bg-surface border border-line rounded-md px-2 py-1 text-xs font-medium capitalize text-content hover:border-line-strong transition-colors">
-                                                    <option value="pro">Pro</option>
-                                                    <option value="premium">Premium</option>
-                                                </select>
+                                                {/* Plan is a read-only badge in the table.
+                                                    Edit it via the Override modal so that
+                                                    audit/chatbot/seat limits update in lockstep. */}
+                                                <span
+                                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-[0.06em]"
+                                                    style={{
+                                                        backgroundColor: a.plan === 'premium' ? 'rgba(26,115,232,0.10)' : 'rgba(249,115,22,0.10)',
+                                                        color:           a.plan === 'premium' ? '#1A73E8' : '#F97316',
+                                                        border:          `1px solid ${a.plan === 'premium' ? 'rgba(26,115,232,0.35)' : 'rgba(249,115,22,0.35)'}`,
+                                                    }}>
+                                                    {a.plan}
+                                                </span>
                                             </Td>
                                             <Td>
                                                 <span className="tabular-nums text-sm text-content">{a.seatsUsed}<span className="text-content-subtle">/{a.seatLimit}</span></span>
@@ -308,7 +316,16 @@ export default function SuperAdminDashboard() {
                                                     )}
                                                     {acceptedAdmin && (
                                                         <Button size="xs" variant="ghostAccent" icon={<Settings2 size={12} strokeWidth={2} />}
-                                                            onClick={() => setOverrideTarget({ kind:'agency', id:a.agencyId, name:a.name, auditLimitOverride:a.auditLimitOverride ?? '', chatbotLimitOverride:a.chatbotLimitOverride ?? '' })}>Override</Button>
+                                                            onClick={() => setOverrideTarget({
+                                                                kind: 'agency',
+                                                                id: a.agencyId,
+                                                                name: a.name,
+                                                                plan: a.plan,
+                                                                originalPlan: a.plan,
+                                                                resetCounts: false,
+                                                                auditLimitOverride: a.auditLimitOverride ?? '',
+                                                                chatbotLimitOverride: a.chatbotLimitOverride ?? '',
+                                                            })}>Override</Button>
                                                     )}
                                                     <Button size="xs" variant="ghostRed" icon={<Trash2 size={12} strokeWidth={2} />}
                                                         onClick={() => setConfirmDelete({ kind:'agency', id:a.agencyId, label:a.name })}>Delete</Button>
@@ -490,13 +507,96 @@ export default function SuperAdminDashboard() {
             </Modal>
 
             <Modal open={!!overrideTarget} onClose={() => setOverrideTarget(null)}
-                title="Override limits" subtitle={overrideTarget?.name}
+                title={overrideTarget?.kind === 'agency' ? 'Plan & limits' : 'Override limits'}
+                subtitle={overrideTarget?.name}
                 footer={<>
                     <Button variant="secondary" onClick={() => setOverrideTarget(null)}>Cancel</Button>
-                    <AsyncButton onClick={saveOverride}>Save override</AsyncButton>
+                    <AsyncButton onClick={saveOverride}>
+                        {overrideTarget?.kind === 'agency' && overrideTarget?.plan !== overrideTarget?.originalPlan
+                            ? 'Save plan & limits'
+                            : 'Save override'}
+                    </AsyncButton>
                 </>}>
                 {overrideTarget && (
                     <div className="space-y-4">
+                        {/* Plan picker — only for agency targets. Changing plan
+                            also resets seatLimit/auditLimit/chatbotLimit to the
+                            new plan defaults via the PATCH endpoint. */}
+                        {overrideTarget.kind === 'agency' && (() => {
+                            const planDefs = {
+                                pro:     { auditLimit: 30, chatbotLimit: 50, seatLimit: 5 },
+                                premium: { auditLimit: 50, chatbotLimit: 75, seatLimit: 15 },
+                            };
+                            const def = planDefs[overrideTarget.plan];
+                            const planChanged = overrideTarget.plan !== overrideTarget.originalPlan;
+                            return (
+                                <>
+                                    <Field label="Plan" hint="Changing the plan auto-fills the audit & chatbot override inputs below with that plan's defaults. You can still tweak the inputs afterwards without affecting this dropdown.">
+                                        <Select
+                                            value={overrideTarget.plan}
+                                            onChange={(e) => {
+                                                const nextPlan = e.target.value;
+                                                const nextDef = planDefs[nextPlan];
+                                                // One-way binding: plan → inputs.
+                                                // Selecting a plan auto-populates the override inputs
+                                                // with that plan's defaults so the admin sees what
+                                                // the agency will get. The reverse direction (typing
+                                                // in the inputs) does NOT touch this dropdown.
+                                                setOverrideTarget(t => ({
+                                                    ...t,
+                                                    plan: nextPlan,
+                                                    auditLimitOverride: nextDef ? String(nextDef.auditLimit) : t.auditLimitOverride,
+                                                    chatbotLimitOverride: nextDef ? String(nextDef.chatbotLimit) : t.chatbotLimitOverride,
+                                                }));
+                                            }}
+                                        >
+                                            <option value="pro">Pro — 30 audits · 50 chats · 5 seats</option>
+                                            <option value="premium">Premium — 50 audits · 75 chats · 15 seats</option>
+                                        </Select>
+                                    </Field>
+
+                                    {/* Live preview of plan-derived totals */}
+                                    {def && (
+                                        <div className="rounded-lg border border-line bg-surface-muted/40 px-4 py-3">
+                                            <div className="text-[10.5px] uppercase tracking-[0.14em] font-bold text-content-subtle mb-2">
+                                                {planChanged ? 'New plan totals' : 'Current plan totals'}
+                                            </div>
+                                            <div className="grid grid-cols-3 gap-3 text-xs">
+                                                <div>
+                                                    <div className="text-content-subtle">Audits</div>
+                                                    <div className="font-bold text-content tabular-nums text-base mt-0.5">{def.auditLimit}/mo</div>
+                                                </div>
+                                                <div>
+                                                    <div className="text-content-subtle">Chatbot</div>
+                                                    <div className="font-bold text-content tabular-nums text-base mt-0.5">{def.chatbotLimit}/mo</div>
+                                                </div>
+                                                <div>
+                                                    <div className="text-content-subtle">Seats</div>
+                                                    <div className="font-bold text-content tabular-nums text-base mt-0.5">{def.seatLimit}</div>
+                                                </div>
+                                            </div>
+                                            {planChanged && (
+                                                <label className="mt-3 flex items-start gap-2 text-xs text-content cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!overrideTarget.resetCounts}
+                                                        onChange={(e) => setOverrideTarget(t => ({ ...t, resetCounts: e.target.checked }))}
+                                                        className="mt-0.5 accent-[#F97316]"
+                                                    />
+                                                    <span>
+                                                        Also reset <strong>audit & chatbot usage counters to 0</strong> for this agency.
+                                                        <span className="block text-content-subtle mt-0.5">
+                                                            Skip this if the agency has already consumed quota you want to preserve.
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            )}
+                                        </div>
+                                    )}
+                                </>
+                            );
+                        })()}
+
                         <Field label="Audit limit override" hint="Leave blank to revert to plan default.">
                             <Input type="number" min="0" value={overrideTarget.auditLimitOverride}
                                 onChange={(e) => setOverrideTarget(t => ({ ...t, auditLimitOverride: e.target.value }))} />

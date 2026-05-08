@@ -84,43 +84,57 @@ export async function POST(req) {
             createdBy: guard.user.email,
         });
 
-        await logActivity({
-            userEmail: guard.user.email,
-            agencyId: agency.agencyId,
-            action: ACTIONS.AGENCY_CREATED,
-            metadata: { name: agency.name, plan, adminEmail: email },
-        });
+        // Helper: roll back the agency we just created. Used whenever admin
+        // assignment fails so we never leave an orphan agency behind.
+        const rollbackAgency = async (reason) => {
+            try {
+                await Agency.deleteOne({ agencyId: agency.agencyId });
+                console.error(`[agency-create] rolled back agency ${agency.agencyId} — ${reason}`);
+            } catch (rollbackErr) {
+                console.error(`[agency-create] CRITICAL: rollback also failed for ${agency.agencyId}`, rollbackErr);
+            }
+        };
 
         // Assign the admin directly — no invitation step.
+        // Wrapped in its own try/catch so a thrown error here triggers the
+        // agency rollback instead of falling through to the generic 500.
         let adminUser;
-        if (existingUser) {
-            adminUser = await User.findOneAndUpdate(
-                { email },
-                {
-                    $set: {
-                        role: ROLES.AGENCY_ADMIN,
-                        agencyId: agency.agencyId,
-                        status: 'active',
-                        invitedBy: guard.user.email,
+        try {
+            if (existingUser) {
+                adminUser = await User.findOneAndUpdate(
+                    { email },
+                    {
+                        $set: {
+                            role: ROLES.AGENCY_ADMIN,
+                            agencyId: agency.agencyId,
+                            status: 'active',
+                            invitedBy: guard.user.email,
+                        },
                     },
-                },
-                { new: true }
+                    { new: true }
+                );
+            } else {
+                adminUser = await User.create({
+                    email,
+                    role: ROLES.AGENCY_ADMIN,
+                    agencyId: agency.agencyId,
+                    status: 'active',
+                    invitedBy: guard.user.email,
+                    lastLogin: now,
+                    auditCount: 0,
+                    auditLimit: PLANS.free.auditLimit,
+                    chatbotCount: 0,
+                    chatbotLimit: PLANS.free.chatbotLimit,
+                    quotaStartDate: now,
+                    quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+                });
+            }
+        } catch (assignErr) {
+            await rollbackAgency(`admin assignment threw: ${assignErr?.message || assignErr}`);
+            return NextResponse.json(
+                { error: `Failed to assign ${email} as agency admin: ${assignErr?.message || 'unknown error'}` },
+                { status: 500 }
             );
-        } else {
-            adminUser = await User.create({
-                email,
-                role: ROLES.AGENCY_ADMIN,
-                agencyId: agency.agencyId,
-                status: 'active',
-                invitedBy: guard.user.email,
-                lastLogin: now,
-                auditCount: 0,
-                auditLimit: PLANS.free.auditLimit,
-                chatbotCount: 0,
-                chatbotLimit: PLANS.free.chatbotLimit,
-                quotaStartDate: now,
-                quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
-            });
         }
 
         console.log('[agency-create] admin assignment result:', {
@@ -130,19 +144,31 @@ export async function POST(req) {
         });
 
         if (!adminUser || adminUser.role !== ROLES.AGENCY_ADMIN || adminUser.agencyId !== agency.agencyId) {
-            console.error('[agency-create] admin assignment FAILED to persist correctly');
+            await rollbackAgency('admin assignment did not persist with expected fields');
             return NextResponse.json({
-                error: 'Agency was created but admin assignment failed. Please contact support.',
-                agency,
+                error: 'Agency could not be created — admin assignment did not persist. Please try again.',
             }, { status: 500 });
         }
 
-        await logActivity({
-            userEmail: guard.user.email,
-            agencyId: agency.agencyId,
-            action: ACTIONS.ADMIN_ASSIGNED,
-            metadata: { adminEmail: email, preExisting: !!existingUser },
-        });
+        // Both writes succeeded. From here on, errors must NOT cause a 500 —
+        // the agency + admin are already committed, so we'd be lying to the
+        // client. Wrap remaining best-effort calls so they can't bubble.
+        try {
+            await logActivity({
+                userEmail: guard.user.email,
+                agencyId: agency.agencyId,
+                action: ACTIONS.AGENCY_CREATED,
+                metadata: { name: agency.name, plan, adminEmail: email },
+            });
+            await logActivity({
+                userEmail: guard.user.email,
+                agencyId: agency.agencyId,
+                action: ACTIONS.ADMIN_ASSIGNED,
+                metadata: { adminEmail: email, preExisting: !!existingUser },
+            });
+        } catch (logErr) {
+            console.error('[agency-create] activity log failed (non-fatal):', logErr);
+        }
 
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
         const dashboardUrl = `${baseUrl}/agency/welcome`;
