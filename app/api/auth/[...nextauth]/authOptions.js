@@ -20,7 +20,7 @@ export const authOptions = {
     updateAge: 0,
   },
   pages: {
-    signIn: "/login",
+    signIn: "/",
   },
   callbacks: {
     async jwt({ token, account, user }) {

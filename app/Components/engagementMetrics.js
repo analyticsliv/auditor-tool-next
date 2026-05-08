@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -137,10 +137,10 @@ const EngagementMetrics = () => {
 
 
     return (
-        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
             <div>
                 <div className='flex justify-center relative'>
-                    <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                    <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>
                         Engagement Metrics - Anomaly Detection
                     </h1>
                     {/* <img src="/images/info-icon.png" alt="info" id="info-icon" />

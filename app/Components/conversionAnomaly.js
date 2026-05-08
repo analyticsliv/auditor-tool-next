@@ -57,30 +57,30 @@ const ConversionAnomaly = () => {
     }, [totalConvData, convChartData, startDate, endDate])
 
     return (
-        <div className='parent-div bg-white rounded-3xl px-4 py-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl px-4 py-10 mt-10'>
             <div>
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>
                     Conversions - Anomaly Detection
                 </h1>
                 {(!totalConvData?.rows || totalConvData?.rows?.length === 0) ?
-                    <div className="mx-auto max-w-3xl bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-inner">
+                    <div className="mx-auto max-w-3xl bg-gradient-to-br from-indigo-50 dark:from-indigo-950 to-purple-50 dark:to-purple-950 rounded-2xl p-6 shadow-inner">
 
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-9 h-9 rounded-xl bg-indigo-500 text-white flex items-center justify-center text-sm shadow">
                                 !
                             </div>
-                            <h3 className="text-sm font-bold text-gray-800">
+                            <h3 className="text-sm font-bold text-content">
                                 No Conversion Trend Available
                             </h3>
                         </div>
 
-                        <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                        <p className="text-sm text-content leading-relaxed mb-3">
                             We couldn’t generate the anomaly graph because there is not enough
                             purchase or key-event data for this GA4 property in the selected date range.
                         </p>
 
-                        <div className="bg-white/70 rounded-xl px-4 py-3 text-sm text-gray-700">
-                            <p className="font-semibold text-gray-800 mb-1">Possible reasons:</p>
+                        <div className="bg-white/70 rounded-xl px-4 py-3 text-sm text-content">
+                            <p className="font-semibold text-content mb-1">Possible reasons:</p>
                             <ul className="list-disc list-inside space-y-0.5">
                                 <li>Conversions are not marked or not firing in GA4</li>
                                 <li>The property is new or has very low traffic</li>
@@ -88,7 +88,7 @@ const ConversionAnomaly = () => {
                             </ul>
                         </div>
 
-                        <p className="text-xs text-gray-500 mt-3">
+                        <p className="text-xs text-content-subtle mt-3">
                             Recommendation: Verify your conversion setup in GA4 before relying on anomaly detection.
                         </p>
 

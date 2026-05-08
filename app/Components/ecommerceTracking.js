@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
 import { useAccountStore } from '../store/useAccountStore'
@@ -106,9 +106,9 @@ const EcommerceTracking = () => {
     const ecomMood = getEcomMood();
 
     return (
-        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
             <div className="streams">
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                     {ecomMood && <MoodIcon mood={ecomMood} />}
                     E-Commerce Tracking
                 </h1>
@@ -117,15 +117,15 @@ const EcommerceTracking = () => {
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
-                        <p className="text-gray-600 font-medium">Loading e-commerce data...</p>
+                        <p className="text-content-muted font-medium">Loading e-commerce data...</p>
                     </div>
                 ) : !isEcomDataAvailable ? (
                     <div className="flex flex-col items-center justify-center py-8">
-                        <div className="p-4 rounded-full bg-red-100 mb-4">
+                        <div className="p-4 rounded-full bg-red-100 dark:bg-red-500/15 mb-4">
                             <Frown className="w-8 h-8 text-red-500" />
                         </div>
                         <p className="text-red-500 font-semibold text-lg">Not an e-commerce account.</p>
-                        <p className="text-gray-500 text-sm mt-2">No transaction data found for the selected period.</p>
+                        <p className="text-content-subtle text-sm mt-2">No transaction data found for the selected period.</p>
                     </div>
                 ) : (
                     <div>
@@ -139,22 +139,22 @@ const EcommerceTracking = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Collecting Transactions</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Collecting Transactions</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
                                             <MoodIcon mood="good" />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>You have <b>{trackingData?.rows?.length}</b> transactions during reporting period.</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>You have <b>{trackingData?.rows?.length}</b> transactions during reporting period.</td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions without IDs</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Transactions without IDs</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
                                             <MoodIcon mood={notSetCount > 0 ? 'bad' : 'good'} />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         {notSetCount > 0 ? (
                                             <>You have <b>{notSetCount}</b> transactions without transaction ID.</>
                                         ) : (
@@ -163,13 +163,13 @@ const EcommerceTracking = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Duplicate Transactions</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Duplicate Transactions</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
                                             <MoodIcon mood={duplicateArray.length > 0 ? 'bad' : 'good'} />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         {duplicateArray.length > 0 ? (
                                             <>You have <b>{duplicateArray.length}</b> duplicate transactions.</>
                                         ) : (
@@ -178,13 +178,13 @@ const EcommerceTracking = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Transactions Revenue</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Transactions Revenue</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         <span className='h-[3.8rem] flex justify-center items-center font-bold text-center'>
                                             <MoodIcon mood="good" />
                                         </span>
                                     </td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>
                                         You have <b>{totalRevenue.toFixed(2)} {currency}</b> revenue during the reporting period.
                                     </td>
                                 </tr>

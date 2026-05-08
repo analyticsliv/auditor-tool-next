@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { useAccountStore } from "../store/useAccountStore";
@@ -54,8 +54,8 @@ const DataStreams = () => {
       <h1 className="pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem] ">
         Tagging & Configuration
       </h1>
-      <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-        <h2 className="pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3">
+      <div className="parent-div bg-surface rounded-3xl p-10 mt-10">
+        <h2 className="pb-10 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3">
           <MoodIcon mood={mood} />
           Data Streams
         </h2>
@@ -71,44 +71,44 @@ const DataStreams = () => {
           </thead>
           <tbody>
             <tr>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-bold text-center">
                 # of streams
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-semibold text-center">
                 Web configured stream
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-semibold text-center">
                 Android configured streams
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 font-semibold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-semibold text-center">
                 iOS configured streams
               </td>
             </tr>
             <tr>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-bold text-center">
                 Active streams
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {webStreams}
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {androidStreams}
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {iosStreams}
               </td>
             </tr>
             <tr>
-              <td className="h-[3.8rem] border-b border-gray-800 font-bold text-center">
+              <td className="h-[3.8rem] border-b border-line-strong font-bold text-center">
                 Measurement Id / App Id
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {webMeasurementId}
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {androidMeasurementId}
               </td>
-              <td className="h-[3.8rem] border-b border-gray-800 text-center">
+              <td className="h-[3.8rem] border-b border-line-strong text-center">
                 {iosMeasurementId}
               </td>
             </tr>

@@ -5,7 +5,7 @@ export async function middleware(request) {
     const { pathname } = request.nextUrl;
 
     // Public paths that don't require authentication
-    const publicPaths = ['/login', '/api/auth'];
+    const publicPaths = ['/', '/api/auth'];
     const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
     // Get the NextAuth JWT token
@@ -50,31 +50,35 @@ export async function middleware(request) {
         });
     }
 
-    // Protect page routes - redirect to login if not authenticated
+    // Protected page routes — redirect unauthenticated users to "/" (the
+    // public landing). The landing page has the Google sign-in CTA.
     if (!isPublicPath && !token) {
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('callbackUrl', pathname);
-        return NextResponse.redirect(loginUrl);
+        const landing = new URL('/', request.url);
+        landing.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(landing);
     }
 
-    // Redirect authenticated users away from login page
-    if (pathname === '/login' && token) {
-        return NextResponse.redirect(new URL('/', request.url));
+    // Authenticated users hitting "/" go straight to the app at "/home".
+    // (Was previously redirecting "/" → "/" which is an infinite loop now
+    // that "/" itself is the public landing page.)
+    if (pathname === '/' && token) {
+        return NextResponse.redirect(new URL('/home', request.url));
     }
 
-    // Allow all other requests
     return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        '/api/audit/:path*',  // Protect audit API routes
-        '/',                   // Protect home page
-        '/dashboard',          // Protect dashboard
-        '/account',            // Protect account page
-        '/auditPreview',       // Protect audit preview
-        '/previous-audit',     // Protect previous audit
-        '/previousAudit',      // Protect previous audit (alt)
-        '/login',              // Handle login redirects
+        '/api/audit/:path*',
+        '/',
+        '/home',
+        '/dashboard',
+        '/account',
+        '/agency',
+        '/agency/welcome',
+        '/auditPreview',
+        '/previous-audit',
+        '/previousAudit',
     ]
 };

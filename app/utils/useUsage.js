@@ -1,32 +1,22 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from "react";
+import { useUsageStore } from "../store/useUsageStore";
 
+/* Backed by the shared usage store so this hook never triggers a duplicate
+   /api/usage request. Concurrent hook subscribers share the same in-flight
+   fetch; subsequent mounts read straight from the cache. */
 export function useUsage(autoFetch = true) {
-    const [usage, setUsage] = useState(null);
-    const [loading, setLoading] = useState(autoFetch);
-    const [error, setError] = useState(null);
+    const usage = useUsageStore((s) => s.usage);
+    const loading = useUsageStore((s) => s.loading);
+    const error = useUsageStore((s) => s.error);
+    const fetchUsage = useUsageStore((s) => s.fetchUsage);
 
-    const refetch = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const res = await fetch('/api/usage', { method: 'GET', credentials: 'include' });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Failed to load usage');
-            setUsage(data);
-            return data;
-        } catch (err) {
-            setError(err.message);
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    const refetch = useCallback(() => fetchUsage(true), [fetchUsage]);
 
     useEffect(() => {
-        if (autoFetch) refetch();
-    }, [autoFetch, refetch]);
+        if (autoFetch) fetchUsage();
+    }, [autoFetch, fetchUsage]);
 
     return { usage, loading, error, refetch };
 }

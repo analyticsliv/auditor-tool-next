@@ -1,30 +1,29 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useUsageStore } from "../store/useUsageStore";
 
 export function useRole() {
-    const [role, setRole] = useState(null);
-    const [agencyId, setAgencyId] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { status } = useSession();
+    const role = useUsageStore((s) => s.role);
+    const agencyId = useUsageStore((s) => s.agencyId);
+    const loading = useUsageStore((s) => s.loading);
+    const fetched = useUsageStore((s) => s.fetched);
+    const fetchUsage = useUsageStore((s) => s.fetchUsage);
+    const reset = useUsageStore((s) => s.reset);
 
     useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                const res = await fetch('/api/usage', { credentials: 'include' });
-                if (!res.ok) throw new Error('not authenticated');
-                const data = await res.json();
-                if (cancelled) return;
-                setRole(data.role || null);
-                setAgencyId(data.agencyId || null);
-            } catch {
-                if (!cancelled) setRole(null);
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        })();
-        return () => { cancelled = true; };
-    }, []);
+        if (status === "authenticated") {
+            // fetchUsage is idempotent — won't refetch if already fetched.
+            fetchUsage();
+        } else if (status === "unauthenticated") {
+            // Drop cached data when the user logs out so the next sign-in
+            // re-fetches against the new identity.
+            if (fetched) reset();
+        }
+        // status === "loading" → wait, no-op
+    }, [status, fetchUsage, reset, fetched]);
 
     return { role, agencyId, loading };
 }

@@ -115,7 +115,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
+            <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
 
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-6 flex-shrink-0">
@@ -145,20 +145,20 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Account & Property Selection Bar */}
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b-2 border-blue-100 flex-shrink-0">
+                <div className="bg-gradient-to-r from-blue-50 dark:from-blue-950 to-purple-50 dark:to-purple-950 p-4 border-b-2 border-blue-100 flex-shrink-0">
                     <div className="flex gap-3">
                         {/* Account Dropdown */}
                         <div className="flex-1 relative" ref={dropdownRef}>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Account</label>
+                            <label className="block text-xs font-semibold text-content mb-1">Account</label>
                             <div
-                                className="px-4 py-2.5 border-2 border-gray-200 rounded-xl w-full flex justify-between items-center bg-white transition-all duration-200 hover:border-blue-400 cursor-pointer"
+                                className="px-4 py-2.5 border-2 border-line rounded-xl w-full flex justify-between items-center bg-surface transition-all duration-200 hover:border-blue-400 cursor-pointer"
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
                             >
-                                <span className={`${chatbotSelectedAccount ? "text-gray-800 font-medium" : "text-gray-500"} text-sm`}>
+                                <span className={`${chatbotSelectedAccount ? "text-content font-medium" : "text-content-subtle"} text-sm`}>
                                     {chatbotSelectedAccount ? chatbotSelectedAccount.displayName : "Select account"}
                                 </span>
                                 <svg
-                                    className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
+                                    className={`w-4 h-4 text-content-subtle transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -168,14 +168,14 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                             </div>
 
                             {dropdownOpen && (
-                                <div className="absolute z-20 mt-1 border border-gray-200 bg-white rounded-xl w-full shadow-2xl max-h-64 overflow-hidden">
-                                    <div className="sticky top-0 bg-white z-10 p-2 border-b border-gray-100">
+                                <div className="absolute z-20 mt-1 border border-line bg-surface rounded-xl w-full shadow-2xl max-h-64 overflow-hidden">
+                                    <div className="sticky top-0 bg-surface z-10 p-2 border-b border-line">
                                         <input
                                             type="text"
                                             placeholder="Search accounts..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="pl-3 pr-3 py-1.5 border border-gray-200 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                            className="pl-3 pr-3 py-1.5 border border-line rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                                         />
                                     </div>
                                     <div className="max-h-48 overflow-y-auto">
@@ -187,7 +187,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                 <div
                                                     key={account?.account}
                                                     onClick={() => handleAccountSelect(account)}
-                                                    className="px-3 py-2 hover:bg-blue-50 cursor-pointer transition-colors duration-150 text-sm"
+                                                    className="px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-500/10 cursor-pointer transition-colors duration-150 text-sm"
                                                 >
                                                     <div className="flex items-center">
                                                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
@@ -202,13 +202,13 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
                         {/* Property Dropdown */}
                         <div className="flex-1">
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Property</label>
+                            <label className="block text-xs font-semibold text-content mb-1">Property</label>
                             <div className="relative">
                                 <select
                                     onChange={handlePropertySelect}
                                     disabled={!chatbotSelectedAccount || loadingProperties}
                                     value={chatbotSelectedProperty?.name || ""}
-                                    className="px-4 py-2.5 border-2 border-gray-200 rounded-xl w-full bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 hover:border-blue-400 text-sm font-medium text-gray-700"
+                                    className="px-4 py-2.5 border-2 border-line rounded-xl w-full bg-surface appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 hover:border-blue-400 text-sm font-medium text-content"
                                 >
                                     <option value="">
                                         {loadingProperties ? "Loading properties..." : !chatbotSelectedAccount ? "Select account first" : "Select property"}
@@ -219,7 +219,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                         </option>
                                     ))}
                                 </select>
-                                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-content-subtle pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                                 {loadingProperties && (
@@ -238,16 +238,16 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                 )}
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-surface-muted">
                     {messages.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center">
-                            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-4">
-                                <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 dark:from-blue-900 to-purple-100 dark:to-purple-900 rounded-full flex items-center justify-center mb-4">
+                                <svg className="w-10 h-10 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                 </svg>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">Welcome to GA4 Assistant!</h3>
-                            <p className="text-gray-600 max-w-md mb-6">
+                            <h3 className="text-xl font-bold text-content mb-2">Welcome to GA4 Assistant!</h3>
+                            <p className="text-content-muted max-w-md mb-6">
                                 {chatbotSelectedProperty
                                     ? "Ask me anything about your Google Analytics data. I can help you understand your metrics, analyze trends, and answer questions about your website performance."
                                     : "Please select an account and property above to start chatting with the assistant."
@@ -257,27 +257,27 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl">
                                     <button
                                         onClick={() => handleRecommendedQuestion("How many active users yesterday?")}
-                                        className="px-4 py-3 bg-white border-2 border-blue-200 rounded-xl hover:border-blue-400 hover:shadow-md transition-all text-left"
+                                        className="px-4 py-3 bg-surface border-2 border-blue-200 dark:border-blue-500/30 rounded-xl hover:border-blue-400 hover:shadow-md transition-all text-left"
                                     >
-                                        <span className="text-sm font-semibold text-gray-700">📊 Active users yesterday</span>
+                                        <span className="text-sm font-semibold text-content">📊 Active users yesterday</span>
                                     </button>
                                     <button
                                         onClick={() => handleRecommendedQuestion("Show top traffic sources")}
-                                        className="px-4 py-3 bg-white border-2 border-purple-200 rounded-xl hover:border-purple-400 hover:shadow-md transition-all text-left"
+                                        className="px-4 py-3 bg-surface border-2 border-purple-200 dark:border-purple-500/30 rounded-xl hover:border-purple-400 hover:shadow-md transition-all text-left"
                                     >
-                                        <span className="text-sm font-semibold text-gray-700">🔍 Top traffic sources</span>
+                                        <span className="text-sm font-semibold text-content">🔍 Top traffic sources</span>
                                     </button>
                                     <button
                                         onClick={() => handleRecommendedQuestion("What are the most viewed pages?")}
-                                        className="px-4 py-3 bg-white border-2 border-pink-200 rounded-xl hover:border-pink-400 hover:shadow-md transition-all text-left"
+                                        className="px-4 py-3 bg-surface border-2 border-pink-200 dark:border-pink-500/30 rounded-xl hover:border-pink-400 hover:shadow-md transition-all text-left"
                                     >
-                                        <span className="text-sm font-semibold text-gray-700">📄 Most viewed pages</span>
+                                        <span className="text-sm font-semibold text-content">📄 Most viewed pages</span>
                                     </button>
                                     <button
                                         onClick={() => handleRecommendedQuestion("Show conversion rate trends")}
-                                        className="px-4 py-3 bg-white border-2 border-green-200 rounded-xl hover:border-green-400 hover:shadow-md transition-all text-left"
+                                        className="px-4 py-3 bg-surface border-2 border-green-200 dark:border-green-500/30 rounded-xl hover:border-green-400 hover:shadow-md transition-all text-left"
                                     >
-                                        <span className="text-sm font-semibold text-gray-700">📈 Conversion trends</span>
+                                        <span className="text-sm font-semibold text-content">📈 Conversion trends</span>
                                     </button>
                                 </div>
                             )}
@@ -293,9 +293,9 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                     </div>
                                 ) : message.type === "error" ? (
                                     <div className="flex justify-start">
-                                        <div className="bg-red-50 border-2 border-red-200 text-red-800 rounded-2xl rounded-tl-sm px-5 py-3 max-w-[80%]">
+                                        <div className="bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 text-red-800 dark:text-red-200 rounded-2xl rounded-tl-sm px-5 py-3 max-w-[80%]">
                                             <div className="flex items-start gap-2">
-                                                <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
                                                 <p className="text-sm leading-relaxed">{message.content}</p>
@@ -304,7 +304,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                     </div>
                                 ) : (
                                     <div className="flex justify-start">
-                                        <div className="bg-white border-2 border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 max-w-[80%] shadow-md">
+                                        <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-5 py-4 max-w-[80%] shadow-md">
                                             <div className="flex items-start gap-3 mb-3">
                                                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
                                                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,16 +312,16 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                     </svg>
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className="text-sm leading-relaxed text-gray-800 whitespace-pre-wrap">
+                                                    <p className="text-sm leading-relaxed text-content whitespace-pre-wrap">
                                                         {message.content}
                                                     </p>
 
                                                     {/* Show GA4 Data if available */}
                                                     {message.data?.ga4_dataframe && message.data.ga4_dataframe.length > 0 && (
-                                                        <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                                                            <p className="text-xs font-semibold text-blue-900 mb-2">📊 Data Summary:</p>
+                                                        <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-500/10 rounded-lg border border-blue-200 dark:border-blue-500/30">
+                                                            <p className="text-xs font-semibold text-blue-900 dark:text-blue-200 mb-2">📊 Data Summary:</p>
                                                             {message.data.ga4_dataframe.map((row, idx) => (
-                                                                <div key={idx} className="text-xs text-blue-800">
+                                                                <div key={idx} className="text-xs text-blue-800 dark:text-blue-200">
                                                                     {Object.entries(row).map(([key, value]) => (
                                                                         <span key={key} className="mr-3">
                                                                             <strong>{key}:</strong> {value}
@@ -334,7 +334,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
                                                     {/* Response Time */}
                                                     {message.data?.response_time && (
-                                                        <p className="text-xs text-gray-400 mt-2">
+                                                        <p className="text-xs text-content-subtle mt-2">
                                                             ⚡ Responded in {message.data.response_time.toFixed(2)}s
                                                         </p>
                                                     )}
@@ -343,14 +343,14 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
                                             {/* Recommended Questions */}
                                             {message.recommendedQuestions && message.recommendedQuestions.length > 0 && (
-                                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                                    <p className="text-xs font-semibold text-gray-600 mb-2">💡 You might also ask:</p>
+                                                <div className="mt-3 pt-3 border-t border-line">
+                                                    <p className="text-xs font-semibold text-content-muted mb-2">💡 You might also ask:</p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {message.recommendedQuestions.map((question, idx) => (
                                                             <button
                                                                 key={idx}
                                                                 onClick={() => handleRecommendedQuestion(question)}
-                                                                className="px-3 py-1.5 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-full text-xs font-medium text-blue-700 hover:from-blue-100 hover:to-purple-100 hover:border-blue-300 transition-all"
+                                                                className="px-3 py-1.5 bg-gradient-to-r from-blue-50 dark:from-blue-950 to-purple-50 dark:to-purple-950 border border-blue-200 dark:border-blue-500/30 rounded-full text-xs font-medium text-blue-700 dark:text-blue-300 hover:from-blue-100 dark:from-blue-900 hover:to-purple-100 dark:to-purple-900 hover:border-blue-300 dark:hover:border-blue-500/40 transition-all"
                                                             >
                                                                 {question}
                                                             </button>
@@ -368,15 +368,15 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                     {/* Loading Indicator */}
                     {isLoading && (
                         <div className="flex justify-start">
-                            <div className="bg-white border-2 border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-md">
+                            <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-5 py-4 shadow-md">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                                     </div>
                                     <div className="flex gap-1">
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                        <div className="w-2 h-2 bg-content-subtle rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-content-subtle rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                        <div className="w-2 h-2 bg-content-subtle rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                     </div>
                                 </div>
                             </div>
@@ -387,7 +387,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 bg-white border-t-2 border-gray-200 flex-shrink-0">
+                <div className="p-4 bg-surface border-t-2 border-line flex-shrink-0">
                     <div className="flex gap-3">
                         <input
                             ref={inputRef}
@@ -397,7 +397,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                             onKeyPress={handleKeyPress}
                             placeholder={blockedByLimit ? "Message limit reached" : (propertyId ? "Ask a question about your analytics..." : "Please select a property first")}
                             disabled={!propertyId || isLoading || blockedByLimit}
-                            className="flex-1 px-5 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+                            className="flex-1 px-5 py-3 border-2 border-line-strong rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-surface-hover disabled:cursor-not-allowed text-sm"
                         />
                         <button
                             onClick={handleSend}
@@ -421,7 +421,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                     </div>
 
                     {!propertyId && (
-                        <p className="text-xs text-red-600 mt-2 flex items-center gap-1">
+                        <p className="text-xs text-red-600 dark:text-red-400 mt-2 flex items-center gap-1">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>

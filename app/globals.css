@@ -2,22 +2,394 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* --background: #ffffff; */
-  /* --foreground: #171717; */
+html { scroll-behavior: smooth; }
+
+/* ============================================================
+   Shimmer skeleton — theme-aware loading placeholder.
+   Two-tone gradient slides across the element. Uses semantic
+   tokens so it adapts to light & dark automatically.
+   ============================================================ */
+@keyframes skeleton-slide {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-shimmer {
+  /* Light mode: use border tones so the shimmer reads against white surfaces.
+     The previous surface-hover/muted pair was too close to white to be visible. */
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--border)) 0%,
+    rgb(var(--border-strong)) 50%,
+    rgb(var(--border)) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-slide 1.4s ease-in-out infinite;
+  border-radius: inherit;
+}
+.dark .skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.05) 0%,
+    rgba(255,255,255,0.12) 50%,
+    rgba(255,255,255,0.05) 100%
+  );
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    /* --background: #0a0a0a;
-    --foreground: #ededed; */
+/* ============================================================
+   Theme tokens
+   - Light values mirror the existing UI exactly (white surfaces,
+     slate-100 page bg, gray-200 borders, blue-600 brand, etc.)
+   - Dark values are a professional slate palette tuned for
+     long sessions, charts, and AA contrast.
+   - Format: "R G B" so Tailwind can apply <alpha-value>.
+   ============================================================ */
+
+:root {
+  /* surfaces */
+  --background: 241 245 249;        /* slate-100 (page bg) */
+  --surface: 255 255 255;           /* white (cards, header, sidebar) */
+  --surface-muted: 241 245 249;     /* slate-100 */
+  --surface-hover: 243 244 246;     /* gray-100 */
+  --surface-elevated: 255 255 255;  /* white (modals/popovers) */
+
+  /* content (text) */
+  --foreground: 31 41 55;           /* gray-800 */
+  --content: 31 41 55;              /* gray-800 */
+  --content-muted: 75 85 99;        /* gray-600 */
+  --content-subtle: 107 114 128;    /* gray-500 */
+  --content-inverse: 255 255 255;
+
+  /* borders */
+  --border: 229 231 235;            /* gray-200 */
+  --border-strong: 209 213 219;     /* gray-300 */
+
+  /* brand */
+  --brand: 37 99 235;               /* blue-600 */
+  --brand-hover: 29 78 216;         /* blue-700 */
+  --brand-muted: 239 246 255;       /* blue-50 */
+  --brand-foreground: 255 255 255;
+
+  /* status */
+  --success: 22 163 74;             /* green-600 */
+  --success-muted: 240 253 244;     /* green-50 */
+  --warning: 217 119 6;             /* amber-600 */
+  --warning-muted: 255 251 235;     /* amber-50 */
+  --danger: 239 68 68;              /* red-500 */
+  --danger-muted: 254 242 242;      /* red-50 */
+
+  /* charts (recharts) */
+  --chart-1: 37 99 235;             /* blue-600 */
+  --chart-2: 16 185 129;            /* emerald-500 */
+  --chart-3: 245 158 11;            /* amber-500 */
+  --chart-4: 139 92 246;            /* violet-500 */
+  --chart-5: 236 72 153;            /* pink-500 */
+  --chart-6: 6 182 212;             /* cyan-500 */
+  --chart-grid: 229 231 235;        /* gray-200 */
+  --chart-axis: 107 114 128;        /* gray-500 */
+}
+
+.dark {
+  /* surfaces — layered slate, not pure black */
+  --background: 9 13 23;            /* near-black slate */
+  --surface: 17 24 39;              /* gray-900 */
+  --surface-muted: 11 16 26;        /* page bg, deeper than surface */
+  --surface-hover: 30 41 59;        /* slate-800 */
+  --surface-elevated: 24 33 49;     /* slightly lifted card */
+
+  /* content */
+  --foreground: 226 232 240;        /* slate-200 */
+  --content: 241 245 249;           /* slate-100 */
+  --content-muted: 148 163 184;     /* slate-400 */
+  --content-subtle: 100 116 139;    /* slate-500 */
+  --content-inverse: 17 24 39;
+
+  /* borders */
+  --border: 39 49 66;               /* custom slate */
+  --border-strong: 51 65 85;        /* slate-700 */
+
+  /* brand — lighter blue for dark contrast */
+  --brand: 96 165 250;              /* blue-400 */
+  --brand-hover: 147 197 253;       /* blue-300 */
+  --brand-muted: 30 58 138;         /* blue-900, used as soft tint bg */
+  --brand-foreground: 15 23 42;     /* slate-900 (dark text on light blue) */
+
+  /* status — punchier in dark */
+  --success: 52 211 153;            /* emerald-400 */
+  --success-muted: 6 78 59;         /* emerald-900 */
+  --warning: 251 191 36;            /* amber-400 */
+  --warning-muted: 120 53 15;       /* amber-900 */
+  --danger: 248 113 113;            /* red-400 */
+  --danger-muted: 127 29 29;        /* red-900 */
+
+  /* charts — brighter, more saturated for dark bg */
+  --chart-1: 96 165 250;            /* blue-400 */
+  --chart-2: 52 211 153;            /* emerald-400 */
+  --chart-3: 251 191 36;            /* amber-400 */
+  --chart-4: 167 139 250;           /* violet-400 */
+  --chart-5: 244 114 182;           /* pink-400 */
+  --chart-6: 34 211 238;            /* cyan-400 */
+  --chart-grid: 39 49 66;
+  --chart-axis: 148 163 184;
+}
+
+/* Force-light scope for printable / PDF surfaces.
+   Apply class="theme-light" on a wrapper to force light tokens
+   (used for the audit PDF export regardless of user preference). */
+.theme-light {
+  --background: 241 245 249;
+  --surface: 255 255 255;
+  --surface-muted: 241 245 249;
+  --surface-hover: 243 244 246;
+  --surface-elevated: 255 255 255;
+  --foreground: 31 41 55;
+  --content: 31 41 55;
+  --content-muted: 75 85 99;
+  --content-subtle: 107 114 128;
+  --content-inverse: 255 255 255;
+  --border: 229 231 235;
+  --border-strong: 209 213 219;
+  --brand: 37 99 235;
+  --brand-hover: 29 78 216;
+  --brand-muted: 239 246 255;
+  --brand-foreground: 255 255 255;
+  --success: 22 163 74;
+  --success-muted: 240 253 244;
+  --warning: 217 119 6;
+  --warning-muted: 255 251 235;
+  --danger: 239 68 68;
+  --danger-muted: 254 242 242;
+  --chart-1: 37 99 235;
+  --chart-2: 16 185 129;
+  --chart-3: 245 158 11;
+  --chart-4: 139 92 246;
+  --chart-5: 236 72 153;
+  --chart-6: 6 182 212;
+  --chart-grid: 229 231 235;
+  --chart-axis: 107 114 128;
+}
+
+@media print {
+  :root,
+  .dark {
+    --background: 241 245 249;
+    --surface: 255 255 255;
+    --surface-muted: 241 245 249;
+    --surface-hover: 243 244 246;
+    --surface-elevated: 255 255 255;
+    --foreground: 31 41 55;
+    --content: 31 41 55;
+    --content-muted: 75 85 99;
+    --content-subtle: 107 114 128;
+    --border: 229 231 235;
+    --border-strong: 209 213 219;
+    --brand: 37 99 235;
+    --brand-muted: 239 246 255;
+    --chart-grid: 229 231 235;
+    --chart-axis: 107 114 128;
   }
 }
 
 body {
-  /* color: var(--foreground);
-  background: var(--background); */
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ============================================================
+   Aurora — slow drifting conic-gradient mesh used as the
+   atmospheric backdrop on the home/setup page. GPU-only,
+   no JS, ~0% CPU when idle.
+   ============================================================ */
+@keyframes aurora-drift {
+  0%   { transform: translate3d(-15%, -10%, 0) rotate(0deg)   scale(1.05); }
+  50%  { transform: translate3d(  8%,   6%, 0) rotate(180deg) scale(1.15); }
+  100% { transform: translate3d(-15%, -10%, 0) rotate(360deg) scale(1.05); }
+}
+@keyframes aurora-drift-2 {
+  0%   { transform: translate3d( 12%,  10%, 0) rotate(0deg)   scale(1.10); }
+  50%  { transform: translate3d(-10%,  -8%, 0) rotate(-180deg) scale(0.95); }
+  100% { transform: translate3d( 12%,  10%, 0) rotate(-360deg) scale(1.10); }
+}
+@keyframes border-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.18); }
+}
+@keyframes shimmer-rail {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.aurora-stage {
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  filter: blur(72px);
+  opacity: 0.55;
+  animation: aurora-drift 28s linear infinite;
+  /* New palette: emerald → teal → cyan → sky with a warm amber pop.
+     Distinct from the generic indigo/purple/pink SaaS template.
+     Reads as "data freshness" — green/teal — but the amber stop adds
+     warmth so it never feels clinical. */
+  background:
+    conic-gradient(from 90deg at 30% 40%,
+      rgba(16, 185, 129, 0.55),   /* emerald-500 */
+      rgba(20, 184, 166, 0.50),   /* teal-500   */
+      rgba(6, 182, 212, 0.50),    /* cyan-500   */
+      rgba(251, 146, 60, 0.40),   /* orange-400 (warm pop) */
+      rgba(16, 185, 129, 0.55));
+}
+.aurora-stage--alt {
+  animation: aurora-drift-2 36s linear infinite;
+  opacity: 0.42;
+  background:
+    conic-gradient(from 270deg at 70% 70%,
+      rgba(56, 189, 248, 0.50),   /* sky-400  */
+      rgba(45, 212, 191, 0.45),   /* teal-400 */
+      rgba(244, 114, 91, 0.40),   /* coral    */
+      rgba(56, 189, 248, 0.50));
+}
+.dark .aurora-stage  { opacity: 0.45; }
+.dark .aurora-stage--alt { opacity: 0.32; }
+
+/* Fine grain noise overlay (SVG turbulence baked into a tiny PNG-like data URL).
+   Layered at very low opacity to add filmic depth and break gradient banding. */
+.noise-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.85'/></svg>");
+  background-size: 220px 220px;
+}
+.dark .noise-layer { opacity: 0.10; }
+
+/* Subtle technical grid — barely visible micro-grid for that "instrument
+   panel" feel. Switches color in dark. */
+.tech-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 35%, transparent 75%);
+}
+.dark .tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+}
+
+/* Animated conic-gradient border on the form card. The trick: a rotating
+   conic gradient on a pseudo-element behind the card, masked to a 1px ring.
+   Works in both themes by tinting the mid-stops. */
+.glow-frame {
+  position: relative;
+  isolation: isolate;
+}
+.glow-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+    conic-gradient(from var(--angle, 0deg),
+      rgba(16, 185, 129, 0.0)   0%,
+      rgba(16, 185, 129, 0.85)  18%,
+      rgba(20, 184, 166, 0.95)  32%,
+      rgba(6, 182, 212, 0.85)   46%,
+      rgba(16, 185, 129, 0.0)   62%,
+      rgba(16, 185, 129, 0.0) 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: border-spin 7s linear infinite;
+  z-index: -1;
+}
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Pulse for "live" status dot */
+.dot-live {
+  position: relative;
+}
+.dot-live::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: rgb(16 185 129 / 0.45);
+  animation: pulse-soft 1.8s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Shimmer rail used for active step in vertical step indicator */
+.rail-active {
+  background: linear-gradient(90deg,
+    rgb(16 185 129),
+    rgb(20 184 166),
+    rgb(6 182 212),
+    rgb(20 184 166),
+    rgb(16 185 129));
+  background-size: 200% 100%;
+  animation: shimmer-rail 4s linear infinite;
+}
+
+/* Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-stage,
+  .aurora-stage--alt,
+  .glow-frame::before,
+  .dot-live::after,
+  .rail-active { animation: none; }
+}
+
+/* ============================================================
+   Recharts dark-mode tuning
+   Targets default class names emitted by recharts so axes,
+   grid lines, tooltips and legends render correctly in dark.
+   Light mode is left to recharts defaults (already correct).
+   ============================================================ */
+.dark .recharts-cartesian-grid line,
+.dark .recharts-cartesian-axis-line,
+.dark .recharts-cartesian-axis-tick-line {
+  stroke: rgb(var(--chart-grid));
+}
+.dark .recharts-cartesian-axis-tick-value,
+.dark .recharts-text {
+  fill: rgb(var(--chart-axis));
+}
+.dark .recharts-default-tooltip {
+  background-color: rgb(var(--surface-elevated)) !important;
+  border-color: rgb(var(--border)) !important;
+  color: rgb(var(--content)) !important;
+}
+.dark .recharts-tooltip-label,
+.dark .recharts-tooltip-item,
+.dark .recharts-tooltip-item-name,
+.dark .recharts-tooltip-item-value {
+  color: rgb(var(--content)) !important;
+}
+.dark .recharts-legend-item-text {
+  color: rgb(var(--content-muted)) !important;
+}
+/* Reference / threshold lines (red anomaly bands etc.) keep their
+   semantic stroke; the label text inside should stay readable. */
+.dark .recharts-reference-line text,
+.dark .recharts-label text {
+  fill: rgb(var(--content)) !important;
 }
 
 .page-break {
@@ -27,14 +399,19 @@ body {
 .parent-div {
   border: 1px solid transparent;
   background-clip: padding-box;
-  background-color: white;
+  background-color: rgb(var(--surface));
   position: relative;
   transition: all 0.3s ease;
-  border-radius: 1.5rem; /* rounded-3xl */
-  margin-top: 2.5rem; /* mt-10 */
+  border-radius: 1.5rem;
+  margin-top: 2.5rem;
   box-shadow: 0 2px 4px rgba(207, 207, 255, 0.1);
   overflow: hidden;
   border: 1px solid rgb(207, 207, 255);
+}
+
+.dark .parent-div {
+  border-color: rgb(var(--border-strong));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .parent-div::before {
@@ -47,12 +424,16 @@ body {
   z-index: -1;
   background: linear-gradient(135deg, #cfcfff, #e0e0ff);
   border-radius: inherit;
-  mask: 
-    linear-gradient(#fff 0 0) content-box, 
+  mask:
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: destination-out;
   pointer-events: none;
+}
+
+.dark .parent-div::before {
+  background: linear-gradient(135deg, #4c4c8a, #3a3a6e);
 }
 
 .parent-div:hover {
@@ -60,7 +441,15 @@ body {
   transform: translateY(-2px);
 }
 
+.dark .parent-div:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(76, 76, 138, 0.4);
+}
+
 .parent-div:hover::before {
   background: linear-gradient(135deg, #a0a0ff, #d0d0ff);
   transition: background 0.3s ease;
+}
+
+.dark .parent-div:hover::before {
+  background: linear-gradient(135deg, #6e6ec0, #4c4c8a);
 }

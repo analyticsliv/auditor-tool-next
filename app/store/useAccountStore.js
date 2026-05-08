@@ -2,6 +2,7 @@ import { create } from "zustand";
 import moment from "moment";
 import { signOut, getSession } from "next-auth/react";
 import { sendUserData } from "../utils/sendUserData";
+import { toast } from "./useToastStore";
 
 export const useAccountStore = create((set, get) => ({
     accounts: [],
@@ -67,16 +68,16 @@ export const useAccountStore = create((set, get) => ({
 
         if (!session) {
             console.error("❌ No session found");
-            alert("Session expired. Please sign in again.");
-            router.push("/login");
+            toast.error("Session expired. Please sign in again.");
+            router.push("/");
             return;
         }
 
         if (!session.accessToken || session.error === 'RefreshAccessTokenError') {
             console.error("❌ Access token missing or refresh failed:", session.error);
-            alert("Your session has expired. Please sign in again.");
+            toast.error("Your session has expired. Please sign in again.");
             await signOut({ redirect: false });
-            router.push("/login");
+            router.push("/");
             return;
         }
 
@@ -105,7 +106,7 @@ export const useAccountStore = create((set, get) => ({
                     statusText: response.statusText,
                     error: errorData
                 });
-                alert(`Failed to fetch account summaries (${response.status}). Please try signing in again.`);
+                toast.error(`Failed to fetch account summaries (${response.status}). Please try signing in again.`);
                 set({ loading: false });
                 return;
             }
@@ -129,11 +130,9 @@ export const useAccountStore = create((set, get) => ({
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("session");
                 await signOut({ redirect: false });
-                alert(
-                    `Hey ${userData?.given_name?.user?.name}, no accounts associated with this email.`
-                );
+                toast.error(`No GA4 accounts are associated with this email.`);
 
-                router.push("/login");
+                router.push("/");
             }
         } catch (error) {
             console.error("Error:", error);

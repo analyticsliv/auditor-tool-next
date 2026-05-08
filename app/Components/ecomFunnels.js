@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
@@ -42,16 +42,16 @@ const EcomFunnels = () => {
       {purchaseData?.find(step => step?.label === 'Add to Cart')?.value > 0 && (
         <>
           {/* Purchase Funnel Block */}
-          <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-            <h2 className="pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center">
+          <div className="parent-div bg-surface rounded-3xl p-10 mt-10">
+            <h2 className="pb-8 text-content font-extrabold text-[1.8rem] text-center">
               E-Commerce Shopping Purchase Funnel
             </h2>
             <FunnelContent data={purchaseData} />
           </div>
 
           {/* Checkout Funnel Block */}
-          <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-            <h2 className="pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center">
+          <div className="parent-div bg-surface rounded-3xl p-10 mt-10">
+            <h2 className="pb-8 text-content font-extrabold text-[1.8rem] text-center">
               E-Commerce Shopping Checkout Funnel
             </h2>
             <FunnelContent data={checkoutData} />
@@ -116,17 +116,17 @@ const FunnelContent = ({ data }) => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 w-full lg:max-w-md mt-6 lg:mt-0">
-        <StatCard label="Top of Funnel" value={data[0]?.value.toLocaleString()} color="text-indigo-600" />
+        <StatCard label="Top of Funnel" value={data[0]?.value.toLocaleString()} color="text-indigo-600 dark:text-indigo-400" />
         <StatCard
           label="Conversion"
           value={`${((data[data.length - 1]?.value / data[0]?.value) * 100).toFixed(1)}%`}
-          color="text-purple-600"
+          color="text-purple-600 dark:text-purple-400"
         />
-        <StatCard label="Purchases" value={data[data.length - 1]?.value.toLocaleString()} color="text-pink-600" />
+        <StatCard label="Purchases" value={data[data.length - 1]?.value.toLocaleString()} color="text-pink-600 dark:text-pink-400" />
         <StatCard
           label="Drop-offs"
           value={(data[0]?.value - data[data.length - 1]?.value).toLocaleString()}
-          color="text-red-600"
+          color="text-red-600 dark:text-red-400"
         />
       </div>
     </div>
@@ -134,9 +134,9 @@ const FunnelContent = ({ data }) => {
 };
 
 const StatCard = ({ label, value, color }) => (
-  <div className="bg-gray-50 p-4 lg:m-2 rounded-xl shadow text-center">
+  <div className="bg-surface-muted p-4 lg:m-2 rounded-xl shadow text-center">
     <div className={`text-xl font-bold ${color}`}>{value}</div>
-    <div className="text-gray-600 text-sm mt-1">{label}</div>
+    <div className="text-content-muted text-sm mt-1">{label}</div>
   </div>
 );
 
@@ -159,8 +159,8 @@ export default EcomFunnels;
 //   ]
 // }) => {
 //   return (
-//     <div className="parent-div bg-white rounded-3xl p-10 mt-10">
-//       <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+//     <div className="parent-div bg-surface rounded-3xl p-10 mt-10">
+//       <h2 className="text-3xl font-bold text-center mb-12 text-content">
 //         Purchase Funnel Analytics
 //       </h2>
 
@@ -220,32 +220,32 @@ export default EcomFunnels;
 
 //         {/* right side stats */}
 //         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
-//           <div className="bg-white p-6 rounded-xl shadow-md text-center">
-//             <div className="text-3xl font-bold text-indigo-600">
+//           <div className="bg-surface p-6 rounded-xl shadow-md text-center">
+//             <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
 //               {data[0].value.toLocaleString()}
 //             </div>
-//             <div className="text-gray-600 mt-1">Total Views</div>
+//             <div className="text-content-muted mt-1">Total Views</div>
 //           </div>
 
-//           <div className="bg-white p-6 rounded-xl shadow-md text-center">
-//             <div className="text-3xl font-bold text-purple-600">
+//           <div className="bg-surface p-6 rounded-xl shadow-md text-center">
+//             <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
 //               {((data[data.length - 1].value / data[0].value) * 100).toFixed(1)}%
 //             </div>
-//             <div className="text-gray-600 mt-1">Conversion</div>
+//             <div className="text-content-muted mt-1">Conversion</div>
 //           </div>
 
-//           <div className="bg-white p-6 rounded-xl shadow-md text-center">
-//             <div className="text-3xl font-bold text-pink-600">
+//           <div className="bg-surface p-6 rounded-xl shadow-md text-center">
+//             <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">
 //               {data[data.length - 1].value.toLocaleString()}
 //             </div>
-//             <div className="text-gray-600 mt-1">Purchases</div>
+//             <div className="text-content-muted mt-1">Purchases</div>
 //           </div>
 
-//           <div className="bg-white p-6 rounded-xl shadow-md text-center">
-//             <div className="text-3xl font-bold text-red-600">
+//           <div className="bg-surface p-6 rounded-xl shadow-md text-center">
+//             <div className="text-3xl font-bold text-red-600 dark:text-red-400">
 //               {(data[0].value - data[data.length - 1].value).toLocaleString()}
 //             </div>
-//             <div className="text-gray-600 mt-1">Drop-offs</div>
+//             <div className="text-content-muted mt-1">Drop-offs</div>
 //           </div>
 //         </div>
 //       </div>

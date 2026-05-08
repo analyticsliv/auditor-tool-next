@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -62,14 +62,14 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-surface rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-6 rounded-t-2xl">
                     <div className="flex justify-between items-center">
                         <h2 className="text-2xl font-bold text-white">Request More Audits</h2>
                         <button
                             onClick={onClose}
-                            className="text-white hover:text-gray-200 transition-colors"
+                            className="text-white hover:text-content-subtle transition-colors"
                             disabled={isSubmitting}
                         >
                             <svg
@@ -96,7 +96,7 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     {/* Name Field */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-content mb-2">
                             Full Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -105,14 +105,14 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                            className="w-full px-4 py-3 border-2 border-line rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                             placeholder="Enter your full name"
                         />
                     </div>
 
                     {/* Email Field */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-content mb-2">
                             Email Address <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -121,7 +121,7 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50"
+                            className="w-full px-4 py-3 border-2 border-line rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-surface-muted"
                             placeholder="your.email@example.com"
                             readOnly
                         />
@@ -129,7 +129,7 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
 
                     {/* Contact Field */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-content mb-2">
                             Contact Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -138,14 +138,14 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                             value={formData.contact}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                            className="w-full px-4 py-3 border-2 border-line rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                             placeholder="+1 (555) 000-0000"
                         />
                     </div>
 
                     {/* Message Field */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-content mb-2">
                             Why do you need more audits? <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -154,7 +154,7 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                             onChange={handleChange}
                             required
                             rows={4}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                            className="w-full px-4 py-3 border-2 border-line rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
                             placeholder="Tell us about your audit needs and how many audits you typically require..."
                         />
                     </div>
@@ -163,8 +163,8 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                     {submitStatus && (
                         <div
                             className={`p-4 rounded-xl ${submitStatus.type === "success"
-                                    ? "bg-green-50 text-green-800 border border-green-200"
-                                    : "bg-red-50 text-red-800 border border-red-200"
+                                    ? "bg-green-50 dark:bg-green-500/10 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-500/30"
+                                    : "bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-500/30"
                                 }`}
                         >
                             <div className="flex items-center">
@@ -204,7 +204,7 @@ const ContactFormModal = ({ isOpen, onClose, userEmail }) => {
                             type="button"
                             onClick={onClose}
                             disabled={isSubmitting}
-                            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex-1 px-6 py-3 border-2 border-line-strong text-content rounded-xl font-semibold hover:bg-surface-muted transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancel
                         </button>

@@ -50,7 +50,7 @@ export default function AgencyWelcomePage() {
                 <Card className="max-w-md w-full overflow-hidden">
                     <Header icon={Building2} title="You're an Agency Admin" subtitle="Sign in to access your agency dashboard." />
                     <div className="p-6">
-                        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+                        <p className="text-sm text-content-muted leading-relaxed mb-5">
                             Use Google sign-in with the email address that received this invite. Your dashboard
                             and pooled quota are already set up for you.
                         </p>
@@ -94,7 +94,7 @@ export default function AgencyWelcomePage() {
                     }
                 />
                 <div className="p-6 space-y-4">
-                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-2">
+                    <div className="bg-surface-muted border border-line rounded-xl p-4 space-y-2">
                         <Row label="Signed in" value={session.user.email} />
                         <Row label="Role" value={prettyRole(role)} />
                         {usage.agencyName && <Row label="Agency" value={usage.agencyName} />}
@@ -110,7 +110,7 @@ export default function AgencyWelcomePage() {
                         </Button>
                     )}
                     {isAgencyUser && (
-                        <Button onClick={() => router.push('/')} className="w-full" size="lg" icon={<ArrowRight size={14} strokeWidth={2.25} />}>
+                        <Button onClick={() => router.push('/home')} className="w-full" size="lg" icon={<ArrowRight size={14} strokeWidth={2.25} />}>
                             Go to home
                         </Button>
                     )}
@@ -121,14 +121,14 @@ export default function AgencyWelcomePage() {
                     )}
                     {!isAgencyAdmin && !isAgencyUser && !isSuperAdmin && !hasAgency && (
                         <>
-                            <p className="text-sm text-gray-600 leading-relaxed bg-amber-50 border border-amber-200 rounded-lg p-3">
+                            <p className="text-sm text-content-muted leading-relaxed bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg p-3">
                                 Your role hasn't been linked to an agency yet. If you were just added as admin, give it a few seconds and try refresh.
                             </p>
                             <div className="flex gap-2">
                                 <Button onClick={refresh} className="flex-1" variant="secondary" icon={<RefreshCw size={14} strokeWidth={2} />}>
                                     Refresh
                                 </Button>
-                                <Button onClick={() => router.push('/')} className="flex-1" variant="ghost">
+                                <Button onClick={() => router.push('/home')} className="flex-1" variant="ghost">
                                     Go home
                                 </Button>
                             </div>
@@ -138,7 +138,7 @@ export default function AgencyWelcomePage() {
                     {/* Always-available account switch */}
                     <button
                         onClick={() => signOut({ callbackUrl: '/agency/welcome' })}
-                        className="w-full text-center text-xs text-gray-500 hover:text-gray-800 transition-colors mt-2"
+                        className="w-full text-center text-xs text-content-subtle hover:text-content transition-colors mt-2"
                     >
                         Not you? Sign out & switch account
                     </button>
@@ -155,7 +155,7 @@ function Centered({ children }) {
 function Header({ icon: Icon, title, subtitle }) {
     return (
         <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-6 text-white">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
+            <div className="w-12 h-12 bg-surface/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
                 <Icon size={22} strokeWidth={2} />
             </div>
             <h1 className="text-xl font-bold">{title}</h1>
@@ -167,8 +167,8 @@ function Header({ icon: Icon, title, subtitle }) {
 function Row({ label, value }) {
     return (
         <div className="flex items-center justify-between text-sm gap-3">
-            <span className="text-gray-500 flex-shrink-0">{label}</span>
-            <span className="font-medium text-gray-900 text-right truncate">{value}</span>
+            <span className="text-content-subtle flex-shrink-0">{label}</span>
+            <span className="font-medium text-content text-right truncate">{value}</span>
         </div>
     );
 }

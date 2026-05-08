@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
 const AuditLimitModal = ({ isOpen, onClose, onRequestMore, auditCount, auditLimit }) => {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full  max-h-[90vh] overflow-y-auto">
+            <div className="bg-surface rounded-2xl shadow-2xl max-w-lg w-full  max-h-[90vh] overflow-y-auto">
                 {/* Icon Header */}
-                <div className="bg-gradient-to-br from-orange-50 to-red-50 p-8 text-center">
+                <div className="bg-gradient-to-br from-orange-50 dark:from-orange-950 to-red-50 dark:to-red-950 p-8 text-center">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-full shadow-lg mb-4">
                         <svg
                             className="w-10 h-10 text-white"
@@ -23,19 +23,19 @@ const AuditLimitModal = ({ isOpen, onClose, onRequestMore, auditCount, auditLimi
                             />
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Audit Limit Reached</h2>
+                    <h2 className="text-2xl font-bold text-content">Audit Limit Reached</h2>
                 </div>
 
                 {/* Content */}
                 <div className="p-8">
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
+                    <div className="bg-gradient-to-r from-blue-50 dark:from-blue-950 to-purple-50 dark:to-purple-950 rounded-xl p-6 mb-6">
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm font-semibold text-gray-600">Your Usage</span>
-                            <span className="text-2xl font-bold text-gray-800">
+                            <span className="text-sm font-semibold text-content-muted">Your Usage</span>
+                            <span className="text-2xl font-bold text-content">
                                 {auditCount} / {auditLimit}
                             </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div className="w-full bg-surface-hover rounded-full h-3 overflow-hidden">
                             <div
                                 className="bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-500"
                                 style={{ width: `${(auditCount / auditLimit) * 100}%` }}
@@ -44,12 +44,12 @@ const AuditLimitModal = ({ isOpen, onClose, onRequestMore, auditCount, auditLimi
                     </div>
 
                     <div className="space-y-4 mb-6">
-                        <p className="text-gray-700 leading-relaxed">
+                        <p className="text-content leading-relaxed">
                             You've used all <span className="font-bold">{auditLimit}</span> of your free audits.
                             To continue using our GA4 Auditor tool, please reach out to our team.
                         </p>
 
-                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <div className="bg-blue-50 dark:bg-blue-500/10 border-l-4 border-blue-500 p-4 rounded">
                             <div className="flex">
                                 <svg
                                     className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5"
@@ -62,7 +62,7 @@ const AuditLimitModal = ({ isOpen, onClose, onRequestMore, auditCount, auditLimi
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                <div className="text-sm text-blue-800">
+                                <div className="text-sm text-blue-800 dark:text-blue-200">
                                     <p className="font-semibold mb-1">Need more audits?</p>
                                     <p>Contact us to discuss upgrading your plan or getting additional audit credits.</p>
                                 </div>
@@ -74,7 +74,7 @@ const AuditLimitModal = ({ isOpen, onClose, onRequestMore, auditCount, auditLimi
                     <div className="flex flex-col sm:flex-row gap-3">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+                            className="flex-1 px-6 py-3 border-2 border-line-strong text-content rounded-xl font-semibold hover:bg-surface-muted transition-all"
                         >
                             Go Back
                         </button>

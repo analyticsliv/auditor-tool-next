@@ -13,7 +13,10 @@ import {
     Modal, EmptyState, PageHeader, Tabs, Toast, useToast,
     Stat, DataTable, THead, TBody, Tr, Th, Td,
     Skeleton, SkeletonRow, SkeletonStats, Field, Input, Select, Tag,
+    Pagination,
 } from '../Components/ui';
+
+const PER_PAGE = 10;
 
 export default function SuperAdminDashboard() {
     const router = useRouter();
@@ -22,7 +25,12 @@ export default function SuperAdminDashboard() {
     const toast = useToast();
 
     const [tab, setTab] = useState('agencies');
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+
+    // Reset page to 1 whenever the active tab changes so the user always lands
+    // on the first page of the new dataset.
+    useEffect(() => { setPage(1); }, [tab]);
     const [agencies, setAgencies] = useState([]);
     const [users, setUsers] = useState([]);
     const [logs, setLogs] = useState([]);
@@ -57,7 +65,7 @@ export default function SuperAdminDashboard() {
     };
 
     useEffect(() => {
-        if (status === 'unauthenticated') router.push('/login');
+        if (status === 'unauthenticated') router.push('/');
         if (status === 'authenticated' && role === 'superadmin') loadAll();
     }, [status, role, router]);
 
@@ -78,7 +86,7 @@ export default function SuperAdminDashboard() {
                     <Skeleton width={360} height={36} />
                 </div>
                 <SkeletonStats count={4} />
-                <Card><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /></Card>
+                <Card><table className="w-full"><tbody><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /></tbody></table></Card>
             </div>
         );
     }
@@ -87,12 +95,12 @@ export default function SuperAdminDashboard() {
         return (
             <div className="max-w-md mx-auto mt-20">
                 <Card className="p-10 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border border-purple-100">
-                        <Lock size={20} strokeWidth={1.75} className="text-purple-600" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-500/15 dark:via-purple-500/15 dark:to-pink-500/15 border border-purple-100 dark:border-purple-500/20">
+                        <Lock size={20} strokeWidth={1.75} className="text-purple-600 dark:text-purple-400" />
                     </div>
-                    <h1 className="text-xl font-bold text-gray-900 mb-2">Access denied</h1>
-                    <p className="text-sm text-gray-500 mb-6 leading-relaxed">This area is reserved for super administrators.</p>
-                    <Button onClick={() => router.push('/')}>Go home</Button>
+                    <h1 className="text-xl font-bold text-content mb-2">Access denied</h1>
+                    <p className="text-sm text-content-subtle mb-6 leading-relaxed">This area is reserved for super administrators.</p>
+                    <Button onClick={() => router.push('/home')}>Go home</Button>
                 </Card>
             </div>
         );
@@ -193,12 +201,27 @@ export default function SuperAdminDashboard() {
     const totalAuditPool = agencies.reduce((s, a) => s + (a.auditLimitOverride ?? a.auditLimit ?? 0), 0);
     const totalAuditUsed = agencies.reduce((s, a) => s + (a.auditCount ?? 0), 0);
 
+    /* -------- Pagination slices -------- */
+
+    const sliceFor = (arr) => arr.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    const pagedAgencies    = sliceFor(agencies);
+    const pagedUsers       = sliceFor(users);
+    const pagedInvitations = sliceFor(invitations);
+    const pagedLogs        = sliceFor(logs);
+    const totalForTab = {
+        agencies: agencies.length,
+        users: users.length,
+        invitations: invitations.length,
+        logs: logs.length,
+    }[tab] || 0;
+    const totalPages = Math.max(1, Math.ceil(totalForTab / PER_PAGE));
+
     return (
         <div className="max-w-7xl mx-auto">
             <PageHeader
                 eyebrow="Super admin"
                 title="Control center"
-                subtitle={<>Signed in as <span className="text-gray-900 font-medium">{session.user.email}</span></>}
+                subtitle={<>Signed in as <span className="text-content font-medium">{session.user.email}</span></>}
                 right={
                     <Button onClick={() => setCreatingOpen(true)} icon={<Plus size={14} strokeWidth={2.25} />}>
                         New agency
@@ -225,7 +248,7 @@ export default function SuperAdminDashboard() {
             {tab === 'agencies' && (
                 <Card>
                     {loading ? (
-                        <div><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></div>
+                        <table className="w-full"><tbody><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></tbody></table>
                     ) : agencies.length === 0 ? (
                         <EmptyState icon={Building2} title="No agencies yet"
                             description="Create your first agency and invite an admin to get started."
@@ -236,45 +259,45 @@ export default function SuperAdminDashboard() {
                                 <Th>Agency</Th><Th>Plan</Th><Th>Seats</Th><Th>Audits</Th><Th>Chatbot</Th><Th>Resets</Th><Th align="right">Actions</Th>
                             </THead>
                             <TBody>
-                                {agencies.map(a => {
+                                {pagedAgencies.map(a => {
                                     const al = a.auditLimitOverride ?? a.auditLimit;
                                     const cl = a.chatbotLimitOverride ?? a.chatbotLimit;
                                     const acceptedAdmin = a.hasAdmin;
                                     return (
                                         <Tr key={a.agencyId}>
                                             <Td>
-                                                <div className="font-semibold text-gray-900">{a.name}</div>
+                                                <div className="font-semibold text-content">{a.name}</div>
                                                 {acceptedAdmin ? (
-                                                    <div className="text-xs text-gray-500 mt-0.5">{a.adminEmails?.[0]}</div>
+                                                    <div className="text-xs text-content-subtle mt-0.5">{a.adminEmails?.[0]}</div>
                                                 ) : a.pendingAdminInvite ? (
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <StatusPill status="pending" />
-                                                        <span className="text-xs text-gray-500">{a.pendingAdminInvite.email}</span>
+                                                        <span className="text-xs text-content-subtle">{a.pendingAdminInvite.email}</span>
                                                     </div>
                                                 ) : (
-                                                    <div className="text-xs text-rose-600 mt-0.5">no admin assigned</div>
+                                                    <div className="text-xs text-rose-600 dark:text-rose-400 mt-0.5">no admin assigned</div>
                                                 )}
                                             </Td>
                                             <Td>
                                                 <select value={a.plan} onChange={(e) => updateAgencyPlan(a.agencyId, e.target.value)}
-                                                    className="bg-white border border-gray-200 rounded-md px-2 py-1 text-xs font-medium capitalize hover:border-gray-400 transition-colors">
+                                                    className="bg-surface border border-line rounded-md px-2 py-1 text-xs font-medium capitalize text-content hover:border-line-strong transition-colors">
                                                     <option value="pro">Pro</option>
                                                     <option value="premium">Premium</option>
                                                 </select>
                                             </Td>
                                             <Td>
-                                                <span className="tabular-nums text-sm text-gray-800">{a.seatsUsed}<span className="text-gray-400">/{a.seatLimit}</span></span>
+                                                <span className="tabular-nums text-sm text-content">{a.seatsUsed}<span className="text-content-subtle">/{a.seatLimit}</span></span>
                                             </Td>
                                             <Td className="min-w-[160px]">
-                                                <div className="text-xs tabular-nums text-gray-600 mb-1.5">{a.auditCount}<span className="text-gray-400"> / {al}</span></div>
+                                                <div className="text-xs tabular-nums text-content-muted mb-1.5">{a.auditCount}<span className="text-content-subtle"> / {al}</span></div>
                                                 <ProgressBar used={a.auditCount} limit={al} />
                                             </Td>
                                             <Td className="min-w-[160px]">
-                                                <div className="text-xs tabular-nums text-gray-600 mb-1.5">{a.chatbotCount}<span className="text-gray-400"> / {cl}</span></div>
+                                                <div className="text-xs tabular-nums text-content-muted mb-1.5">{a.chatbotCount}<span className="text-content-subtle"> / {cl}</span></div>
                                                 <ProgressBar used={a.chatbotCount} limit={cl} />
                                             </Td>
                                             <Td nowrap>
-                                                <span className="text-xs text-gray-500">{new Date(a.quotaResetDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                                                <span className="text-xs text-content-subtle">{new Date(a.quotaResetDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                                             </Td>
                                             <Td align="right" nowrap>
                                                 <div className="inline-flex items-center gap-1">
@@ -296,6 +319,9 @@ export default function SuperAdminDashboard() {
                             </TBody>
                         </DataTable>
                     )}
+                    {!loading && agencies.length > 0 && (
+                        <Pagination page={page} total={totalPages} onChange={setPage} pageSize={PER_PAGE} totalItems={agencies.length} />
+                    )}
                 </Card>
             )}
 
@@ -303,7 +329,7 @@ export default function SuperAdminDashboard() {
             {tab === 'users' && (
                 <Card>
                     {loading ? (
-                        <div><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></div>
+                        <table className="w-full"><tbody><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></tbody></table>
                     ) : users.length === 0 ? (
                         <EmptyState icon={Users} title="No users yet"
                             description="Once invited users accept and sign in, they'll appear here with their usage." />
@@ -313,7 +339,7 @@ export default function SuperAdminDashboard() {
                                 <Th>User</Th><Th>Role</Th><Th>Agency</Th><Th>Audits</Th><Th>Chatbot</Th><Th>Last login</Th><Th align="right">Actions</Th>
                             </THead>
                             <TBody>
-                                {users.map(u => {
+                                {pagedUsers.map(u => {
                                     const isAgency = !!u.agency;
                                     const al = isAgency ? (u.agency.auditLimitOverride ?? u.agency.auditLimit) : (u.auditLimitOverride ?? u.auditLimit);
                                     const cl = isAgency ? (u.agency.chatbotLimitOverride ?? u.agency.chatbotLimit) : (u.chatbotLimitOverride ?? u.chatbotLimit);
@@ -323,27 +349,27 @@ export default function SuperAdminDashboard() {
                                     return (
                                         <Tr key={u._id || u.email}>
                                             <Td>
-                                                <div className="font-semibold text-gray-900">{u.name || u.email}</div>
-                                                {u.name && <div className="text-xs text-gray-500 mt-0.5">{u.email}</div>}
+                                                <div className="font-semibold text-content">{u.name || u.email}</div>
+                                                {u.name && <div className="text-xs text-content-subtle mt-0.5">{u.email}</div>}
                                             </Td>
                                             <Td><Tag>{roleLabel}</Tag></Td>
-                                            <Td>{u.agency?.name ? <span className="text-gray-700">{u.agency.name}</span> : <span className="text-gray-400">—</span>}</Td>
+                                            <Td>{u.agency?.name ? <span className="text-content">{u.agency.name}</span> : <span className="text-content-subtle">—</span>}</Td>
                                             <Td className="min-w-[140px]">
-                                                <div className="text-xs tabular-nums text-gray-600 mb-1">
-                                                    {ac}<span className="text-gray-400"> / {al}</span>
-                                                    {isAgency && <span className="ml-1.5 text-gray-400 text-[10px]">pool</span>}
+                                                <div className="text-xs tabular-nums text-content-muted mb-1">
+                                                    {ac}<span className="text-content-subtle"> / {al}</span>
+                                                    {isAgency && <span className="ml-1.5 text-content-subtle text-[10px]">pool</span>}
                                                 </div>
                                                 <ProgressBar used={ac} limit={al} />
                                             </Td>
                                             <Td className="min-w-[140px]">
-                                                <div className="text-xs tabular-nums text-gray-600 mb-1">
-                                                    {cc}<span className="text-gray-400"> / {cl}</span>
-                                                    {isAgency && <span className="ml-1.5 text-gray-400 text-[10px]">pool</span>}
+                                                <div className="text-xs tabular-nums text-content-muted mb-1">
+                                                    {cc}<span className="text-content-subtle"> / {cl}</span>
+                                                    {isAgency && <span className="ml-1.5 text-content-subtle text-[10px]">pool</span>}
                                                 </div>
                                                 <ProgressBar used={cc} limit={cl} />
                                             </Td>
                                             <Td nowrap>
-                                                <span className="text-xs text-gray-500">{u.lastLogin ? new Date(u.lastLogin).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}</span>
+                                                <span className="text-xs text-content-subtle">{u.lastLogin ? new Date(u.lastLogin).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—'}</span>
                                             </Td>
                                             <Td align="right" nowrap>
                                                 <div className="inline-flex items-center gap-1">
@@ -361,6 +387,9 @@ export default function SuperAdminDashboard() {
                             </TBody>
                         </DataTable>
                     )}
+                    {!loading && users.length > 0 && (
+                        <Pagination page={page} total={totalPages} onChange={setPage} pageSize={PER_PAGE} totalItems={users.length} />
+                    )}
                 </Card>
             )}
 
@@ -368,7 +397,7 @@ export default function SuperAdminDashboard() {
             {tab === 'invitations' && (
                 <Card>
                     {loading ? (
-                        <div><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></div>
+                        <table className="w-full"><tbody><SkeletonRow cols={7} /><SkeletonRow cols={7} /><SkeletonRow cols={7} /></tbody></table>
                     ) : invitations.length === 0 ? (
                         <EmptyState icon={Mail} title="No invitations sent" description="Invitations to agency admins or members will be tracked here." />
                     ) : (
@@ -377,17 +406,17 @@ export default function SuperAdminDashboard() {
                                 <Th>Email</Th><Th>Role</Th><Th>Agency</Th><Th>Invited by</Th><Th>Status</Th><Th>Expires</Th><Th align="right">Actions</Th>
                             </THead>
                             <TBody>
-                                {invitations.map(i => {
+                                {pagedInvitations.map(i => {
                                     const agency = agencies.find(a => a.agencyId === i.agencyId);
                                     const roleLabel = (i.role || '').replace(/([A-Z])/g, ' $1').trim();
                                     return (
                                         <Tr key={i._id}>
-                                            <Td><span className="font-semibold text-gray-900">{i.email}</span></Td>
+                                            <Td><span className="font-semibold text-content">{i.email}</span></Td>
                                             <Td><Tag>{roleLabel}</Tag></Td>
-                                            <Td>{agency?.name ? <span className="text-gray-700">{agency.name}</span> : <span className="text-gray-400 text-xs">—</span>}</Td>
-                                            <Td><span className="text-xs text-gray-600">{i.invitedBy}</span></Td>
+                                            <Td>{agency?.name ? <span className="text-content">{agency.name}</span> : <span className="text-content-subtle text-xs">—</span>}</Td>
+                                            <Td><span className="text-xs text-content-muted">{i.invitedBy}</span></Td>
                                             <Td><StatusPill status={i.status} /></Td>
-                                            <Td nowrap><span className="text-xs text-gray-500">{new Date(i.expiresAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></Td>
+                                            <Td nowrap><span className="text-xs text-content-subtle">{new Date(i.expiresAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></Td>
                                             <Td align="right">
                                                 {i.status === 'pending' && (
                                                     <AsyncButton size="xs" variant="ghostRed" onClick={() => revokeInvite(i._id)}>Revoke</AsyncButton>
@@ -399,6 +428,9 @@ export default function SuperAdminDashboard() {
                             </TBody>
                         </DataTable>
                     )}
+                    {!loading && invitations.length > 0 && (
+                        <Pagination page={page} total={totalPages} onChange={setPage} pageSize={PER_PAGE} totalItems={invitations.length} />
+                    )}
                 </Card>
             )}
 
@@ -406,7 +438,7 @@ export default function SuperAdminDashboard() {
             {tab === 'logs' && (
                 <Card>
                     {loading ? (
-                        <div><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /></div>
+                        <table className="w-full"><tbody><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /><SkeletonRow cols={5} /></tbody></table>
                     ) : logs.length === 0 ? (
                         <EmptyState icon={Inbox} title="No activity yet" description="Audit runs, chatbot messages, invites and admin actions appear here." />
                     ) : (
@@ -415,17 +447,20 @@ export default function SuperAdminDashboard() {
                                 <Th>When</Th><Th>Who</Th><Th>Agency</Th><Th>Action</Th><Th>Details</Th>
                             </THead>
                             <TBody>
-                                {logs.map(l => (
+                                {pagedLogs.map(l => (
                                     <Tr key={l._id}>
-                                        <Td nowrap><span className="text-xs text-gray-500">{new Date(l.createdAt).toLocaleString()}</span></Td>
-                                        <Td><span className="text-gray-800">{l.userEmail}</span></Td>
-                                        <Td><span className="text-xs text-gray-500">{l.agencyId || '—'}</span></Td>
+                                        <Td nowrap><span className="text-xs text-content-subtle">{new Date(l.createdAt).toLocaleString()}</span></Td>
+                                        <Td><span className="text-content">{l.userEmail}</span></Td>
+                                        <Td><span className="text-xs text-content-subtle">{l.agencyId || '—'}</span></Td>
                                         <Td><Tag>{l.action}</Tag></Td>
-                                        <Td><span className="text-xs text-gray-500 block max-w-md truncate">{l.metadata ? JSON.stringify(l.metadata) : ''}</span></Td>
+                                        <Td><span className="text-xs text-content-subtle block max-w-md truncate">{l.metadata ? JSON.stringify(l.metadata) : ''}</span></Td>
                                     </Tr>
                                 ))}
                             </TBody>
                         </DataTable>
+                    )}
+                    {!loading && logs.length > 0 && (
+                        <Pagination page={page} total={totalPages} onChange={setPage} pageSize={PER_PAGE} totalItems={logs.length} />
                     )}
                 </Card>
             )}
@@ -489,8 +524,8 @@ export default function SuperAdminDashboard() {
                     <Button variant="secondary" onClick={() => setConfirmDelete(null)}>Cancel</Button>
                     <AsyncButton variant="dangerSolid" onClick={doDelete}>Delete</AsyncButton>
                 </>}>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                    Permanently delete <strong className="text-gray-900">{confirmDelete?.label}</strong>?
+                <p className="text-sm text-content-muted leading-relaxed">
+                    Permanently delete <strong className="text-content">{confirmDelete?.label}</strong>?
                     Activity logs and pooled counts are preserved. This action cannot be undone.
                 </p>
             </Modal>

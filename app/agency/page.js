@@ -48,7 +48,7 @@ export default function AgencyDashboardPage() {
     };
 
     useEffect(() => {
-        if (status === 'unauthenticated') router.push('/login');
+        if (status === 'unauthenticated') router.push('/');
         if (status === 'authenticated' && role === 'agencyAdmin') load();
     }, [status, role, router]);
 
@@ -69,12 +69,12 @@ export default function AgencyDashboardPage() {
         return (
             <div className="max-w-md mx-auto mt-20">
                 <Card className="p-10 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border border-purple-100">
-                        <Lock size={20} strokeWidth={1.75} className="text-purple-600" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 dark:from-blue-950 via-purple-50 dark:via-purple-950 to-pink-50 dark:to-pink-950 border border-purple-100">
+                        <Lock size={20} strokeWidth={1.75} className="text-purple-600 dark:text-purple-400" />
                     </div>
-                    <h1 className="text-xl font-bold text-gray-900 mb-2">Access denied</h1>
-                    <p className="text-sm text-gray-500 mb-6 leading-relaxed">This area is reserved for agency administrators.</p>
-                    <Button onClick={() => router.push('/')}>Go home</Button>
+                    <h1 className="text-xl font-bold text-content mb-2">Access denied</h1>
+                    <p className="text-sm text-content-subtle mb-6 leading-relaxed">This area is reserved for agency administrators.</p>
+                    <Button onClick={() => router.push('/home')}>Go home</Button>
                 </Card>
             </div>
         );
@@ -147,7 +147,7 @@ export default function AgencyDashboardPage() {
             <PageHeader
                 eyebrow={`Agency · ${a.plan.toUpperCase()}`}
                 title={a.name}
-                subtitle={<>Pooled quota across <span className="text-gray-900 font-medium">{seatsUsed}</span> active seat{seatsUsed === 1 ? '' : 's'}</>}
+                subtitle={<>Pooled quota across <span className="text-content font-medium">{seatsUsed}</span> active seat{seatsUsed === 1 ? '' : 's'}</>}
                 right={
                     seatsUsed + pending.length < a.seatLimit && (
                         <Button onClick={() => setInviteOpen(true)} icon={<Plus size={14} strokeWidth={2.25} />}>
@@ -189,13 +189,13 @@ export default function AgencyDashboardPage() {
                                     return (
                                         <Tr key={u.email}>
                                             <Td>
-                                                <div className="font-semibold text-gray-900">{u.name || u.email}</div>
-                                                {u.name && <div className="text-xs text-gray-500 mt-0.5">{u.email}</div>}
+                                                <div className="font-semibold text-content">{u.name || u.email}</div>
+                                                {u.name && <div className="text-xs text-content-subtle mt-0.5">{u.email}</div>}
                                             </Td>
                                             <Td><Tag>{roleLabel}</Tag></Td>
                                             <Td><StatusPill status="active" /></Td>
                                             <Td nowrap>
-                                                <span className="text-xs text-gray-500">{new Date(u.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                                <span className="text-xs text-content-subtle">{new Date(u.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                             </Td>
                                             <Td align="right">
                                                 {u.role !== 'agencyAdmin' && (
@@ -210,11 +210,11 @@ export default function AgencyDashboardPage() {
                                     const roleLabel = (p.role || '').replace(/([A-Z])/g, ' $1').trim();
                                     return (
                                         <Tr key={p._id} muted>
-                                            <Td><span className="font-semibold text-gray-700">{p.email}</span></Td>
+                                            <Td><span className="font-semibold text-content">{p.email}</span></Td>
                                             <Td><Tag>{roleLabel}</Tag></Td>
                                             <Td><StatusPill status={p.invitationStatus} /></Td>
                                             <Td nowrap>
-                                                <span className="text-xs text-gray-500">invited {new Date(p.invitedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                                                <span className="text-xs text-content-subtle">invited {new Date(p.invitedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                                             </Td>
                                             <Td align="right">
                                                 {p.invitationStatus === 'pending' && (
@@ -243,10 +243,10 @@ export default function AgencyDashboardPage() {
                             <TBody>
                                 {logs.map(l => (
                                     <Tr key={l._id}>
-                                        <Td nowrap><span className="text-xs text-gray-500">{new Date(l.createdAt).toLocaleString()}</span></Td>
-                                        <Td><span className="text-gray-800">{l.userEmail}</span></Td>
+                                        <Td nowrap><span className="text-xs text-content-subtle">{new Date(l.createdAt).toLocaleString()}</span></Td>
+                                        <Td><span className="text-content">{l.userEmail}</span></Td>
                                         <Td><Tag>{l.action}</Tag></Td>
-                                        <Td><span className="text-xs text-gray-500 block max-w-md truncate">{l.metadata ? JSON.stringify(l.metadata) : ''}</span></Td>
+                                        <Td><span className="text-xs text-content-subtle block max-w-md truncate">{l.metadata ? JSON.stringify(l.metadata) : ''}</span></Td>
                                     </Tr>
                                 ))}
                             </TBody>
@@ -271,8 +271,8 @@ export default function AgencyDashboardPage() {
                     <Button variant="secondary" onClick={() => setConfirmDelete(null)}>Cancel</Button>
                     <AsyncButton variant="dangerSolid" onClick={() => handleDelete(confirmDelete.email)}>Remove</AsyncButton>
                 </>}>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                    Permanently remove <strong className="text-gray-900">{confirmDelete?.email}</strong> from your team?
+                <p className="text-sm text-content-muted leading-relaxed">
+                    Permanently remove <strong className="text-content">{confirmDelete?.email}</strong> from your team?
                     They'll lose access immediately. Activity logs and pooled counts are preserved.
                 </p>
             </Modal>
@@ -285,23 +285,23 @@ export default function AgencyDashboardPage() {
 /* Composite stat: large value + progress bar */
 function StatWithBar({ label, used, limit, icon: Icon }) {
     const pct = limit ? (used / limit) * 100 : 0;
-    const valueColor = pct >= 90 ? 'text-rose-600' : pct >= 70 ? 'text-amber-600' : 'text-gray-900';
+    const valueColor = pct >= 90 ? 'text-rose-600 dark:text-rose-400' : pct >= 70 ? 'text-amber-600 dark:text-amber-400' : 'text-content';
     return (
-        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-gray-300 transition-all">
+        <div className="bg-surface border border-line rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-line-strong transition-all">
             <div className="flex items-center justify-between mb-2.5">
-                <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">{label}</span>
+                <span className="text-xs uppercase tracking-wider text-content-subtle font-semibold">{label}</span>
                 {Icon && (
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center">
-                        <Icon size={15} strokeWidth={2} className="text-purple-600" />
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-50 dark:from-blue-950 via-purple-50 dark:via-purple-950 to-pink-50 dark:to-pink-950 flex items-center justify-center">
+                        <Icon size={15} strokeWidth={2} className="text-purple-600 dark:text-purple-400" />
                     </div>
                 )}
             </div>
             <div className="flex items-baseline gap-1.5 mb-3">
                 <span className={`text-3xl font-bold tabular-nums tracking-tight ${valueColor}`}>{used}</span>
-                <span className="text-sm text-gray-400 tabular-nums">/ {limit}</span>
+                <span className="text-sm text-content-subtle tabular-nums">/ {limit}</span>
             </div>
             <ProgressBar used={used} limit={limit} />
-            <div className="text-[11px] text-gray-500 mt-2 tabular-nums">
+            <div className="text-[11px] text-content-subtle mt-2 tabular-nums">
                 {Math.max(0, limit - used)} remaining · {Math.round(pct)}% used
             </div>
         </div>

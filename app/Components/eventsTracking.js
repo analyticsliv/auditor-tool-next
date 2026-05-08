@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
@@ -124,48 +124,48 @@ const EventsTracking = () => {
     console.log("eventChartDataeventChartDataeventChartData----", eventChartData)
     return (
         <>
-            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+            <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
                 <div>
-                    <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                    <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>
                         Events Tracking
                     </h1>
                     <div className='flex justify-between items-center'>
                         <div className='w-[40%] content-center text-sm 2xl:text-base text-left'>
                             <h3><b>Automatically collected events</b> are events collected by default i.e page_view, app_update. You&apos;re tracking <b>{eventChartData?.[0]?.count}</b> events from this type.</h3>
-                            {categoryEvents.auto.length > 0 && (
+                            {/* {categoryEvents.auto.length > 0 && (
                                 <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
                                     {categoryEvents.auto.map((e, i) => (
-                                        <span key={i} className='text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                        <span key={i} className='text-[10px] bg-purple-100 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full'>{e}</span>
                                     ))}
                                 </div>
-                            )}
+                            )} */}
 
-                            <h3 className='pt-3'><b>Enhanced measurement events</b> are collected when enhanced measurement is enabled i.e file_download, scroll. You&apos;re tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
-                            {categoryEvents.enhanced.length > 0 && (
+                            <h3 className='pt-8'><b>Enhanced measurement events</b> are collected when enhanced measurement is enabled i.e file_download, scroll. You&apos;re tracking <b>{eventChartData?.[1]?.count}</b> events from this type.</h3>
+                            {/* {categoryEvents.enhanced.length > 0 && (
                                 <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
                                     {categoryEvents.enhanced.map((e, i) => (
-                                        <span key={i} className='text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                        <span key={i} className='text-[10px] bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full'>{e}</span>
                                     ))}
                                 </div>
-                            )}
+                            )} */}
 
-                            <h3 className='pt-3'><b>Recommended events</b> are events that have predefined names i.e purchase, sign_up. You&apos;re tracking <b>{eventChartData?.[2]?.count}</b> events from this type.</h3>
-                            {categoryEvents.recommended.length > 0 && (
+                            <h3 className='pt-8'><b>Recommended events</b> are events that have predefined names i.e purchase, sign_up. You&apos;re tracking <b>{eventChartData?.[2]?.count}</b> events from this type.</h3>
+                            {/* {categoryEvents.recommended.length > 0 && (
                                 <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
                                     {categoryEvents.recommended.map((e, i) => (
-                                        <span key={i} className='text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                        <span key={i} className='text-[10px] bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-300 px-2 py-0.5 rounded-full'>{e}</span>
                                     ))}
                                 </div>
-                            )}
+                            )} */}
 
-                            <h3 className='pt-3'><b>Custom events</b> are events you define and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this type.</h3>
-                            {categoryEvents.custom.length > 0 && (
+                            <h3 className='pt-8'><b>Custom events</b> are events you define and implement yourself i.e clicked_shop_now. You&apos;re tracking <b>{eventChartData?.[3]?.count}</b> events from this type.</h3>
+                            {/* {categoryEvents.custom.length > 0 && (
                                 <div className='flex flex-wrap gap-1 mt-1.5 mb-1'>
                                     {categoryEvents.custom.map((e, i) => (
-                                        <span key={i} className='text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full'>{e}</span>
+                                        <span key={i} className='text-[10px] bg-orange-100 dark:bg-orange-500/15 text-orange-700 dark:text-orange-300 px-2 py-0.5 rounded-full'>{e}</span>
                                     ))}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                         <div className='min-w-[55%] content-center'>
                             <ResponsiveContainer height={400}>
@@ -180,48 +180,48 @@ const EventsTracking = () => {
                     </div>
                     {hasEvents && (
 
-                        <div className="bg-white rounded-3xl mt-7">
-                            <h1 className="pb-2 text-gray-800 font-bold text-xl text-center">
+                        <div className="bg-surface rounded-3xl mt-7">
+                            <h1 className="pb-2 text-content font-bold text-xl text-center">
                                 Top Triggered Events {isLessThan15 ? '' : '(Top 15)'}
                             </h1>
 
                             {isLessThan15 && (
-                                <p className="text-center text-sm text-gray-600 pb-4">
+                                <p className="text-center text-sm text-content-muted pb-4">
                                     Here are all your triggered events.
                                 </p>
                             )}
                             <div className="overflow-x-auto mt-3">
-                                <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
-                                    <thead className="bg-gray-100">
+                                <table className="w-full border border-line-strong rounded-lg overflow-hidden">
+                                    <thead className="bg-surface-hover">
                                         <tr>
-                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">
+                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">
                                                 #
                                             </th>
-                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">Event</th>
-                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700 border-r border-gray-300">
+                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">Event</th>
+                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content border-r border-line-strong">
                                                 Count
                                             </th>
 
 
-                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">
+                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">
                                                 #
                                             </th>
-                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">Event</th>
-                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700 border-r border-gray-300">
+                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">Event</th>
+                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content border-r border-line-strong">
                                                 Count
                                             </th>
 
-                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">
+                                            <th className="w-[36px] px-1 py-2 text-center text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">
                                                 #
                                             </th>
-                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">Event</th>
-                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-gray-700">Count</th>
+                                            <th className="px-3 py-2 text-left text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">Event</th>
+                                            <th className="px-3 py-2 text-right text-[10px] xl:text-xs 2xl:text-sm font-semibold text-content">Count</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         {Array.from({ length: rowsPerColumn }).map((_, rowIndex) => (
-                                            <tr key={rowIndex} className="border-t hover:bg-gray-50 transition">
+                                            <tr key={rowIndex} className="border-t hover:bg-surface-muted transition">
                                                 {chunkedEvents?.map((col, colIndex) => {
                                                     const event = col?.[rowIndex];
                                                     if (!event) {
@@ -238,13 +238,13 @@ const EventsTracking = () => {
 
                                                     return (
                                                         <React.Fragment key={colIndex}>
-                                                            <td className="w-[36px] px-1 py-1 text-center text-[10px] xl:text-xs 2xl:text-sm text-gray-700">
+                                                            <td className="w-[36px] px-1 py-1 text-center text-[10px] xl:text-xs 2xl:text-sm text-content">
                                                                 {globalIndex + 1}
                                                             </td>
-                                                            <td className="px-3 py-1 text-[10px] xl:text-xs 2xl:text-sm text-gray-800 break-all">
+                                                            <td className="px-3 py-1 text-[10px] xl:text-xs 2xl:text-sm text-content break-all">
                                                                 {event.name}
                                                             </td>
-                                                            <td className="px-3 py-1 text-[10px] xl:text-xs 2xl:text-sm text-gray-800 text-right font-medium border-r border-gray-200">
+                                                            <td className="px-3 py-1 text-[10px] xl:text-xs 2xl:text-sm text-content text-right font-medium border-r border-line">
                                                                 {event.count.toLocaleString()}
                                                             </td>
 
@@ -261,10 +261,10 @@ const EventsTracking = () => {
                 </div>
             </div>
 
-            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+            <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
                 <div>
                     <div>
-                        <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                        <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                             {caseSensitiveMood ? (
                                 <div className="p-2 rounded-lg bg-green-500">
                                     <Smile className="w-5 h-5 text-white" />
@@ -291,14 +291,14 @@ const EventsTracking = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>Case Sensitivity </td>
-                                        <td className='h-[3.8rem] flex justify-center items-center border-b text-sm border-gray-800 text-center'>{caseSensitiveMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                        <td className='h-[3.8rem] border-b text-sm border-line-strong text-center'>Case Sensitivity </td>
+                                        <td className='h-[3.8rem] flex justify-center items-center border-b text-sm border-line-strong text-center'>{caseSensitiveMood ? <div className="p-2 rounded-lg bg-green-500" >
                                             <Smile className="w-5 h-5 text-white" />
                                         </div> : <div className="p-2 rounded-lg bg-red-500">
                                             <Frown className="w-5 h-5 text-white" />
                                         </div>}
                                         </td>
-                                        <td className='h-[3.8rem] border-b text-sm border-gray-800 text-center'>
+                                        <td className='h-[3.8rem] border-b text-sm border-line-strong text-center'>
                                             {eventstatus}
                                         </td>
                                     </tr>

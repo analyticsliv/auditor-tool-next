@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
@@ -68,8 +68,8 @@ const GeneralConfig = () => {
 
     return (
         <div>
-            <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <div className='pb-10 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+            <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                <div className='pb-10 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                     <MoodIcon mood={overallMood} />
                     General Configuration
                 </div>
@@ -84,40 +84,40 @@ const GeneralConfig = () => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Time Zone </td>
-                                <td id="time" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Time Zone </td>
+                                <td id="time" className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>
                                     <MoodIcon mood={timezoneMood ? 'good' : 'bad'} />
                                 </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>The time zone setting of the property is set to <b id="timezone">{timezone}</b></td>
                             </tr>
                             <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Currency Code </td>
-                                <td id="currency" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Currency Code </td>
+                                <td id="currency" className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>
                                     <MoodIcon mood={currenyMood ? 'good' : 'bad'} />
                                 </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>The currency setting of the property is set to <b id="currencycode">{currencyCode}</b>
                                 </td>
                             </tr>
                             <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Industry Category </td>
-                                <td id="industry" className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Industry Category </td>
+                                <td id="industry" className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>
                                     <MoodIcon mood={categorymood ? 'good' : 'bad'} />
                                 </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>The industry category of the property is <b id="industrycategory">{category}</b></td>
                             </tr>
                             <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
-                                <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Data Retention </td>
+                                <td className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>
                                     <MoodIcon mood={dataRetentionMood ? 'good' : 'bad'} />
                                 </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Data retention is set to <b>{dataretention}</b></td>
                             </tr>
                             <tr>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
-                                <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'>Google-Signal Details</td>
+                                <td className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>
                                     <MoodIcon mood={googleSignalMood ? 'good' : 'bad'} />
                                 </td>
-                                <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
+                                <td className='h-[3.8rem] border-b border-line-strong text-center'><b>{googlesignaldetails}</b></td>
                             </tr>
                         </tbody>
                     </table>

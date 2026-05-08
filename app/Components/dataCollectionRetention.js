@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
@@ -30,8 +30,8 @@ const DataCollectionRetention = () => {
     return (
         <div>
             <div>
-                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <h1 className='pb-20 text-gray-800 font-extrabold text-[1.8rem] text-center'>Data Collection & Retention</h1>
+                <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                    <h1 className='pb-20 text-content font-extrabold text-[1.8rem] text-center'>Data Collection & Retention</h1>
                     <div>
                         <table className='w-full'>
                             <thead>
@@ -43,22 +43,22 @@ const DataCollectionRetention = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data Retention </td>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{dataRetentionMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Data Retention </td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>{dataRetentionMood ? <div className="p-2 rounded-lg bg-green-500" >
                                         <Smile className="w-5 h-5 text-white" />
                                     </div> : <div className="p-2 rounded-lg bg-red-500">
                                         <Frown className="w-5 h-5 text-white" />
                                     </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Data retention is set to <b>{dataretention}</b></td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Data retention is set to <b>{dataretention}</b></td>
                                 </tr>
                                 <tr>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'>Google-Signal Details</td>
-                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-gray-800 font-bold text-center'>{googleSignalMood ? <div className="p-2 rounded-lg bg-green-500" >
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'>Google-Signal Details</td>
+                                    <td className='h-[3.8rem] flex justify-center items-center border-b border-line-strong font-bold text-center'>{googleSignalMood ? <div className="p-2 rounded-lg bg-green-500" >
                                         <Smile className="w-5 h-5 text-white" />
                                     </div> : <div className="p-2 rounded-lg bg-red-500">
                                         <Frown className="w-5 h-5 text-white" />
                                     </div>}</td>
-                                    <td className='h-[3.8rem] border-b border-gray-800 text-center'><b>{googlesignaldetails}</b></td>
+                                    <td className='h-[3.8rem] border-b border-line-strong text-center'><b>{googlesignaldetails}</b></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -1,5 +1,6 @@
 import { useAccountStore } from "../store/useAccountStore";
 import { getSession } from "next-auth/react";
+import { toast } from "../store/useToastStore";
 
 export async function reportEndApiCall(key, endapiall) {
     if (typeof window === "undefined") return;
@@ -12,7 +13,7 @@ export async function reportEndApiCall(key, endapiall) {
 
         if (!session || !session.accessToken) {
             console.error("No session or access token available");
-            alert("Session expired. Please refresh the page and try again.");
+            toast.error("Session expired. Please refresh the page and try again.");
             return;
         }
 
@@ -33,7 +34,7 @@ export async function reportEndApiCall(key, endapiall) {
         });
 
         if (!response.ok) {
-            alert("Network response was not ok");
+            toast.error("Network response was not ok");
         }
 
         const endApiData = await response.json();
@@ -60,7 +61,7 @@ export async function fetchAuditData(key, path) {
 
         if (!session || !session.accessToken) {
             console.error("No session or access token available");
-            alert("Session expired. Please refresh the page and try again.");
+            toast.error("Session expired. Please refresh the page and try again.");
             return;
         }
 
