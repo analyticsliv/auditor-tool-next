@@ -69,8 +69,9 @@ export default function AgencyDashboardPage() {
         return (
             <div className="max-w-md mx-auto mt-20">
                 <Card className="p-10 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 dark:from-blue-950 via-purple-50 dark:via-purple-950 to-pink-50 dark:to-pink-950 border border-purple-100">
-                        <Lock size={20} strokeWidth={1.75} className="text-purple-600 dark:text-purple-400" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 border-2"
+                         style={{ borderColor: 'rgba(249,115,22,0.35)', backgroundColor: 'rgba(249,115,22,0.08)' }}>
+                        <Lock size={20} strokeWidth={2} style={{ color: '#F97316' }} />
                     </div>
                     <h1 className="text-xl font-bold text-content mb-2">Access denied</h1>
                     <p className="text-sm text-content-subtle mb-6 leading-relaxed">This area is reserved for agency administrators.</p>
@@ -291,8 +292,9 @@ function StatWithBar({ label, used, limit, icon: Icon }) {
             <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs uppercase tracking-wider text-content-subtle font-semibold">{label}</span>
                 {Icon && (
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-50 dark:from-blue-950 via-purple-50 dark:via-purple-950 to-pink-50 dark:to-pink-950 flex items-center justify-center">
-                        <Icon size={15} strokeWidth={2} className="text-purple-600 dark:text-purple-400" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
+                         style={{ backgroundColor: '#F97316' }}>
+                        <Icon size={15} strokeWidth={2.2} />
                     </div>
                 )}
             </div>

@@ -13,6 +13,7 @@ import { useRole } from "./utils/useRole";
 import ThemeProvider from "./Components/ThemeProvider";
 import ThemeToggle from "./Components/ThemeToggle";
 import GlobalToast from "./Components/GlobalToast";
+import GlobalChatbotButton from "./Components/GlobalChatbotButton";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -251,6 +252,11 @@ function AppShell({ children }) {
           <span className="font-mono uppercase tracking-[0.18em] px-1.5 py-0.5 rounded border border-line">v1.0</span>
         </div>
       </footer>
+
+      {/* Global chatbot button — present on every authenticated route except
+          the print-friendly /previous-audit (handled by isAuditById guard above
+          which short-circuits before this render). */}
+      <GlobalChatbotButton />
     </main>
   );
 }

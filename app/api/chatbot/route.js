@@ -4,7 +4,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function POST(request) {
     try {
-        // Get user session for authentication
+        // getServerSession runs the jwt callback in authOptions which refreshes
+        // the access token if it's within 60s of expiry — so session.accessToken
+        // here is ALWAYS the freshest copy server-side has.
         const session = await getServerSession(authOptions);
 
         if (!session) {
@@ -14,10 +16,19 @@ export async function POST(request) {
             );
         }
 
+        // If the jwt callback failed to refresh (e.g. revoked refresh token),
+        // it sets session.error and leaves the stale accessToken on the
+        // session. Block the call and let the client trigger re-auth.
+        if (session.error === 'RefreshAccessTokenError') {
+            return NextResponse.json(
+                { error: 'Session expired. Please sign in again.', code: 'RefreshAccessTokenError' },
+                { status: 401 }
+            );
+        }
+
         const body = await request.json();
         const { property_id, query } = body;
 
-        // Validate required fields
         if (!property_id || !query) {
             return NextResponse.json(
                 { error: 'property_id and query are required' },
@@ -25,14 +36,18 @@ export async function POST(request) {
             );
         }
 
-        // Get bearer token from environment or session
-
-        const accessToken = request.headers.get("accessToken");
+        // Use the client-supplied header as the primary source — this matches
+        // production behaviour. The client just called getSession() before
+        // firing the request, so the header carries the token that the jwt
+        // callback (with its 60s refresh buffer) just produced. session.accessToken
+        // from getServerSession() is a defensive fallback if the header is
+        // missing for some reason.
+        const accessToken = request.headers.get("accessToken") || session.accessToken;
 
         if (!accessToken) {
             return NextResponse.json(
-                { error: 'Bearer token not configured' },
-                { status: 500 }
+                { error: 'No access token available' },
+                { status: 401 }
             );
         }
 

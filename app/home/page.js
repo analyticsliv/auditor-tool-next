@@ -11,14 +11,13 @@ import moment from "moment";
 import { addDays, subDays } from "date-fns";
 import {
   ChevronDown, Search, ShoppingBag, ArrowUpRight,
-  CheckCircle2, MessageCircle, Sparkles, ShieldCheck,
+  CheckCircle2, Sparkles, ShieldCheck,
   BarChart3, Building2, Calendar,
 } from "lucide-react";
 import { JetBrains_Mono } from "next/font/google";
 import AuditLimitModal from "../Components/AuditLimitModal";
 import ContactFormModal from "../Components/ContactFormModal";
 import { checkAuditCount } from "../utils/Auditcountutils";
-import ChatbotModal from "../Components/ChatbotModal";
 import { toast } from "../store/useToastStore";
 import { useUsageStore } from "../store/useUsageStore";
 
@@ -49,7 +48,6 @@ const Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [loadingProperties, setLoadingProperties] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
 
   const isValidDateRange = (start, end) => {
     if (!start || !end) return false;
@@ -292,23 +290,8 @@ const Home = () => {
         onClose={() => setShowContactModal(false)}
         userEmail={session?.user?.email}
       />
-      <ChatbotModal isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
-
-      {/* Floating chatbot CTA — solid orange, no gradient */}
-      <button
-        onClick={() => setShowChatbot(true)}
-        className="fixed bottom-8 right-8 xl:bottom-10 xl:right-10 group w-12 h-12 xl:w-[54px] xl:h-[54px] rounded-full text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 z-40"
-        aria-label="Open GA4 chatbot"
-        title="Ask anything about GA4"
-        style={{ backgroundColor: ORANGE, boxShadow: "0 14px 30px -8px rgba(249,115,22,0.55)" }}
-      >
-        <span aria-hidden className="absolute inset-0 rounded-full ring-2 ring-white/20" />
-        <span aria-hidden className="absolute -inset-1.5 rounded-full opacity-0 group-hover:opacity-30 transition-opacity"
-          style={{ backgroundColor: ORANGE, filter: "blur(10px)" }} />
-        <span className="relative flex items-center justify-center w-full h-full">
-          <MessageCircle className="w-5 h-5" strokeWidth={2.4} />
-        </span>
-      </button>
+      {/* Chatbot button + modal are now mounted globally in layout.js so they
+          appear on every authenticated route — no need to render them here. */}
     </AuthWrapper>
   );
 };

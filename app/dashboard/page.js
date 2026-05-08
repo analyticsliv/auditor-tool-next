@@ -95,8 +95,9 @@ export default function SuperAdminDashboard() {
         return (
             <div className="max-w-md mx-auto mt-20">
                 <Card className="p-10 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-500/15 dark:via-purple-500/15 dark:to-pink-500/15 border border-purple-100 dark:border-purple-500/20">
-                        <Lock size={20} strokeWidth={1.75} className="text-purple-600 dark:text-purple-400" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 border-2"
+                         style={{ borderColor: 'rgba(249,115,22,0.35)', backgroundColor: 'rgba(249,115,22,0.08)' }}>
+                        <Lock size={20} strokeWidth={2} style={{ color: '#F97316' }} />
                     </div>
                     <h1 className="text-xl font-bold text-content mb-2">Access denied</h1>
                     <p className="text-sm text-content-subtle mb-6 leading-relaxed">This area is reserved for super administrators.</p>

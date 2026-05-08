@@ -39,9 +39,15 @@ export const authOptions = {
         token.picture = user?.image;
       }
 
-      if (!token.expiresAt || Date.now() < token.expiresAt) {
+      // Refresh 60s BEFORE the token actually expires so a long-running call
+      // (e.g. chatbot LLM completion) doesn't get a token that expires mid-flight.
+      const REFRESH_BUFFER_MS = 60 * 1000;
+      if (!token.expiresAt || Date.now() < token.expiresAt - REFRESH_BUFFER_MS) {
         return token;
       }
+      // Once we're inside the refresh window, clear any stale error so the
+      // attempt below isn't pre-empted by a previous failure.
+      delete token.error;
 
       if (!token.refreshToken) {
         return { ...token, error: "RefreshAccessTokenError" };

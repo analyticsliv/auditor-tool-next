@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /* ---------- Spinner ---------- */
 
@@ -18,7 +18,7 @@ export function Spinner({ size = 14, className = '' }) {
 
 const VARIANTS = {
     primary:
-        'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 disabled:from-gray-300 disabled:via-gray-300 disabled:to-gray-300 disabled:text-gray-100 dark:disabled:from-slate-700 dark:disabled:via-slate-700 dark:disabled:to-slate-700 dark:disabled:text-slate-400 shadow-sm hover:shadow-md',
+        'bg-[#F97316] text-white hover:bg-[#EA580C] disabled:bg-gray-300 disabled:text-gray-100 dark:disabled:bg-slate-700 dark:disabled:text-slate-400 shadow-sm hover:shadow-md',
     secondary:
         'bg-surface text-content border border-line-strong hover:bg-surface-hover hover:border-line-strong disabled:bg-surface-hover disabled:text-content-subtle disabled:border-line',
     danger:
@@ -28,7 +28,7 @@ const VARIANTS = {
     ghost:
         'text-content hover:bg-surface-hover disabled:text-content-subtle',
     ghostAccent:
-        'text-purple-600 hover:bg-purple-50 disabled:text-content-subtle dark:text-purple-400 dark:hover:bg-purple-500/10',
+        'text-[#F97316] hover:bg-[#F97316]/10 disabled:text-content-subtle',
     ghostRed:
         'text-danger hover:bg-danger-muted disabled:text-content-subtle',
 };
@@ -105,12 +105,14 @@ export function Card({ children, className = '' }) {
 
 export function ProgressBar({ used = 0, limit = 0, height = 6 }) {
     const pct = limit ? Math.min(100, (used / limit) * 100) : 0;
-    let gradient = 'from-blue-500 via-purple-500 to-pink-500';
-    if (pct >= 90) gradient = 'from-rose-500 to-orange-500';
-    else if (pct >= 70) gradient = 'from-amber-400 to-orange-400';
+    // Solid colors only — orange (default) → orange-bright (warn) → red (danger)
+    let color = '#1A73E8';                 // blue when fresh
+    if (pct >= 90) color = '#EF4444';      // red when nearly out
+    else if (pct >= 70) color = '#F97316'; // orange when getting close
     return (
         <div className="w-full bg-surface-hover rounded-full overflow-hidden" style={{ height }}>
-            <div className={`h-full bg-gradient-to-r ${gradient} transition-all duration-700 ease-out rounded-full`} style={{ width: `${pct}%` }} />
+            <div className="h-full transition-all duration-700 ease-out rounded-full"
+                 style={{ width: `${pct}%`, backgroundColor: color }} />
         </div>
     );
 }
@@ -121,15 +123,16 @@ export function Stat({ label, value, sub, accent, icon: Icon, tone = 'neutral' }
     const valueColor =
         tone === 'warn' ? 'text-amber-600 dark:text-amber-400' :
         tone === 'danger' ? 'text-rose-600 dark:text-rose-400' :
-        tone === 'accent' ? 'text-purple-600 dark:text-purple-400' :
+        tone === 'accent' ? 'text-[#F97316]' :
         'text-content';
     return (
         <div className="bg-surface border border-line rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-line-strong transition-all">
             <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs uppercase tracking-wider text-content-subtle font-semibold">{label}</span>
                 {Icon && (
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-500/15 dark:via-purple-500/15 dark:to-pink-500/15 flex items-center justify-center">
-                        <Icon size={15} strokeWidth={2} className="text-purple-600 dark:text-purple-400" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
+                         style={{ backgroundColor: '#F97316' }}>
+                        <Icon size={15} strokeWidth={2.2} />
                     </div>
                 )}
             </div>
@@ -194,8 +197,9 @@ export function EmptyState({ title, description, icon: Icon, action }) {
     return (
         <div className="text-center py-16 px-6">
             {Icon && (
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-500/15 dark:via-purple-500/15 dark:to-pink-500/15 border border-purple-100 dark:border-purple-500/20">
-                    <Icon size={22} strokeWidth={1.75} className="text-purple-600 dark:text-purple-400" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 border-2"
+                    style={{ borderColor: 'rgba(249,115,22,0.35)', backgroundColor: 'rgba(249,115,22,0.08)' }}>
+                    <Icon size={22} strokeWidth={2} style={{ color: '#F97316' }} />
                 </div>
             )}
             <h3 className="text-base font-semibold text-content mb-1.5">{title}</h3>
@@ -213,14 +217,23 @@ export function PageHeader({ eyebrow, title, subtitle, right }) {
             <div className="flex items-end justify-between gap-4 flex-wrap">
                 <div>
                     {eyebrow && (
-                        <div className="text-[11px] uppercase tracking-[0.14em] text-purple-600 dark:text-purple-400 font-semibold mb-2">{eyebrow}</div>
+                        <div className="inline-flex items-center gap-1.5 mb-2">
+                            <span className="block w-5 h-[2px]" style={{ backgroundColor: '#F97316' }} />
+                            <span className="text-[10.5px] uppercase tracking-[0.18em] font-bold" style={{ color: '#F97316' }}>
+                                {eyebrow}
+                            </span>
+                        </div>
                     )}
                     <h1 className="text-2xl sm:text-3xl font-bold text-content tracking-tight">{title}</h1>
                     {subtitle && <p className="text-sm text-content-subtle mt-1.5">{subtitle}</p>}
                 </div>
                 {right && <div className="flex items-center gap-2 mb-1">{right}</div>}
             </div>
-            <div className="mt-5 h-px w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60" />
+            {/* Solid two-color rule — no gradient. Orange takes 60%, blue 40%. */}
+            <div className="mt-5 flex h-[2px] w-full rounded-full overflow-hidden">
+                <div className="flex-[3]" style={{ backgroundColor: '#F97316' }} />
+                <div className="flex-[2]" style={{ backgroundColor: '#1A73E8' }} />
+            </div>
         </div>
     );
 }
@@ -257,7 +270,8 @@ export function Tabs({ tabs, value, onChange }) {
                             {Icon && <Icon size={15} strokeWidth={1.75} />}
                             <span className="capitalize">{t.label}</span>
                             {typeof t.count === 'number' && (
-                                <span className={`text-[10.5px] tabular-nums px-1.5 py-px rounded-full font-medium ${active ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300' : 'bg-surface-hover text-content-subtle'}`}>
+                                <span className={`text-[10.5px] tabular-nums px-1.5 py-px rounded-full font-medium ${active ? 'text-white' : 'bg-surface-hover text-content-subtle'}`}
+                                    style={active ? { backgroundColor: '#F97316' } : undefined}>
                                     {t.count}
                                 </span>
                             )}
@@ -265,8 +279,8 @@ export function Tabs({ tabs, value, onChange }) {
                     );
                 })}
                 <div
-                    className="absolute -bottom-px h-0.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transition-all duration-300 ease-out rounded-full"
-                    style={{ transform: `translateX(${indicator.x}px)`, width: indicator.w }}
+                    className="absolute -bottom-px h-0.5 transition-all duration-300 ease-out rounded-full"
+                    style={{ transform: `translateX(${indicator.x}px)`, width: indicator.w, backgroundColor: '#F97316' }}
                 />
             </div>
         </div>
@@ -376,7 +390,7 @@ export function Toast({ toast, onClose }) {
     const tone =
         toast.kind === 'error' ? { bar: 'bg-rose-500' } :
         toast.kind === 'success' ? { bar: 'bg-emerald-500' } :
-        { bar: 'bg-purple-500' };
+        { bar: 'bg-[#F97316]' };
     return (
         <div className="fixed bottom-6 right-6 z-[60]" style={{ animation: 'ui-toastIn 220ms ease-out' }}>
             <div className="bg-surface-elevated border border-line rounded-xl pl-4 pr-3 py-3 flex items-center gap-3 max-w-sm shadow-lg">
@@ -421,7 +435,7 @@ export function Input(props) {
     return (
         <input
             {...props}
-            className={`w-full bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-content placeholder:text-content-subtle focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-colors ${props.className || ''}`}
+            className={`w-full bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-content placeholder:text-content-subtle focus:outline-none focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20 transition-colors ${props.className || ''}`}
         />
     );
 }
@@ -430,7 +444,7 @@ export function Select(props) {
     return (
         <select
             {...props}
-            className={`w-full bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-content focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-colors ${props.className || ''}`}
+            className={`w-full bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-content focus:outline-none focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20 transition-colors ${props.className || ''}`}
         />
     );
 }
@@ -498,7 +512,7 @@ export function Pagination({ page, total, onChange, pageSize = 10, totalItems = 
                     className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-line text-content hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     aria-label="Previous page"
                 >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                    <ChevronLeft size={14} strokeWidth={2.25} />
                 </button>
 
                 {pages.map((p, idx) => {
@@ -518,9 +532,10 @@ export function Pagination({ page, total, onChange, pageSize = 10, totalItems = 
                             aria-current={active ? 'page' : undefined}
                             className={`inline-flex items-center justify-center w-8 h-8 rounded-md text-[12.5px] font-medium tabular-nums transition-colors ${
                                 active
-                                    ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-sm'
+                                    ? 'text-white shadow-sm'
                                     : 'border border-line text-content hover:bg-surface-hover'
                             }`}
+                            style={active ? { backgroundColor: '#F97316' } : undefined}
                         >
                             {p}
                         </button>
@@ -534,7 +549,7 @@ export function Pagination({ page, total, onChange, pageSize = 10, totalItems = 
                     className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-line text-content hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     aria-label="Next page"
                 >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+                    <ChevronRight size={14} strokeWidth={2.25} />
                 </button>
             </nav>
         </div>
