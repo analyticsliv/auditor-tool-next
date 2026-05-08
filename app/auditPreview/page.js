@@ -8,6 +8,7 @@ import { getComponentsList } from '../utils/componentList';
 import AuditStart from '../Components/auditStart';
 import InfoComponent from '../Components/info';
 import Loader from '../Components/loader';
+import { toast } from '../store/useToastStore';
 
 const COMPONENTS_PER_BATCH = 6;
 
@@ -36,15 +37,15 @@ const AuditPreview = () => {
   useEffect(() => {
     if (!propertyId || !selectedProperty?.name) {
       resetSelection();
-      alert("No property selected");
-      router.push("/");
+      toast.error("No property selected");
+      router.push("/home");
       return;
     }
   }, [propertyId]);
 
   useEffect(() => {
     if (!readyToRunAudit && !auditCompleted) {
-      router.push("/");
+      router.push("/home");
       return;
     }
   }, [readyToRunAudit, auditCompleted])
@@ -90,7 +91,7 @@ const AuditPreview = () => {
       {loading && (
         <div className="flex flex-col justify-center items-center py-10">
           <Loader />
-          <div className="mt-4 text-center text-sm text-gray-500">Running audit...</div>
+          <div className="mt-4 text-center text-sm text-content-subtle">Running audit...</div>
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import React from 'react';
 import { useAccountStore } from '../store/useAccountStore';
 import MoodIcon from './MoodIcon';
@@ -16,9 +16,9 @@ const CustomDimensionMetrics = () => {
     const overallMood = (hasDimensions && hasMetrics) ? 'good' : (hasDimensions || hasMetrics) ? 'warning' : 'bad';
 
     return (
-        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
 
-            <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+            <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                 <MoodIcon mood={overallMood} />
                 Custom Dimensions & Metrics
             </h1>
@@ -38,7 +38,7 @@ const CustomDimensionMetrics = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
+                        <tr className='h-[3.8rem] border-b border-line-strong text-center'>
                             <td>Custom Dimensions</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
                                 <MoodIcon mood={dimensions?.length ? 'good' : 'bad'} />
@@ -58,7 +58,7 @@ const CustomDimensionMetrics = () => {
                                 }
                             </td>
                         </tr>
-                        <tr className='h-[3.8rem] border-b border-gray-800 text-center'>
+                        <tr className='h-[3.8rem] border-b border-line-strong text-center'>
                             <td>Custom Metrics</td>
                             <td className='h-[3.8rem] flex justify-center items-center'>
                                 <MoodIcon mood={metrics?.length ? 'good' : 'bad'} />

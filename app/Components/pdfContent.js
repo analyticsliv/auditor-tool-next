@@ -50,7 +50,7 @@ const PdfContent = forwardRef(({ isEcommerceOverride }, ref) => {
             <div><AttributionSetting /></div>
             <div><ActiveDomains /></div>
             <div className="page-break" style={{ pageBreakAfter: "always" }}><ProductLinks /></div>
-            <div className="page-break" style={{ pageBreakAfter: "always" }}><EngagementRate /></div>
+            <div><EngagementRate /></div>
             <div><EventsTracking /></div>
             <div><KeyEvents /></div>
 

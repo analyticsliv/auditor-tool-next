@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useEffect, useState } from 'react'
 import { useAccountStore } from '../store/useAccountStore';
@@ -41,7 +41,7 @@ const AttributionSetting = () => {
     }, [data?.otherConversionEventLookbackWindow])
 
     const cardBase =
-        'relative flex flex-col text-center items-center bg-white border border-gray-200 rounded-b-3xl py-8 px-6 2xl:px-10 justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full';
+        'relative flex flex-col text-center items-center bg-surface border border-line rounded-b-3xl py-8 px-6 2xl:px-10 justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 w-full';
 
     // Calculate overall mood based on how many checks are positive
     const positiveChecks = [modelMood, acquisitionWindowMood, conversionWindowMood].filter(Boolean).length;
@@ -51,8 +51,8 @@ const AttributionSetting = () => {
     return (
         <div>
             <div>
-                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <h1 className='pb-5 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+                <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                    <h1 className='pb-5 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                         <MoodIcon mood={overallMood} />
                         Attribution Setting Details
                     </h1>
@@ -64,12 +64,12 @@ const AttributionSetting = () => {
                                 <span className="pb-3">
                                     <MoodIcon mood={modelMood ? 'good' : 'bad'} variant="card" />
                                 </span>
-                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Model</h2>
+                                <h2 className="font-bold text-2xl pb-2 text-content">Model</h2>
 
                                 <Share2 className="w-14 h-14 text-indigo-500 mb-3 opacity-90" />
 
-                                <h3 className="text-base text-gray-600">
-                                    Your attribution model is set to <b className="text-gray-800">{model}</b>
+                                <h3 className="text-base text-content-muted">
+                                    Your attribution model is set to <b className="text-content">{model}</b>
                                 </h3>
                             </div>
 
@@ -80,12 +80,12 @@ const AttributionSetting = () => {
                                     <MoodIcon mood={acquisitionWindowMood ? 'good' : 'bad'} variant="card" />
                                 </span>
 
-                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Acquisition Window</h2>
+                                <h2 className="font-bold text-2xl pb-2 text-content">Acquisition Window</h2>
 
                                 <MousePointerClick className="w-14 h-14 text-emerald-500 mb-3 opacity-90" />
 
-                                <h3 className="text-base text-gray-600">
-                                    Your <b className="text-gray-800">{acquisitionWindow}</b>
+                                <h3 className="text-base text-content-muted">
+                                    Your <b className="text-content">{acquisitionWindow}</b>
                                 </h3>
                             </div>
 
@@ -96,12 +96,12 @@ const AttributionSetting = () => {
                                     <MoodIcon mood={conversionWindowMood ? 'good' : 'bad'} variant="card" />
                                 </span>
 
-                                <h2 className="font-bold text-2xl pb-2 text-gray-800">Conversion Window</h2>
+                                <h2 className="font-bold text-2xl pb-2 text-content">Conversion Window</h2>
 
                                 <TrendingUp className="w-14 h-14 text-orange-500 mb-3 opacity-90" />
 
-                                <h3 className="text-base text-gray-600">
-                                    Your <b className="text-gray-800">{conversionWindow}</b>
+                                <h3 className="text-base text-content-muted">
+                                    Your <b className="text-content">{conversionWindow}</b>
                                 </h3>
                             </div>
                         </div>

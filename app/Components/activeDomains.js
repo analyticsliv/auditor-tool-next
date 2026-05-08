@@ -81,8 +81,8 @@ const ActiveDomains = () => {
         // Steel
         '#CFD8DC', '#ECEFF1',
 
-        // Grey
-        '#E0E0E0', '#F5F5F5'
+        // // Grey
+        // '#E0E0E0', '#F5F5F5'
     ];
 
 
@@ -176,8 +176,8 @@ const ActiveDomains = () => {
             <div>
                 <h1 className='pt-8 text-center text-[#7380ec] font-extrabold text-[1.8rem]'>Data Integrity &
                     Customization</h1>
-                <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                    <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>
+                <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                    <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>
                         Active Domains
                     </h1>
                     <h3 className='text-center'>
@@ -235,7 +235,7 @@ const ActiveDomains = () => {
                                             style={{ backgroundColor: colorMap[name] }}
                                         ></span>
                                         <span
-                                            className={`${visibleDomains?.has(name) ? 'text-black' : 'line-through text-gray-400'}`}
+                                            className={`${visibleDomains?.has(name) ? 'text-content' : 'line-through text-content-subtle'}`}
                                         >
                                             {name}
                                         </span>

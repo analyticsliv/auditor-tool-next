@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import React from 'react';
 import { useAccountStore } from '../store/useAccountStore';
 import MoodIcon from './MoodIcon';
@@ -22,7 +22,7 @@ const Acquisitions = () => {
             if (dimension === "(not set)") positionOfNotSet = index + 1;
 
             return (
-                <tr key={index} className="h-[3.8rem] border-b border-gray-800 text-center">
+                <tr key={index} className="h-[3.8rem] border-b border-line-strong text-center">
                     <td>{dimension}</td>
                     {metrics.map((val, i) => (
                         <td key={i}>{val}</td>
@@ -67,10 +67,10 @@ const Acquisitions = () => {
                         </h3>
                         <div
                             className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
-                                ? 'bg-red-50 border-red-500 text-red-800'
+                                ? 'bg-red-50 dark:bg-red-500/10 border-red-500 text-red-800 dark:text-red-200'
                                 : insightStatus === 'warning'
-                                    ? 'bg-amber-50 border-amber-500 text-amber-800'
-                                    : 'bg-green-50 border-green-500 text-green-800'
+                                    ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-500 text-amber-800 dark:text-amber-200'
+                                    : 'bg-green-50 dark:bg-green-500/10 border-green-500 text-green-800 dark:text-green-200'
                                 }`}
                         >
                             <p
@@ -99,7 +99,7 @@ const Acquisitions = () => {
             if (dimension === "Unassigned") positionOfUnassigned = index + 1;
 
             return (
-                <tr key={index} className="h-[3.8rem] border-b border-gray-800 text-center">
+                <tr key={index} className="h-[3.8rem] border-b border-line-strong text-center">
                     <td>{dimension}</td>
                     {metrics.map((val, i) => (
                         <td key={i}>{val}</td>
@@ -142,10 +142,10 @@ const Acquisitions = () => {
                         </h3>
                         <div
                             className={`flex-1 flex items-center p-5 rounded-xl border-l-4 ${insightStatus === 'critical'
-                                ? 'bg-red-50 border-red-500 text-red-800'
+                                ? 'bg-red-50 dark:bg-red-500/10 border-red-500 text-red-800 dark:text-red-200'
                                 : insightStatus === 'warning'
-                                    ? 'bg-amber-50 border-amber-500 text-amber-800'
-                                    : 'bg-green-50 border-green-500 text-green-800'
+                                    ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-500 text-amber-800 dark:text-amber-200'
+                                    : 'bg-green-50 dark:bg-green-500/10 border-green-500 text-green-800 dark:text-green-200'
                                 }`}
                         >
                             <p
@@ -165,15 +165,15 @@ const Acquisitions = () => {
 
     return (
         <div>
-            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+            <section className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                <h1 className='pb-11 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                     {userAcquisitionResult && <MoodIcon mood={userAcquisitionResult.insightStatus} />}
                     User Acquisition
                 </h1>
                 {userAcquisitionResult?.content}
             </section>
-            <section className='parent-div bg-white rounded-3xl p-10 mt-10'>
-                <h1 className='pb-11 text-gray-800 font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
+            <section className='parent-div bg-surface rounded-3xl p-10 mt-10'>
+                <h1 className='pb-11 text-content font-extrabold text-[1.8rem] text-center flex items-center justify-center gap-3'>
                     {trafficAcquisitionResult && <MoodIcon mood={trafficAcquisitionResult.insightStatus} />}
                     Traffic Acquisition
                 </h1>

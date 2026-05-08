@@ -73,9 +73,9 @@ const EcomItemDetails = () => {
     if (!shouldRender) return null; // 👈 Hide entire component if Add to Cart is empty
 
     return (
-        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
             <div id="ecommerce-section">
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>E-Commerce Item Details</h1>
+                <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>E-Commerce Item Details</h1>
                 <h3 className='text-center'>
                     Ensuring complete capture of item details in all ecommerce events. Item details are crucial in<br />
                     understanding user behavior and shopping experience on your store.
@@ -101,9 +101,9 @@ const EcomItemDetails = () => {
                                 { label: 'Purchase', key: 'purchase' }
                             ]?.map((event, idx) => (
                                 <tr key={idx}>
-                                    <td className='h-[3.8rem] border-b border-gray-800'>{event?.label}</td>
+                                    <td className='h-[3.8rem] border-b border-line-strong'>{event?.label}</td>
                                     {[1, 2, 3, 4, 5]?.map(i => (
-                                        <td className='h-[3.8rem] border-b border-gray-800' key={i}>
+                                        <td className='h-[3.8rem] border-b border-line-strong' key={i}>
                                             <div className='flex justify-center items-center'>{renderEmoji(`${event?.key}${i}`)}</div>
                                         </td>
                                     ))}

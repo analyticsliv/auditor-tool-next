@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import React, { useEffect, useState } from 'react';
 import { useAccountStore } from '../store/useAccountStore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -72,9 +72,9 @@ const EngagementRate = () => {
     }, [engagementData]);
 
     return (
-        <div className='parent-div bg-white rounded-3xl p-10 mt-10'>
+        <div className='parent-div bg-surface rounded-3xl p-10 mt-10'>
             <div>
-                <h1 className='pb-8 text-gray-800 font-extrabold text-[1.8rem] text-center'>{headerTitle}</h1>
+                <h1 className='pb-8 text-content font-extrabold text-[1.8rem] text-center'>{headerTitle}</h1>
                 <div className='flex justify-between items-center'>
                     <div className='w-[40%] content-center text-base 2xl:text-lg text-left'>
                         <h3>By analyzing the engagement rate

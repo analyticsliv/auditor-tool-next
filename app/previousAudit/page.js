@@ -70,7 +70,7 @@ const PreviousAudit = () => {
             </div>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden">
+                <table className="min-w-full bg-surface border border-line shadow-md rounded-xl overflow-hidden">
                     <thead className="bg-[#3f51b5] text-white text-sm 2xl:text-base uppercase">
                         <tr>
                             <th className="2xl:px-6 px-4 py-3 2xl:py-4 text-left">Account Name</th>
@@ -83,21 +83,21 @@ const PreviousAudit = () => {
                     <tbody>
                         {loading ? (
                             [...Array(3)]?.map((_, i) => (
-                                <tr key={i} className="animate-pulse bg-gray-50">
+                                <tr key={i} className="animate-pulse bg-surface-muted">
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">
-                                        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                        <div className="h-4 bg-line-strong rounded w-3/4"></div>
                                     </td>
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">
-                                        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                        <div className="h-4 bg-line-strong rounded w-3/4"></div>
                                     </td>
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">
-                                        <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                                        <div className="h-4 bg-line-strong rounded w-2/3"></div>
                                     </td>
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">
-                                        <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                                        <div className="h-4 bg-line-strong rounded w-2/3"></div>
                                     </td>
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">
-                                        <div className="h-8 bg-gray-300 rounded w-16"></div>
+                                        <div className="h-8 bg-line-strong rounded w-16"></div>
                                     </td>
                                 </tr>
                             ))
@@ -105,8 +105,8 @@ const PreviousAudit = () => {
                             paginatedAudits?.map((audit, index) => (
                                 <tr
                                     key={audit?._id}
-                                    className={`text-gray-700 text-sm 2xl:text-base ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                                        } hover:bg-blue-50 transition`}
+                                    className={`text-content text-sm 2xl:text-base ${index % 2 === 0 ? 'bg-surface-muted' : 'bg-surface'
+                                        } hover:bg-blue-50 dark:bg-blue-500/10 transition`}
                                 >
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">{audit?.accountName}</td>
                                     <td className="2xl:px-6 px-4 py-3 2xl:py-4">{audit?.propertyName}</td>
@@ -128,7 +128,7 @@ const PreviousAudit = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5} className="text-center py-8 text-gray-500 font-medium">
+                                <td colSpan={5} className="text-center py-8 text-content-subtle font-medium">
                                     No audits found.
                                 </td>
                             </tr>
@@ -143,7 +143,7 @@ const PreviousAudit = () => {
                     <button
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
-                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-surface border rounded-md text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-500/10 disabled:opacity-50"
                     >
                         Previous
                     </button>
@@ -154,7 +154,7 @@ const PreviousAudit = () => {
                             onClick={() => setCurrentPage(index + 1)}
                             className={`text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 rounded-md border ${currentPage === index + 1
                                 ? 'bg-blue-600 text-white'
-                                : 'bg-white text-blue-600 hover:bg-blue-50'
+                                : 'bg-surface text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-500/10'
                                 }`}
                         >
                             {index + 1}
@@ -164,7 +164,7 @@ const PreviousAudit = () => {
                     <button
                         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                         disabled={currentPage === totalPages}
-                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-white border rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                        className="text-sm 2xl:text-base 2xl:px-4 px-3 py-1 2xl:py-2 bg-surface border rounded-md text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-500/10 disabled:opacity-50"
                     >
                         Next
                     </button>
