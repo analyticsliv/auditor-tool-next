@@ -1,4 +1,7 @@
 import GoogleProvider from "next-auth/providers/google";
+import connectDB from "@/lib/mongodb";
+import User from "@/models/user";
+import { ROLES, SUPER_ADMIN_EMAIL, PLANS, QUOTA_WINDOW_DAYS, addDays } from "@/app/config/plans";
 
 export const authOptions = {
   providers: [
@@ -92,6 +95,60 @@ export const authOptions = {
       session.user.name = token.name;
       session.user.image = token.picture;
       return session;
+    },
+  },
+  events: {
+    /* ============================================================
+       Fires after a successful sign-in (both new and returning users).
+       Guarantees that every Google-authenticated user has a User row
+       in MongoDB BEFORE they hit any API route. Previously we relied
+       on lazy creation in getSessionUser() — but if any one of those
+       calls failed (e.g. the legacy `accounts.accountId_1` index),
+       the user would be stuck "authenticated but missing" and every
+       API call returned 401.
+       ============================================================ */
+    async signIn({ user, account }) {
+      if (account?.provider !== 'google') return;
+      const email = user?.email?.toLowerCase()?.trim();
+      if (!email) return;
+
+      try {
+        await connectDB();
+        const isSuperAdmin = email === SUPER_ADMIN_EMAIL;
+        const now = new Date();
+
+        // Atomic upsert. $setOnInsert applies only on creation so we
+        // don't clobber an existing user's role/quota/agency on every
+        // sign-in. $set keeps name + lastLogin fresh.
+        await User.findOneAndUpdate(
+          { email },
+          {
+            $setOnInsert: {
+              email,
+              role: isSuperAdmin ? ROLES.SUPER_ADMIN : ROLES.FREE_USER,
+              auditCount: 0,
+              auditLimit: PLANS.free.auditLimit,
+              chatbotCount: 0,
+              chatbotLimit: PLANS.free.chatbotLimit,
+              quotaStartDate: now,
+              quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+              status: 'active',
+            },
+            $set: {
+              ...(user?.name ? { name: user.name } : {}),
+              lastLogin: now,
+            },
+          },
+          { upsert: true, setDefaultsOnInsert: true }
+        );
+      } catch (e) {
+        // Don't block sign-in if the DB hiccups — getSessionUser() will
+        // attempt the same upsert on the first API call as a safety net.
+        console.error(
+          '[auth events.signIn] user upsert failed for', email,
+          'code:', e?.code, 'name:', e?.codeName, 'msg:', e?.message
+        );
+      }
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

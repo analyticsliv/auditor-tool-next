@@ -32,27 +32,41 @@ export async function getSessionUser() {
         const isSuperAdmin = email === SUPER_ADMIN_EMAIL;
         const sessionName = session?.user?.name;
 
-        let user = await User.findOne({ email }).lean();
-        if (!user) {
-            const now = new Date();
-            try {
-                const created = new User({
-                    email,
-                    name: sessionName || undefined,
-                    lastLogin: now,
-                    role: isSuperAdmin ? ROLES.SUPER_ADMIN : ROLES.FREE_USER,
-                    auditCount: 0,
-                    auditLimit: PLANS.free.auditLimit,
-                    chatbotCount: 0,
-                    chatbotLimit: PLANS.free.chatbotLimit,
-                    quotaStartDate: now,
-                    quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
-                    status: 'active',
-                });
-                await created.save();
-            } catch (e) {
-                if (e?.code !== 11000) console.error('getSessionUser create error', e);
-            }
+        // Atomic create-or-return. findOneAndUpdate with upsert is race-safe,
+        // doesn't swallow legacy duplicate-key errors silently, and gives us
+        // back the resulting document in one round trip.
+        const now = new Date();
+        let user;
+        try {
+            user = await User.findOneAndUpdate(
+                { email },
+                {
+                    $setOnInsert: {
+                        email,
+                        role: isSuperAdmin ? ROLES.SUPER_ADMIN : ROLES.FREE_USER,
+                        auditCount: 0,
+                        auditLimit: PLANS.free.auditLimit,
+                        chatbotCount: 0,
+                        chatbotLimit: PLANS.free.chatbotLimit,
+                        quotaStartDate: now,
+                        quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+                        status: 'active',
+                    },
+                    $set: {
+                        ...(sessionName ? { name: sessionName } : {}),
+                        lastLogin: now,
+                    },
+                },
+                { upsert: true, new: true, lean: true, setDefaultsOnInsert: true }
+            );
+        } catch (e) {
+            // Loud log so legacy-index issues don't hide silently anymore.
+            console.error(
+                '[getSessionUser] upsert failed for', email,
+                'code:', e?.code, 'name:', e?.codeName, 'msg:', e?.message
+            );
+            // Last-ditch attempt to read the doc — covers the case where a
+            // concurrent call upserted while we were failing.
             user = await User.findOne({ email }).lean();
         }
         if (!user) return null;

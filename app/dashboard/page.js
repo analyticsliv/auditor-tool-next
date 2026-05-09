@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
     Building2, Users, Mail, Activity, Plus, Settings2,
-    Trash2, UserPlus2, Lock, Inbox,
+    Trash2, UserPlus2, Lock, Inbox, ChevronRight,
+    User as UserIcon, Clock, AlertCircle,
 } from 'lucide-react';
 import { useRole } from '../utils/useRole';
 import {
@@ -44,6 +45,18 @@ export default function SuperAdminDashboard() {
     const [overrideTarget, setOverrideTarget] = useState(null);
     const [inviteAdminTarget, setInviteAdminTarget] = useState(null);
     const [inviteAdminEmail, setInviteAdminEmail] = useState('');
+
+    // Per-row expand state for the agency table — superadmin can drill into
+    // each agency to see its members and pending invites without leaving
+    // the page.
+    const [expandedAgencies, setExpandedAgencies] = useState(() => new Set());
+    const toggleAgencyExpand = (id) => {
+        setExpandedAgencies(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            return next;
+        });
+    };
 
     const loadAll = async () => {
         try {
@@ -265,20 +278,41 @@ export default function SuperAdminDashboard() {
                                     const al = a.auditLimitOverride ?? a.auditLimit;
                                     const cl = a.chatbotLimitOverride ?? a.chatbotLimit;
                                     const acceptedAdmin = a.hasAdmin;
+                                    const isExpanded = expandedAgencies.has(a.agencyId);
                                     return (
-                                        <Tr key={a.agencyId}>
+                                        <Fragment key={a.agencyId}>
+                                        <Tr>
                                             <Td>
-                                                <div className="font-semibold text-content">{a.name}</div>
-                                                {acceptedAdmin ? (
-                                                    <div className="text-xs text-content-subtle mt-0.5">{a.adminEmails?.[0]}</div>
-                                                ) : a.pendingAdminInvite ? (
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <StatusPill status="pending" />
-                                                        <span className="text-xs text-content-subtle">{a.pendingAdminInvite.email}</span>
+                                                <div className="flex items-start gap-2.5">
+                                                    {/* Drill-in chevron — rotates 90° when expanded.
+                                                        Provides a clean affordance for opening the
+                                                        agency's user list without an extra column. */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleAgencyExpand(a.agencyId)}
+                                                        aria-expanded={isExpanded}
+                                                        aria-label={isExpanded ? 'Collapse agency details' : 'Expand agency details'}
+                                                        className="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-md border border-line text-content-muted hover:text-content hover:border-content-subtle/50 hover:bg-surface-muted/60 transition-colors flex-shrink-0"
+                                                        style={isExpanded ? { borderColor: '#F97316', color: '#F97316', backgroundColor: 'rgba(249,115,22,0.06)' } : undefined}
+                                                    >
+                                                        <ChevronRight size={13} strokeWidth={2.4}
+                                                            className="transition-transform duration-300"
+                                                            style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+                                                    </button>
+                                                    <div className="min-w-0">
+                                                        <div className="font-semibold text-content">{a.name}</div>
+                                                        {acceptedAdmin ? (
+                                                            <div className="text-xs text-content-subtle mt-0.5">{a.adminEmails?.[0]}</div>
+                                                        ) : a.pendingAdminInvite ? (
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <StatusPill status="pending" />
+                                                                <span className="text-xs text-content-subtle">{a.pendingAdminInvite.email}</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-xs text-rose-600 dark:text-rose-400 mt-0.5">no admin assigned</div>
+                                                        )}
                                                     </div>
-                                                ) : (
-                                                    <div className="text-xs text-rose-600 dark:text-rose-400 mt-0.5">no admin assigned</div>
-                                                )}
+                                                </div>
                                             </Td>
                                             <Td>
                                                 {/* Plan is a read-only badge in the table.
@@ -332,6 +366,25 @@ export default function SuperAdminDashboard() {
                                                 </div>
                                             </Td>
                                         </Tr>
+
+                                        {/* Expanded detail row — accordion-style smooth open.
+                                            Always rendered so the grid-rows transition can animate
+                                            both directions; visibility is controlled by isExpanded. */}
+                                        <tr className="bg-surface-muted/30">
+                                            <td colSpan={7} className="p-0 border-b border-line">
+                                                <div
+                                                    className={`grid transition-all duration-300 ease-out ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                                                    <div className="overflow-hidden">
+                                                        <AgencyDetailPanel
+                                                            agency={a}
+                                                            users={users}
+                                                            invitations={invitations}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </Fragment>
                                     );
                                 })}
                             </TBody>
@@ -632,6 +685,132 @@ export default function SuperAdminDashboard() {
             </Modal>
 
             <Toast toast={toast.toast} onClose={toast.dismiss} />
+        </div>
+    );
+}
+
+/* ============================================================
+   AGENCY DETAIL PANEL
+   Expanded accordion content shown when superadmin clicks the
+   chevron on an agency row. Pulls users/invitations from the
+   already-loaded dashboard state — no extra fetch needed.
+   ============================================================ */
+function AgencyDetailPanel({ agency, users, invitations }) {
+    const ORANGE = '#F97316';
+    const BLUE   = '#1A73E8';
+
+    const members = (users || []).filter(u => u?.agency?.agencyId === agency.agencyId
+        || u?.agencyId === agency.agencyId);
+    // Only surface invitations that are still actionable. Anything revoked,
+    // expired, or already accepted is captured in the Activity log instead.
+    const pending = (invitations || []).filter(i =>
+        i.agencyId === agency.agencyId && i.status === 'pending'
+    );
+
+    const admins = members.filter(u => u.role === 'agencyAdmin');
+    const teamMembers = members.filter(u => u.role !== 'agencyAdmin');
+    const hasOverride = agency.auditLimitOverride != null || agency.chatbotLimitOverride != null;
+
+    return (
+        <div className="px-5 py-4 border-l-[3px]" style={{ borderLeftColor: ORANGE }}>
+            {/* Two-column body: members left, pending invites right.
+                Quick stats (members count, pending count, audits, chatbot)
+                are intentionally not duplicated here — they're already
+                visible in the parent agency row. */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-3">
+
+                {/* MEMBERS */}
+                <DetailList
+                    icon={Users}
+                    title={`Members · ${members.length}${agency.seatLimit ? ` / ${agency.seatLimit}` : ''}`}
+                    accent={ORANGE}
+                    items={[...admins, ...teamMembers]}
+                    empty="No accepted members yet."
+                    renderItem={(u) => (
+                        <li key={u.email} className="px-3 py-2 flex items-center gap-2.5">
+                            <div className="w-6 h-6 rounded flex items-center justify-center text-white shrink-0"
+                                 style={{ backgroundColor: u.role === 'agencyAdmin' ? ORANGE : BLUE }}>
+                                <UserIcon size={11} strokeWidth={2.4} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="text-[12px] font-semibold text-content truncate leading-tight">{u.email}</div>
+                                <div className="flex items-center gap-1.5 text-[10px] text-content-subtle mt-0.5 leading-tight">
+                                    <span className="uppercase tracking-[0.12em] font-bold"
+                                          style={{ color: u.role === 'agencyAdmin' ? ORANGE : BLUE }}>
+                                        {u.role === 'agencyAdmin' ? 'Admin' : 'Team'}
+                                    </span>
+                                    {u.lastLogin && (
+                                        <>
+                                            <span className="opacity-50">·</span>
+                                            <span className="inline-flex items-center gap-1">
+                                                <Clock size={9} strokeWidth={2.4} />
+                                                {new Date(u.lastLogin).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </li>
+                    )}
+                />
+
+                {/* PENDING INVITES — pending status only; revoked/expired filtered out */}
+                <DetailList
+                    icon={Mail}
+                    title={`Pending invites · ${pending.length}`}
+                    accent={pending.length > 0 ? ORANGE : 'rgb(var(--border-strong))'}
+                    items={pending}
+                    empty="No pending invitations."
+                    renderItem={(i) => (
+                        <li key={i._id || i.email} className="px-3 py-2">
+                            <div className="text-[12px] font-semibold text-content truncate leading-tight">{i.email}</div>
+                            <div className="flex items-center gap-1.5 text-[10px] text-content-subtle mt-0.5 leading-tight">
+                                <span className="uppercase tracking-[0.12em] font-bold" style={{ color: ORANGE }}>
+                                    {i.role === 'agencyAdmin' ? 'Admin' : 'Team'}
+                                </span>
+                                {i.expiresAt && (
+                                    <>
+                                        <span className="opacity-50">·</span>
+                                        <span className="inline-flex items-center gap-1">
+                                            <Clock size={9} strokeWidth={2.4} />
+                                            exp {new Date(i.expiresAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                        </span>
+                                    </>
+                                )}
+                            </div>
+                        </li>
+                    )}
+                />
+            </div>
+
+            {/* Override flag — small inline notice, only when active */}
+            {hasOverride && (
+                <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-[0.14em] border"
+                     style={{ borderColor: 'rgba(249,115,22,0.35)', backgroundColor: 'rgba(249,115,22,0.08)', color: ORANGE }}>
+                    <AlertCircle size={10} strokeWidth={2.5} />
+                    Custom limits override active
+                </div>
+            )}
+        </div>
+    );
+}
+
+/* Compact list card used by the agency detail panel — narrow header bar,
+   tight rows, hidden when empty list still renders an inline empty state. */
+function DetailList({ icon: Icon, title, accent, items, empty, renderItem }) {
+    return (
+        <div className="rounded-md border border-line bg-surface overflow-hidden">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-line bg-surface-muted/40">
+                <Icon size={12} style={{ color: accent }} strokeWidth={2.4} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-content">{title}</span>
+            </div>
+            {items.length === 0 ? (
+                <div className="px-3 py-4 text-center text-[11.5px] text-content-subtle">{empty}</div>
+            ) : (
+                <ul className="divide-y divide-line max-h-[180px] overflow-y-auto">
+                    {items.map(renderItem)}
+                </ul>
+            )}
         </div>
     );
 }
