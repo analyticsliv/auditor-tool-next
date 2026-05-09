@@ -22,8 +22,10 @@ export async function GET() {
         Invitation.find({ agencyId: me.agencyId }).sort({ createdAt: -1 }).lean(),
     ]);
     const enriched = users.map(u => ({ ...u, invitationStatus: 'accepted' }));
+    // Only surface invitations that are still actionable. Anything revoked,
+    // expired or already accepted is captured in the Activity log instead.
     const pendingInvites = invites
-        .filter(i => !users.find(u => u.email === i.email))
+        .filter(i => i.status === 'pending' && !users.find(u => u.email === i.email))
         .map(i => ({
             _id: `inv_${i._id}`,
             email: i.email,
