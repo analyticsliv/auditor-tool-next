@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb';
 import { resolveQuota, incrementUsage } from '@/app/utils/quotaUtils';
 import { logActivity } from '@/app/utils/activityLogger';
 import { ACTIONS } from '@/app/config/plans';
+import { requireAuthenticated } from '@/app/utils/authGuard';
 
 function shape(quota) {
     const c = quota.chatbot;
@@ -19,9 +20,6 @@ function shape(quota) {
 }
 
 async function handle(action, email, metadata) {
-    if (!email) {
-        return NextResponse.json({ success: false, message: 'Email is required' }, { status: 400 });
-    }
     await connectDB();
 
     if (action === 'check') {
@@ -60,21 +58,26 @@ async function handle(action, email, metadata) {
 
 export async function POST(req) {
     try {
+        // Email is derived from the authenticated session — never trust the body.
+        const guard = await requireAuthenticated();
+        if (guard.error) return guard.error;
+        const email = guard.user.email;
+
         const { searchParams } = new URL(req.url);
         const action = searchParams.get('action');
-        const body = await req.json();
-        return await handle(action, body.email, body.metadata);
+        const body = await req.json().catch(() => ({}));
+        return await handle(action, email, body?.metadata);
     } catch (error) {
         console.error('Error in chatbot count management:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
     }
 }
 
-export async function GET(req) {
+export async function GET() {
     try {
-        const { searchParams } = new URL(req.url);
-        const email = searchParams.get('email');
-        return await handle('check', email);
+        const guard = await requireAuthenticated();
+        if (guard.error) return guard.error;
+        return await handle('check', guard.user.email);
     } catch (error) {
         console.error('Error checking chatbot count:', error);
         return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
