@@ -3,7 +3,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/user';
 import { requireSuperAdmin } from '@/app/utils/authGuard';
 import { logActivity } from '@/app/utils/activityLogger';
-import { ACTIONS, SUPER_ADMIN_EMAIL } from '@/app/config/plans';
+import { ROLES, ACTIONS, PLANS, QUOTA_WINDOW_DAYS, addDays, SUPER_ADMIN_EMAIL } from '@/app/config/plans';
 
 export async function PATCH(req, { params }) {
     const guard = await requireSuperAdmin();
@@ -36,7 +36,7 @@ export async function PATCH(req, { params }) {
     }
 }
 
-export async function DELETE(_req, { params }) {
+export async function DELETE(req, { params }) {
     const guard = await requireSuperAdmin();
     if (guard.error) return guard.error;
     await connectDB();
@@ -46,12 +46,47 @@ export async function DELETE(_req, { params }) {
     }
     const user = await User.findOne({ email });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    await User.deleteOne({ email });
+
+    // Default behaviour is soft-detach (move them back to free tier). Pass
+    // ?hard=true to actually wipe the User row — useful only for spam /
+    // GDPR-style account removal, not for the normal "remove from agency".
+    const { searchParams } = new URL(req.url);
+    const hard = searchParams.get('hard') === 'true';
+    const previousRole = user.role;
+    const previousAgencyId = user.agencyId;
+
+    if (hard) {
+        await User.deleteOne({ email });
+    } else {
+        // Soft-detach to free tier. Keeps the user's identity, just resets
+        // the agency membership, role, and personal quota.
+        const now = new Date();
+        await User.updateOne(
+            { email },
+            {
+                $set: {
+                    agencyId: null,
+                    role: ROLES.FREE_USER,
+                    invitedBy: null,
+                    status: 'active',
+                    auditLimit: PLANS.free.auditLimit,
+                    chatbotLimit: PLANS.free.chatbotLimit,
+                    auditCount: 0,
+                    chatbotCount: 0,
+                    auditLimitOverride: null,
+                    chatbotLimitOverride: null,
+                    quotaStartDate: now,
+                    quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+                },
+            }
+        );
+    }
+
     await logActivity({
         userEmail: guard.user.email,
-        agencyId: user.agencyId,
+        agencyId: previousAgencyId,
         action: ACTIONS.USER_DELETED,
-        metadata: { target: email },
+        metadata: { target: email, mode: hard ? 'hard' : 'detached', previousRole },
     });
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, mode: hard ? 'hard' : 'detached', email });
 }

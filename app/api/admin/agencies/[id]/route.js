@@ -4,7 +4,7 @@ import Agency from '@/models/agency';
 import User from '@/models/user';
 import { requireSuperAdmin } from '@/app/utils/authGuard';
 import { logActivity } from '@/app/utils/activityLogger';
-import { PLANS, ACTIONS } from '@/app/config/plans';
+import { PLANS, ACTIONS, QUOTA_WINDOW_DAYS, addDays, ROLES } from '@/app/config/plans';
 
 export async function GET(_req, { params }) {
     const guard = await requireSuperAdmin();
@@ -80,10 +80,28 @@ export async function DELETE(_req, { params }) {
     const agency = await Agency.findOne({ agencyId: id });
     if (!agency) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     await Agency.deleteOne({ agencyId: id });
-    // Detach users (do not delete users themselves; they fall back to free)
+    // Detach users (do not delete users themselves; they fall back to free).
+    // Reset every personal field to free-tier defaults so the next quota
+    // resolution doesn't keep the agency's old limits/counts/overrides.
+    const now = new Date();
     await User.updateMany(
         { agencyId: id },
-        { $set: { agencyId: null, role: 'freeUser' } }
+        {
+            $set: {
+                agencyId: null,
+                role: ROLES.FREE_USER,
+                invitedBy: null,
+                status: 'active',
+                auditLimit: PLANS.free.auditLimit,
+                chatbotLimit: PLANS.free.chatbotLimit,
+                auditCount: 0,
+                chatbotCount: 0,
+                auditLimitOverride: null,
+                chatbotLimitOverride: null,
+                quotaStartDate: now,
+                quotaResetDate: addDays(now, QUOTA_WINDOW_DAYS),
+            },
+        }
     );
     await logActivity({
         userEmail: guard.user.email,
