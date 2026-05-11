@@ -31,7 +31,16 @@ const ChatbotModal = ({ isOpen, onClose }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [loadingProperties, setLoadingProperties] = useState(false);
 
-    const { accounts, fetchPropertySummaries } = useAccountStore();
+    // Account-fetch state (separate from message loading). The modal can be
+    // opened from any page now — if /home hasn't pre-warmed the store, we
+    // fetch accounts on demand here.
+    const [loadingAccounts, setLoadingAccounts] = useState(false);
+    const [accountsError, setAccountsError] = useState(null);
+
+    const accounts = useAccountStore((s) => s.accounts);
+    const hasFetchedAccounts = useAccountStore((s) => s.hasFetchedAccounts);
+    const fetchPropertySummaries = useAccountStore((s) => s.fetchPropertySummaries);
+    const ensureAccountsFetched = useAccountStore((s) => s.ensureAccountsFetched);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,6 +49,51 @@ const ChatbotModal = ({ isOpen, onClose }) => {
     useEffect(() => {
         if (isOpen) inputRef.current?.focus();
     }, [isOpen]);
+
+    /* When the modal opens, make sure we have accounts. If they were already
+       loaded by another page (e.g. /home), the store call returns instantly.
+       Otherwise we fetch once and cache, so future opens are free. */
+    useEffect(() => {
+        if (!isOpen) return;
+        if (hasFetchedAccounts) return;
+        let cancelled = false;
+        setAccountsError(null);
+        setLoadingAccounts(true);
+        ensureAccountsFetched()
+            .then((res) => {
+                if (cancelled) return;
+                if (!res.ok) {
+                    if (res.reason === 'auth' || res.reason === 'no-session') {
+                        setAccountsError("Your Google session expired. Please sign in again.");
+                    } else if (res.reason === 'empty') {
+                        setAccountsError("No GA4 accounts are linked to this email.");
+                    } else {
+                        setAccountsError("Couldn't load your GA4 accounts. Try again in a moment.");
+                    }
+                }
+            })
+            // Always clear the loading flag, even if the effect was cancelled
+            // by a re-render caused by hasFetchedAccounts flipping true. If we
+            // gate this on !cancelled the skeleton spins forever on success.
+            .finally(() => setLoadingAccounts(false));
+        return () => { cancelled = true; };
+    }, [isOpen, hasFetchedAccounts, ensureAccountsFetched]);
+
+    const retryAccountsFetch = async () => {
+        setAccountsError(null);
+        setLoadingAccounts(true);
+        const res = await ensureAccountsFetched();
+        if (!res.ok) {
+            setAccountsError(
+                res.reason === 'auth' || res.reason === 'no-session'
+                    ? "Your Google session expired. Please sign in again."
+                    : res.reason === 'empty'
+                        ? "No GA4 accounts are linked to this email."
+                        : "Couldn't load your GA4 accounts. Try again."
+            );
+        }
+        setLoadingAccounts(false);
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -197,26 +251,67 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                     <div className="flex flex-col sm:flex-row gap-3">
                         {/* Account dropdown */}
                         <div className="flex-1 relative" ref={dropdownRef}>
-                            <label className="block text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1.5">Account</label>
-                            <button
-                                type="button"
-                                onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="w-full flex items-center justify-between gap-2 px-3.5 h-10 rounded-lg border-2 bg-surface text-[13px] transition-all hover:border-content-subtle/40"
-                                style={dropdownOpen
-                                    ? { borderColor: ORANGE, boxShadow: "0 0 0 3px rgba(249,115,22,0.18)" }
-                                    : { borderColor: "rgb(var(--border))" }}
-                            >
-                                <div className="flex items-center gap-2 min-w-0 flex-1">
-                                    <Building2 size={14} strokeWidth={2.4}
-                                        style={chatbotSelectedAccount ? { color: ORANGE } : { color: "rgb(var(--content-subtle))" }} />
-                                    <span className={`truncate ${chatbotSelectedAccount ? "font-semibold text-content" : "text-content-subtle"}`}>
-                                        {chatbotSelectedAccount?.displayName || "Select account"}
+                            <label className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1.5">
+                                Account
+                                {loadingAccounts && (
+                                    <span className="inline-flex items-center gap-1 px-1.5 py-px rounded text-[9.5px] font-bold normal-case tracking-normal"
+                                        style={{ backgroundColor: `${ORANGE}1A`, color: ORANGE }}>
+                                        <span className="animate-spin rounded-full h-2.5 w-2.5 border-[1.5px] border-current border-t-transparent" />
+                                        Loading
+                                    </span>
+                                )}
+                            </label>
+
+                            {/* Three states for the trigger:
+                                1) loadingAccounts → skeleton bar
+                                2) accountsError    → error pill + retry
+                                3) ready            → real button + dropdown */}
+                            {loadingAccounts ? (
+                                <div className="w-full h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3.5 pr-3.5 cursor-wait">
+                                    <Building2 size={14} strokeWidth={2.4} className="text-content-subtle mr-2" />
+                                    <span className="block h-3 flex-1 max-w-[60%] skeleton-shimmer rounded" />
+                                    <span className="ml-auto animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
+                                </div>
+                            ) : accountsError ? (
+                                <div className="w-full rounded-lg border-2 border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-2.5 flex items-center gap-2">
+                                    <AlertCircle size={14} className="text-red-600 dark:text-red-400 shrink-0" />
+                                    <span className="text-[12px] text-red-700 dark:text-red-300 flex-1 leading-snug">{accountsError}</span>
+                                    <button
+                                        type="button"
+                                        onClick={retryAccountsFetch}
+                                        className="text-[11px] font-bold uppercase tracking-[0.12em] px-2 py-1 rounded border border-red-300 dark:border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors shrink-0"
+                                    >
+                                        Retry
+                                    </button>
+                                </div>
+                            ) : accounts?.length === 0 ? (
+                                <div className="w-full rounded-lg border-2 border-line bg-surface-muted/50 p-2.5 flex items-center gap-2">
+                                    <AlertCircle size={14} className="text-content-subtle shrink-0" />
+                                    <span className="text-[12px] text-content-muted flex-1 leading-snug">
+                                        No GA4 accounts linked to this email.
                                     </span>
                                 </div>
-                                <ChevronDown size={16} className={`text-content-muted shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
-                            </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="w-full flex items-center justify-between gap-2 px-3.5 h-10 rounded-lg border-2 bg-surface text-[13px] transition-all hover:border-content-subtle/40"
+                                    style={dropdownOpen
+                                        ? { borderColor: ORANGE, boxShadow: "0 0 0 3px rgba(249,115,22,0.18)" }
+                                        : { borderColor: "rgb(var(--border))" }}
+                                >
+                                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                                        <Building2 size={14} strokeWidth={2.4}
+                                            style={chatbotSelectedAccount ? { color: ORANGE } : { color: "rgb(var(--content-subtle))" }} />
+                                        <span className={`truncate ${chatbotSelectedAccount ? "font-semibold text-content" : "text-content-subtle"}`}>
+                                            {chatbotSelectedAccount?.displayName || "Select account"}
+                                        </span>
+                                    </div>
+                                    <ChevronDown size={16} className={`text-content-muted shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                                </button>
+                            )}
 
-                            {dropdownOpen && (
+                            {dropdownOpen && !loadingAccounts && !accountsError && accounts?.length > 0 && (
                                 <div className="absolute z-30 mt-1.5 w-full rounded-xl border-2 border-line bg-surface-elevated shadow-[0_24px_50px_-12px_rgba(15,23,42,0.25)] overflow-hidden">
                                     <div className="p-2 border-b-2 border-line">
                                         <div className="relative">
@@ -233,9 +328,14 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                         </div>
                                     </div>
                                     <div className="max-h-52 overflow-y-auto py-1">
-                                        {accounts
-                                            ?.filter((acc) => acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase()))
-                                            ?.map((account) => {
+                                        {(() => {
+                                            const filtered = accounts.filter((acc) =>
+                                                acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+                                            );
+                                            if (filtered.length === 0) {
+                                                return <div className="px-3 py-5 text-center text-[12.5px] text-content-subtle">No matches</div>;
+                                            }
+                                            return filtered.map((account) => {
                                                 const active = chatbotSelectedAccount?.account === account?.account;
                                                 return (
                                                     <button
@@ -250,7 +350,8 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                         <span className="truncate flex-1">{account?.displayName}</span>
                                                     </button>
                                                 );
-                                            })}
+                                            });
+                                        })()}
                                     </div>
                                 </div>
                             )}
@@ -270,11 +371,14 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                             </label>
                             <div className="relative">
                                 {loadingProperties ? (
-                                    /* Skeleton state — shimmer bar gives a clear "data is coming" cue */
-                                    <div className="w-full h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-9 pr-9 cursor-wait">
-                                        <BarChart3 size={14} strokeWidth={2.4} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-subtle" />
-                                        <span className="block h-3 w-2/3 skeleton-shimmer rounded" />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
+                                    /* Mirror the account-dropdown skeleton: same shimmer bar +
+                                       same right-aligned spinner (ml-auto inside a flex row
+                                       rather than absolute-positioned, so the spin animation
+                                       runs identically to the account one). */
+                                    <div className="w-full h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3.5 pr-3.5 cursor-wait">
+                                        <BarChart3 size={14} strokeWidth={2.4} className="text-content-subtle mr-2" />
+                                        <span className="block h-3 flex-1 max-w-[60%] skeleton-shimmer rounded" />
+                                        <span className="ml-auto animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
                                     </div>
                                 ) : (
                                     <>

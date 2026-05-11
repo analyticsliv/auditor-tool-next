@@ -783,7 +783,10 @@ function AgencyDetailPanel({ agency, users, invitations }) {
                 />
             </div>
 
-            {/* Override flag — small inline notice, only when active */}
+            {/* Override flag — hidden by request. Kept for reference in case
+                we want to re-enable it later. The `hasOverride` constant
+                above still computes the value if any other UI ever needs it. */}
+            {/*
             {hasOverride && (
                 <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-[0.14em] border"
                      style={{ borderColor: 'rgba(249,115,22,0.35)', backgroundColor: 'rgba(249,115,22,0.08)', color: ORANGE }}>
@@ -791,6 +794,7 @@ function AgencyDetailPanel({ agency, users, invitations }) {
                     Custom limits override active
                 </div>
             )}
+            */}
         </div>
     );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import AuthWrapper from "../Components/AuthWrapper";
 import { useSession, signOut } from "next-auth/react";
 import { useUsage } from "../utils/useUsage";
@@ -46,6 +47,14 @@ export default function AccountPage() {
     const user = session?.user || {};
     const isAuthLoading = status === "loading";
     const isDataLoading = usageLoading || roleLoading;
+
+    // Force a fresh /api/usage call every time the account page mounts so
+    // the user sees the real-time counts, not a value cached from /home or
+    // an earlier visit. The shared store is otherwise read-mostly and the
+    // count would appear frozen after running audits/chatbot elsewhere.
+    useEffect(() => {
+        refetch();
+    }, [refetch]);
 
     const handleSignOut = async () => {
         try { localStorage.removeItem("accessToken"); } catch {}
@@ -418,7 +427,15 @@ function MembershipCard({ usage, role, loading, error, onRefresh }) {
                 {/* Type */}
                 <Stat
                     label="Account type"
-                    value={isAgency ? "Agency member" : "Personal"}
+                    value={
+                        role === "superadmin"
+                            ? "Super admin"
+                            : role === "agencyAdmin"
+                                ? "Agency admin"
+                                : isAgency
+                                    ? "Agency member"
+                                    : "Personal"
+                    }
                     icon={isAgency ? Building2 : UserIcon}
                     color={isAgency ? BLUE : ORANGE}
                 />
