@@ -49,6 +49,12 @@ const Home = () => {
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [loadingProperties, setLoadingProperties] = useState(false);
 
+  // Account-dropdown auto-placement. We measure the trigger on open / scroll /
+  // resize and pick whichever side has more room, capping max-height so the
+  // panel never slides under the fixed navbar or off the bottom of the screen.
+  const [dropdownPlacement, setDropdownPlacement] = useState("bottom"); // 'bottom' | 'top'
+  const [dropdownMaxH, setDropdownMaxH] = useState(320);
+
   const isValidDateRange = (start, end) => {
     if (!start || !end) return false;
     const diff = moment(end).diff(moment(start), "days");
@@ -113,6 +119,48 @@ const Home = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  /* Auto-place the account dropdown.
+     - Reads the trigger's viewport rect on every scroll/resize while open.
+     - Treats anything above NAVBAR_OFFSET as occluded (fixed navbar lives there).
+     - Picks whichever side has more usable space, then caps the panel's
+       max-height to that space minus a small breathing margin. */
+  useEffect(() => {
+    if (!dropdownOpen) return;
+
+    const NAVBAR_OFFSET = 80;   // approx fixed-navbar height
+    const EDGE_MARGIN   = 12;   // breathing room from viewport edge
+    const GAP           = 6;    // gap between trigger and panel
+    const ABS_MIN       = 160;  // never go smaller than this
+    const ABS_MAX       = 360;  // never go bigger than this even on huge screens
+
+    const recompute = () => {
+      const el = dropdownRef.current;
+      if (!el) return;
+      const trigger = el.querySelector("button");
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      const spaceBelow = vh - rect.bottom - GAP - EDGE_MARGIN;
+      const spaceAbove = rect.top - NAVBAR_OFFSET - GAP - EDGE_MARGIN;
+
+      const placeBelow = spaceBelow >= spaceAbove;
+      const available = Math.max(placeBelow ? spaceBelow : spaceAbove, 0);
+      const next = Math.max(ABS_MIN, Math.min(ABS_MAX, available));
+
+      setDropdownPlacement(placeBelow ? "bottom" : "top");
+      setDropdownMaxH(next);
+    };
+
+    recompute();
+    window.addEventListener("scroll", recompute, true);  // capture: catches inner scrollers too
+    window.addEventListener("resize", recompute);
+    return () => {
+      window.removeEventListener("scroll", recompute, true);
+      window.removeEventListener("resize", recompute);
+    };
+  }, [dropdownOpen]);
 
   const handleAccount = (account) => {
     selectAccount(account);
@@ -244,6 +292,8 @@ const Home = () => {
               loadingProperties={loadingProperties}
               dropdownOpen={dropdownOpen}
               setDropdownOpen={setDropdownOpen}
+              dropdownPlacement={dropdownPlacement}
+              dropdownMaxH={dropdownMaxH}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               handleAccount={handleAccount}
@@ -595,8 +645,15 @@ function AccountField(p) {
       </button>
 
       {p.dropdownOpen && !p.loadingAccounts && (
-        <div className="absolute z-30 left-0 right-0 w-full rounded-xl border-2 border-line bg-surface-elevated shadow-[0_24px_50px_-12px_rgba(15,23,42,0.25)] overflow-hidden bottom-[calc(100%+6px)] 2xl:bottom-auto 2xl:top-[calc(100%+6px)]">
-          <div className="p-2 border-b-2 border-line">
+        <div
+          className="absolute z-30 left-0 right-0 w-full rounded-xl border-2 border-line bg-surface-elevated shadow-[0_24px_50px_-12px_rgba(15,23,42,0.25)] overflow-hidden flex flex-col"
+          style={
+            p.dropdownPlacement === "top"
+              ? { bottom: "calc(100% + 6px)", maxHeight: `${p.dropdownMaxH}px` }
+              : { top:    "calc(100% + 6px)", maxHeight: `${p.dropdownMaxH}px` }
+          }
+        >
+          <div className="p-2 border-b-2 border-line flex-shrink-0">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-content-subtle" />
               <input
@@ -610,7 +667,8 @@ function AccountField(p) {
               />
             </div>
           </div>
-          <div className="max-h-80 lg:max-h-[100px] xl:max-h-[200px] 2xl:max-h-[250px] overflow-y-auto py-1">
+          {/* List takes whatever vertical room is left inside the (capped) panel. */}
+          <div className="flex-1 min-h-0 overflow-y-auto py-1">
             {p.accounts
               ?.filter((acc) => acc?.displayName?.toLowerCase().includes(p.searchTerm.toLowerCase()))
               ?.map((account) => {

@@ -4,6 +4,11 @@ import { signOut, getSession } from "next-auth/react";
 import { sendUserData } from "../utils/sendUserData";
 import { toast } from "./useToastStore";
 
+/* Module-level guard so concurrent callers (e.g. home page + chatbot modal
+   mounting at the same time) share a single in-flight fetch instead of
+   firing the GA4 admin API twice. */
+let inflightAccountsFetch = null;
+
 export const useAccountStore = create((set, get) => ({
     accounts: [],
     properties: [],
@@ -139,6 +144,56 @@ export const useAccountStore = create((set, get) => ({
             set({ loading: false });
         } finally {
             set({ loading: false });
+        }
+    },
+
+    /* ============================================================
+       ensureAccountsFetched
+       Non-destructive variant of fetchAccountSummaries used from places
+       OTHER than /home (e.g. the chatbot modal opened from any page).
+       - Returns { ok: true, accounts } when cache is warm or fetch succeeds.
+       - Returns { ok: false, reason } on auth failure / fetch error / empty.
+       - Never signs the user out or navigates them anywhere — callers
+         decide how to surface failures in their own UI.
+       - Coalesces concurrent calls via a module-level in-flight promise.
+       ============================================================ */
+    ensureAccountsFetched: async () => {
+        if (get().hasFetchedAccounts) {
+            return { ok: true, accounts: get().accounts };
+        }
+        if (inflightAccountsFetch) return inflightAccountsFetch;
+
+        inflightAccountsFetch = (async () => {
+            try {
+                const session = await getSession();
+                if (!session) return { ok: false, reason: 'no-session' };
+                if (session.error === 'RefreshAccessTokenError' || !session.accessToken) {
+                    return { ok: false, reason: 'auth' };
+                }
+                const response = await fetch(
+                    "https://analyticsadmin.googleapis.com/v1alpha/accountSummaries?pageSize=200",
+                    { headers: { Authorization: `Bearer ${session.accessToken}` } }
+                );
+                if (!response.ok) {
+                    return { ok: false, reason: 'fetch', status: response.status };
+                }
+                const data = await response.json();
+                const accountSummaries = data?.accountSummaries || [];
+                set({ accounts: accountSummaries, hasFetchedAccounts: true });
+                if (accountSummaries.length === 0) {
+                    return { ok: false, reason: 'empty', accounts: [] };
+                }
+                return { ok: true, accounts: accountSummaries };
+            } catch (e) {
+                console.error('ensureAccountsFetched error', e);
+                return { ok: false, reason: 'error', message: e?.message };
+            }
+        })();
+
+        try {
+            return await inflightAccountsFetch;
+        } finally {
+            inflightAccountsFetch = null;
         }
     },
 
