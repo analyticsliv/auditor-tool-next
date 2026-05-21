@@ -923,7 +923,7 @@ function SignInPreview({ color, active }) {
         </div>
         <div className="flex-1 min-w-0 text-left">
           <div className="text-[11.5px] font-semibold text-content truncate">Continue with Google</div>
-          <div className="text-[9.5px] text-content-subtle truncate">analytics.readonly</div>
+          <div className="text-[9.5px] text-content-subtle truncate">analytics.readonly · analytics.edit</div>
         </div>
         <div className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] shrink-0"
           style={{ backgroundColor: color, transform: active ? "scale(1)" : "scale(0)" }}>
