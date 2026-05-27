@@ -1848,6 +1848,8 @@ function Footer() {
           <a href="#features" className="hover:text-[#F97316] transition-colors">Features</a>
           <a href="#pricing" className="hover:text-[#F97316] transition-colors">Pricing</a>
           <a href="#faq" className="hover:text-[#F97316] transition-colors">FAQ</a>
+          <a href="/privacy" className="hover:text-[#1A73E8] transition-colors">Privacy</a>
+          <a href="/terms" className="hover:text-[#1A73E8] transition-colors">Terms</a>
           <a href="mailto:support@analyticsliv.com" className="hover:text-[#1A73E8] transition-colors">Support</a>
         </div>
       </Container>

@@ -298,6 +298,10 @@ function AppShell({ children }) {
           <span className="opacity-40">|</span>
           <span>powered by</span>
           <strong className="text-content font-semibold">AnalyticsLiv</strong>
+          <span className="opacity-40 mx-1">|</span>
+          <Link href="/privacy" className="hover:text-content transition-colors">Privacy</Link>
+          <span className="opacity-40">·</span>
+          <Link href="/terms" className="hover:text-content transition-colors">Terms</Link>
         </div>
         <div className="hidden sm:flex items-center gap-3 text-content-subtle">
           <span className="inline-flex items-center gap-1.5">
