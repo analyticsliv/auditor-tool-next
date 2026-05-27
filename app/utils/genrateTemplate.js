@@ -124,18 +124,23 @@ function generateEmailTemplate(subject, html) {
             .status-good { border-left-color: #28a745; }
             .status-warning { border-left-color: #ffc107; }
             .status-error { border-left-color: #dc3545; }
-            .button {
+            .button,
+            a.button,
+            a.button:link,
+            a.button:visited,
+            a.button:hover,
+            a.button:active {
               display: inline-block;
               background-color: #0073e6;
-              color: white;
+              color: #ffffff !important;
               padding: 12px 25px;
-              text-decoration: none;
+              text-decoration: none !important;
               border-radius: 6px;
               font-weight: 600;
               font-size: 14px;
               margin: 10px 0;
             }
-            .button:hover {
+            a.button:hover {
               background-color: #005bb5;
             }
             .cta-section {

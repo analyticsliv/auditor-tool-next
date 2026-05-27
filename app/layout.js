@@ -49,7 +49,8 @@ function AppShell({ children }) {
   // users back to "/" as before.
   const isAgencyWelcome = pathname === "/agency/welcome";
   const isInviteAccept  = !!pathname?.startsWith("/invite/");
-  const isOpenAccess    = isPublicLanding || isAgencyWelcome || isInviteAccept;
+  const isLegalPage     = pathname === "/privacy" || pathname === "/terms";
+  const isOpenAccess    = isPublicLanding || isAgencyWelcome || isInviteAccept || isLegalPage;
 
   const { auditData, endApiData } = useAccountStore();
   const { role, loading: roleLoading } = useRole();
@@ -132,7 +133,7 @@ function AppShell({ children }) {
   // sign-in CTA. They must work for both authenticated and unauthenticated
   // visitors (since users typically arrive from an email link before
   // signing in).
-  if (isAgencyWelcome || isInviteAccept) {
+  if (isAgencyWelcome || isInviteAccept || isLegalPage) {
     return <div>{children}</div>;
   }
 
