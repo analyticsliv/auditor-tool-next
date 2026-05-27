@@ -9,6 +9,7 @@ export function generateInternalContactEmail(contactData, internalEmails = null)
     // Default internal emails - you can modify this list
     const defaultInternalEmails = [
         "atul.verma@analyticsliv.com",
+        "pruthvirajsinh.rathod@analyticsliv.com",
         // Add more default emails here as needed
         // "sales@analyticsliv.com",
         // "support@analyticsliv.com",
@@ -51,7 +52,7 @@ export function generateInternalContactEmail(contactData, internalEmails = null)
         
         <div class="cta-section">
             <h3>Quick Actions</h3>
-            <a href="mailto:${contactData.email}?subject=Re: Your GA4 Auditor Tool Inquiry" class="button">Reply to Customer</a>
+            <a href="mailto:${contactData.email}?subject=Re: Your GA4 Auditor Tool Inquiry" class="button" style="color:#ffffff;text-decoration:none;">Reply to Customer</a>
         </div>
         
         <div style="margin-top: 20px; font-size: 12px; color: #666;">
@@ -112,16 +113,16 @@ export function generateUserConfirmationEmail(contactData) {
             <h3>Need Immediate Assistance?</h3>
             <p>For urgent inquiries, feel free to reach out to us directly:</p>
             <div style="margin: 15px 0;">
-                <a href="tel:+918320576622" class="button">📞 Call Us: +91 83205 76622</a>
+                <a href="tel:+918320576622" class="button" style="color:#ffffff;text-decoration:none;">📞 Call Us: +91 83205 76622</a>
             </div>
             <div style="margin: 15px 0;">
-                <a href="mailto:support@analyticsliv.com" class="button">✉️ Email Support</a>
+                <a href="mailto:support@analyticsliv.com" class="button" style="color:#ffffff;text-decoration:none;">✉️ Email Support</a>
             </div>
             <div style="margin: 15px 0;">
-                <a href="https://analyticsliv.com" class="button">🌐 Visit Our Website</a>
+                <a href="https://analyticsliv.com" class="button" style="color:#ffffff;text-decoration:none;">🌐 Visit Our Website</a>
             </div>
         </div>
-        
+
         <div class="info-box">
             <h4>💡 Pro Tip</h4>
             <p>Follow us on social media for the latest updates on GA4 best practices and digital analytics trends!</p>
@@ -148,8 +149,8 @@ export function generateAuditLimitRequestInternalEmail(contactData, internalEmai
 
     const defaultInternalEmails = [
         "sales@analyticsliv.com",
-        "pruthvirajsinh.rathod@analyticsliv.com"
-        // Add more emails as needed
+        "pruthvirajsinh.rathod@analyticsliv.com",
+        "rajvi@analyticsliv.com"
     ];
 
     const recipientEmails = internalEmails || defaultInternalEmails;
@@ -193,7 +194,7 @@ export function generateAuditLimitRequestInternalEmail(contactData, internalEmai
         <div class="cta-section">
             <h3>Quick Actions</h3>
             <div style="margin: 10px 0;">
-                <a href="mailto:${contactData.email}?subject=Re: Your Audit Limit Increase Request" class="button">📧 Reply to User</a>
+                <a href="mailto:${contactData.email}?subject=Re: Your Audit Limit Increase Request" class="button" style="color:#ffffff;text-decoration:none;">📧 Reply to User</a>
             </div>
             <div style="margin: 10px 0;">
                 <p style="font-size: 12px; color: #666;">
@@ -260,10 +261,10 @@ export function generateAuditLimitRequestUserEmail(contactData) {
             <h3>Need Immediate Assistance?</h3>
             <p>For urgent matters, feel free to reach out directly:</p>
             <div style="margin: 15px 0;">
-                <a href="tel:+918320576622" class="button">📞 Call Us: +91 83205 76622</a>
+                <a href="tel:+918320576622" class="button" style="color:#ffffff;text-decoration:none;">📞 Call Us: +91 83205 76622</a>
             </div>
             <div style="margin: 15px 0;">
-                <a href="mailto:support@analyticsliv.com" class="button">✉️ Email Support</a>
+                <a href="mailto:support@analyticsliv.com" class="button" style="color:#ffffff;text-decoration:none;">✉️ Email Support</a>
             </div>
         </div>
         
