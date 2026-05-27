@@ -30,18 +30,44 @@ export default function PrivacyPolicyPage() {
           </p>
         </header>
 
-        <Section title="1. Who we are">
+        <div className="prose prose-slate prose-sm sm:prose-base mb-10 max-w-none text-slate-700 [&_a]:text-blue-600 [&_a:hover]:underline [&_p]:mt-3 [&_p:first-child]:mt-0">
           <p>
-            GA4 Auditor (the &ldquo;Service&rdquo;) is operated by{" "}
-            <strong>ANALYTICS LIV DIGITAL LLP</strong> (&ldquo;AnalyticsLiv&rdquo;,
-            &ldquo;we&rdquo;, &ldquo;us&rdquo;). The Service helps users audit
-            their Google Analytics 4 (GA4) properties and interact with an AI
-            assistant that answers questions about their GA4 configuration.
+            At <strong>ANALYTICS LIV DIGITAL LLP</strong>, accessible from{" "}
+            <a
+              href="https://ga4auditor.analyticsliv.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://ga4auditor.analyticsliv.com
+            </a>
+            , one of our main priorities is the privacy of our users. This
+            Privacy Policy document contains the types of information that is
+            collected and recorded by the GA4 Auditor tool and how we use it.
           </p>
           <p>
-            This Privacy Policy applies <em>only</em> to the GA4 Auditor tool.
-            Other AnalyticsLiv products and the main analyticsliv.com website
-            are governed by their own policies.
+            The GA4 Auditor (the &ldquo;Service&rdquo;) helps users audit their
+            Google Analytics 4 (GA4) properties and interact with an AI
+            assistant that answers questions about their GA4 configuration.
+            If you have additional questions or require more information about
+            our Privacy Policy, do not hesitate to{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`}>contact us</a>.
+          </p>
+          <p>
+            This Privacy Policy applies only to the GA4 Auditor tool at
+            ga4auditor.analyticsliv.com and is valid for users of this tool
+            with regard to the information that they share and/or we collect
+            within the Service. This policy is not applicable to any
+            information collected offline or via channels other than this
+            application. Other AnalyticsLiv products and the main
+            analyticsliv.com website are governed by their own policies.
+          </p>
+        </div>
+
+        <Section title="1. Consent">
+          <p>
+            By signing in to and using the GA4 Auditor Service with your
+            Google account, you hereby consent to our Privacy Policy and
+            agree to its terms.
           </p>
         </Section>
 
@@ -193,7 +219,22 @@ export default function PrivacyPolicyPage() {
           </ul>
         </Section>
 
-        <Section title="8. How to revoke access or request data deletion">
+        <Section title="8. Log files">
+          <p>
+            The GA4 Auditor follows a standard procedure of using log files.
+            These files log users when they use the Service. The information
+            collected by log files may include internet protocol (IP)
+            addresses, browser type, Internet Service Provider (ISP), date
+            and time stamp, and referring or exit pages. This information is
+            not linked to any information that is personally identifiable.
+            The purpose of the information is for analysing trends,
+            administering the Service, troubleshooting errors, and ensuring
+            security. These logs are retained for a limited operational
+            window and are accessible only to authorised engineering staff.
+          </p>
+        </Section>
+
+        <Section title="9. How to revoke access or request data deletion">
           <ul>
             <li>
               You can revoke the Service&rsquo;s access to your Google
@@ -219,7 +260,7 @@ export default function PrivacyPolicyPage() {
           </ul>
         </Section>
 
-        <Section title="9. Your rights">
+        <Section title="10. Your rights">
           <p>
             Depending on where you live, you may have the following rights
             in respect of the personal data we hold about you. We honour
@@ -263,7 +304,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
-        <Section title="10. Cookies">
+        <Section title="11. Cookies">
           <p>
             The Service uses a single <strong>session cookie</strong>{" "}
             (managed by NextAuth) to keep you signed in between page loads.
@@ -278,7 +319,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
-        <Section title="11. Security">
+        <Section title="12. Security">
           <p>
             We use industry-standard measures to protect your data:
             encrypted connections (HTTPS) for all traffic, encrypted
@@ -292,7 +333,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
-        <Section title="12. Children">
+        <Section title="13. Children">
           <p>
             The Service is not directed to children under 18 and we do not
             knowingly collect personal data from them. If you believe a
@@ -301,7 +342,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
-        <Section title="13. Changes to this policy">
+        <Section title="14. Changes to this policy">
           <p>
             We may update this Privacy Policy from time to time. Material
             changes will be communicated by email or via an in-app notice
@@ -311,7 +352,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
-        <Section title="14. Contact and grievance officer">
+        <Section title="15. Contact and grievance officer">
           <p>
             For any questions, complaints, data-protection requests, or
             grievances relating to this Privacy Policy or your personal
