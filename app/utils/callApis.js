@@ -60,7 +60,7 @@ export const runCallApiInChunks = async (batchIndex) => {
   };
 
   const userAcquisition = {
-    dimensions: [{ name: "sessionSourceMedium" }],
+    dimensions: [{ name: "firstUserSourceMedium" }],
     metrics: [
       { name: "sessions" },
       { name: "totalUsers" },
