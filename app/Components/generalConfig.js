@@ -17,27 +17,15 @@ const GeneralConfig = () => {
     let category = auditData?.propertyDetails?.industryCategory || 'Not Defined';
 
     useEffect(() => {
-        if (timezone != undefined) {
-            setTimezoneMood(true);
-        } else {
-            setTimezoneMood(false)
-        }
+        setTimezoneMood(timezone !== 'Not Defined');
     }, [timezone])
 
     useEffect(() => {
-        if (currencyCode != undefined) {
-            setCurrencyMood(true);
-        } else {
-            setCurrencyMood(false)
-        }
+        setCurrencyMood(currencyCode !== 'Not Defined');
     }, [currencyCode])
 
     useEffect(() => {
-        if (category != undefined) {
-            setCategoryMood(true);
-        } else {
-            setCategoryMood(false)
-        }
+        setCategoryMood(category !== 'Not Defined');
     }, [category])
 
     const [dataRetentionMood, setDataRetentionMood] = useState(true);

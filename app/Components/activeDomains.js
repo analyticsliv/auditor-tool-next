@@ -111,7 +111,7 @@ const ActiveDomains = () => {
 
     useEffect(() => {
         const domains = data?.rows?.map(item => item?.dimensionValues[0]?.value);
-        const chartValues = data?.rows?.map(item => (item?.metricValues[1]?.value));
+        const chartValues = data?.rows?.map(item => (item?.metricValues[0]?.value));
         setDomain(domains);
         setChartData(chartValues);
         setVisibleDomains(new Set(domains));
@@ -150,6 +150,19 @@ const ActiveDomains = () => {
                 {`${(percent * 100).toFixed(0)}%`}
             </text>
         );
+    };
+
+    const CustomTooltip = ({ active, payload }) => {
+        if (active && payload?.length) {
+            const { name, value } = payload[0];
+            return (
+                <div className="bg-white border rounded-lg shadow-md px-3 py-2 text-sm text-gray-800">
+                    <p className="font-semibold">{name}</p>
+                    <p>Total Users: {Number(value).toLocaleString()}</p>
+                </div>
+            );
+        }
+        return null;
     };
 
     const handleToggle = (name) => {
@@ -194,6 +207,9 @@ const ActiveDomains = () => {
                                 {text}
                             </h3>
                         </div>
+                        <p className='text-center text-sm text-content-subtle italic mb-2'>
+                            Each slice shows the number of Total Users (unique visitors) recorded for that domain during the selected date range. Hover over a slice for the exact count.
+                        </p>
                         <div className='flex justify-center items-center gap-10'>
                             <ResponsiveContainer width={500} height={500}>
                                 <PieChart width={400} height={400}>
@@ -220,7 +236,7 @@ const ActiveDomains = () => {
                                             />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip content={<CustomTooltip />} />
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="flex flex-wrap w-[50%] gap-4 mt-4">
