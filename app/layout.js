@@ -14,6 +14,7 @@ import ThemeProvider from "./Components/ThemeProvider";
 import ThemeToggle from "./Components/ThemeToggle";
 import GlobalToast from "./Components/GlobalToast";
 import GlobalChatbotButton from "./Components/GlobalChatbotButton";
+import GlobalAuditAgentButton from "./Components/GlobalAuditAgentButton";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -313,10 +314,11 @@ function AppShell({ children }) {
         </div>
       </footer>
 
-      {/* Global chatbot button — present on every authenticated route except
-          the print-friendly /previous-audit (handled by isAuditById guard above
-          which short-circuits before this render). */}
+      {/* Global chatbot + audit agent buttons — present on every authenticated
+          route except the print-friendly /previous-audit (handled by
+          isAuditById guard above which short-circuits before this render). */}
       <GlobalChatbotButton />
+      <GlobalAuditAgentButton />
     </main>
   );
 }
