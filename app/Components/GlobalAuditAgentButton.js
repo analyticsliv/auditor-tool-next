@@ -39,7 +39,7 @@ export default function GlobalAuditAgentButton() {
             <button
                 onClick={() => setOpen(true)}
                 className="fixed bottom-24 right-4 xl:bottom-32 xl:right-8 group w-12 h-12 xl:w-[54px] xl:h-[54px] rounded-full text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 z-40"
-                aria-label="Open GA4 auto-fix agent"
+                aria-label="Open GA4 Auto-fix AI Agent"
                 title="Run AI audit agent"
                 style={{ backgroundColor: BLUE, boxShadow: "0 14px 30px -8px rgba(26,115,232,0.55)" }}
             >
