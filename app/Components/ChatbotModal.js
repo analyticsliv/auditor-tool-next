@@ -9,7 +9,7 @@ import UsageBanner from "./UsageBanner";
 import {
     MessageCircle, X, ChevronDown, Search, Sparkles, Send,
     AlertCircle, Bot, BarChart3, TrendingUp, Eye, Target,
-    Zap, ShieldCheck, Building2,
+    Zap, ShieldCheck, Building2, Maximize2, Minimize2,
 } from "lucide-react";
 
 const ORANGE = "#F97316";
@@ -18,6 +18,7 @@ const SLATE  = "#0F172A";
 
 const ChatbotModal = ({ isOpen, onClose }) => {
     const [inputMessage, setInputMessage] = useState("");
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const { usage, refetch: refetchUsage } = useUsage(isOpen);
     const { messages, isLoading, sendMessage, clearMessages, limitReached, limitInfo, dismissLimit } = useChatbot(refetchUsage);
     const messagesEndRef = useRef(null);
@@ -161,6 +162,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
     const handleClose = () => {
         clearMessages();
         setInputMessage("");
+        setIsFullscreen(false);
         onClose();
     };
 
@@ -177,16 +179,16 @@ const ChatbotModal = ({ isOpen, onClose }) => {
     ];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4">
-            <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden border-2 border-line">
+        <div className={`fixed inset-0 z-50 flex bg-black/55 backdrop-blur-sm ${isFullscreen ? "" : "items-center justify-center p-2 2xl:p-4"}`}>
+            <div className={`bg-surface shadow-2xl flex flex-col overflow-hidden border-2 border-line ${isFullscreen ? "w-full h-full rounded-none" : "w-full max-w-5xl h-[90vh] rounded-2xl 2xl:rounded-3xl"}`}>
 
                 {/* ============== HEADER — solid slate with orange/blue corner accents ============== */}
                 <div className="relative flex-shrink-0 overflow-hidden" style={{ backgroundColor: SLATE }}>
                     {/* Corner accents — match landing/home page styling */}
-                    <div aria-hidden className="absolute top-0 left-0 w-1.5 h-full" style={{ backgroundColor: ORANGE }} />
-                    <div aria-hidden className="absolute top-0 left-0 h-1.5 w-24" style={{ backgroundColor: ORANGE }} />
-                    <div aria-hidden className="absolute bottom-0 right-0 w-1.5 h-12" style={{ backgroundColor: BLUE }} />
-                    <div aria-hidden className="absolute bottom-0 right-0 h-1.5 w-24" style={{ backgroundColor: BLUE }} />
+                    <div aria-hidden className="absolute top-0 left-0 w-1 2xl:w-1.5 h-full" style={{ backgroundColor: ORANGE }} />
+                    <div aria-hidden className="absolute top-0 left-0 h-1 2xl:h-1.5 w-16 2xl:w-24" style={{ backgroundColor: ORANGE }} />
+                    <div aria-hidden className="absolute bottom-0 right-0 w-1 2xl:w-1.5 h-9 2xl:h-12" style={{ backgroundColor: BLUE }} />
+                    <div aria-hidden className="absolute bottom-0 right-0 h-1 2xl:h-1.5 w-16 2xl:w-24" style={{ backgroundColor: BLUE }} />
 
                     {/* Subtle dot grid in header */}
                     <div aria-hidden className="absolute inset-0 opacity-[0.08]"
@@ -195,26 +197,26 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                             backgroundSize: "22px 22px",
                         }} />
 
-                    <div className="relative px-6 py-5 flex justify-between items-center">
-                        <div className="flex items-center gap-3">
+                    <div className="relative px-3.5 py-3 2xl:px-6 2xl:py-5 flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-2 2xl:gap-3 min-w-0">
                             {/* Bot avatar — solid orange */}
-                            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md"
+                            <div className="w-9 h-9 2xl:w-12 2xl:h-12 rounded-lg 2xl:rounded-xl flex items-center justify-center text-white shadow-md shrink-0"
                                 style={{ backgroundColor: ORANGE }}>
-                                <Bot size={22} strokeWidth={2.2} />
+                                <Bot className="w-4 h-4 2xl:w-[22px] 2xl:h-[22px]" strokeWidth={2.2} />
                             </div>
-                            <div>
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    <h2 className="text-xl font-bold text-white tracking-tight">GA4 Assistant</h2>
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-[0.16em] border"
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-1.5 2xl:gap-2 flex-wrap">
+                                    <h2 className="text-sm 2xl:text-xl font-bold text-white tracking-tight">GA4 Assistant</h2>
+                                    <span className="inline-flex items-center gap-1 px-1.5 2xl:px-2 py-0.5 rounded text-[8px] 2xl:text-[9.5px] font-bold uppercase tracking-[0.16em] border"
                                         style={{ borderColor: "rgba(249,115,22,0.4)", backgroundColor: "rgba(249,115,22,0.15)", color: ORANGE }}>
                                         <span className="w-1 h-1 rounded-full animate-pulse" style={{ backgroundColor: ORANGE }} />
                                         Live
                                     </span>
                                     {/* Chatbot quota pill — always visible (unless unlimited) */}
                                     {usage?.chatbot && !usage.chatbot.unlimited && (
-                                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-[0.16em] border"
+                                        <span className="inline-flex items-center gap-1 2xl:gap-1.5 px-1.5 2xl:px-2 py-0.5 rounded text-[8px] 2xl:text-[9.5px] font-bold uppercase tracking-[0.16em] border"
                                             style={{ borderColor: "rgba(26,115,232,0.4)", backgroundColor: "rgba(26,115,232,0.15)", color: "#93C5FD" }}>
-                                            <BarChart3 size={10} strokeWidth={2.5} />
+                                            <BarChart3 className="w-2.5 h-2.5 2xl:w-[10px] 2xl:h-[10px]" strokeWidth={2.5} />
                                             <span className="font-mono tabular-nums normal-case tracking-normal">
                                                 {usage.chatbot.used} / {usage.chatbot.limit}
                                             </span>
@@ -222,41 +224,53 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                         </span>
                                     )}
                                     {usage?.chatbot?.unlimited && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-bold uppercase tracking-[0.16em] border"
+                                        <span className="inline-flex items-center gap-1 px-1.5 2xl:px-2 py-0.5 rounded text-[8px] 2xl:text-[9.5px] font-bold uppercase tracking-[0.16em] border"
                                             style={{ borderColor: "rgba(26,115,232,0.4)", backgroundColor: "rgba(26,115,232,0.15)", color: "#93C5FD" }}>
-                                            <Sparkles size={10} strokeWidth={2.5} />
+                                            <Sparkles className="w-2.5 h-2.5 2xl:w-[10px] 2xl:h-[10px]" strokeWidth={2.5} />
                                             Unlimited
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-slate-300 text-[12.5px] mt-0.5">
+                                <p className="text-slate-300 text-[10px] 2xl:text-[12.5px] mt-0.5 truncate">
                                     {chatbotSelectedProperty
                                         ? <>Analytics for: <span className="text-white font-semibold">{chatbotSelectedProperty.displayName}</span></>
                                         : "Select an account & property to start chatting"}
                                 </p>
                             </div>
                         </div>
-                        <button
-                            onClick={handleClose}
-                            className="text-slate-300 hover:text-white hover:bg-white/10 rounded-lg p-2 transition-colors"
-                            aria-label="Close chatbot"
-                        >
-                            <X size={20} strokeWidth={2.2} />
-                        </button>
+                        <div className="flex items-center gap-0.5 2xl:gap-1 shrink-0">
+                            <button
+                                onClick={() => setIsFullscreen((f) => !f)}
+                                className="text-slate-300 hover:text-white hover:bg-white/10 rounded-lg p-1.5 2xl:p-2 transition-colors"
+                                aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                                title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                            >
+                                {isFullscreen
+                                    ? <Minimize2 className="w-3.5 h-3.5 2xl:w-5 2xl:h-5" strokeWidth={2.2} />
+                                    : <Maximize2 className="w-3.5 h-3.5 2xl:w-5 2xl:h-5" strokeWidth={2.2} />}
+                            </button>
+                            <button
+                                onClick={handleClose}
+                                className="text-slate-300 hover:text-white hover:bg-white/10 rounded-lg p-1.5 2xl:p-2 transition-colors"
+                                aria-label="Close chatbot"
+                            >
+                                <X className="w-3.5 h-3.5 2xl:w-5 2xl:h-5" strokeWidth={2.2} />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 {/* ============== ACCOUNT / PROPERTY BAR ============== */}
-                <div className="bg-surface-muted/40 px-5 py-4 border-b-2 border-line flex-shrink-0">
-                    <div className="flex flex-col sm:flex-row gap-3">
+                <div className="bg-surface-muted/40 px-3 py-3 2xl:px-5 2xl:py-4 border-b-2 border-line flex-shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-2 2xl:gap-3">
                         {/* Account dropdown */}
                         <div className="flex-1 relative" ref={dropdownRef}>
-                            <label className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1.5">
+                            <label className="flex items-center gap-1 2xl:gap-1.5 text-[9px] 2xl:text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1 2xl:mb-1.5">
                                 Account
                                 {loadingAccounts && (
-                                    <span className="inline-flex items-center gap-1 px-1.5 py-px rounded text-[9.5px] font-bold normal-case tracking-normal"
+                                    <span className="inline-flex items-center gap-1 px-1 2xl:px-1.5 py-px rounded text-[8px] 2xl:text-[9.5px] font-bold normal-case tracking-normal"
                                         style={{ backgroundColor: `${ORANGE}1A`, color: ORANGE }}>
-                                        <span className="animate-spin rounded-full h-2.5 w-2.5 border-[1.5px] border-current border-t-transparent" />
+                                        <span className="animate-spin rounded-full h-2 w-2 2xl:h-2.5 2xl:w-2.5 border-[1.5px] border-current border-t-transparent" />
                                         Loading
                                     </span>
                                 )}
@@ -267,27 +281,27 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                 2) accountsError    → error pill + retry
                                 3) ready            → real button + dropdown */}
                             {loadingAccounts ? (
-                                <div className="w-full h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3.5 pr-3.5 cursor-wait">
-                                    <Building2 size={14} strokeWidth={2.4} className="text-content-subtle mr-2" />
+                                <div className="w-full h-8 2xl:h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3 pr-3 cursor-wait">
+                                    <Building2 className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] text-content-subtle mr-2" strokeWidth={2.4} />
                                     <span className="block h-3 flex-1 max-w-[60%] skeleton-shimmer rounded" />
-                                    <span className="ml-auto animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
+                                    <span className="ml-auto animate-spin rounded-full h-3.5 w-3.5 2xl:h-4 2xl:w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
                                 </div>
                             ) : accountsError ? (
-                                <div className="w-full rounded-lg border-2 border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-2.5 flex items-center gap-2">
-                                    <AlertCircle size={14} className="text-red-600 dark:text-red-400 shrink-0" />
-                                    <span className="text-[12px] text-red-700 dark:text-red-300 flex-1 leading-snug">{accountsError}</span>
+                                <div className="w-full rounded-lg border-2 border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-2 2xl:p-2.5 flex items-center gap-1.5 2xl:gap-2">
+                                    <AlertCircle className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] text-red-600 dark:text-red-400 shrink-0" />
+                                    <span className="text-[11px] 2xl:text-[12px] text-red-700 dark:text-red-300 flex-1 leading-snug">{accountsError}</span>
                                     <button
                                         type="button"
                                         onClick={retryAccountsFetch}
-                                        className="text-[11px] font-bold uppercase tracking-[0.12em] px-2 py-1 rounded border border-red-300 dark:border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors shrink-0"
+                                        className="text-[10px] 2xl:text-[11px] font-bold uppercase tracking-[0.12em] px-1.5 2xl:px-2 py-0.5 2xl:py-1 rounded border border-red-300 dark:border-red-500/40 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors shrink-0"
                                     >
                                         Retry
                                     </button>
                                 </div>
                             ) : accounts?.length === 0 ? (
-                                <div className="w-full rounded-lg border-2 border-line bg-surface-muted/50 p-2.5 flex items-center gap-2">
-                                    <AlertCircle size={14} className="text-content-subtle shrink-0" />
-                                    <span className="text-[12px] text-content-muted flex-1 leading-snug">
+                                <div className="w-full rounded-lg border-2 border-line bg-surface-muted/50 p-2 2xl:p-2.5 flex items-center gap-1.5 2xl:gap-2">
+                                    <AlertCircle className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] text-content-subtle shrink-0" />
+                                    <span className="text-[11px] 2xl:text-[12px] text-content-muted flex-1 leading-snug">
                                         No GA4 accounts linked to this email.
                                     </span>
                                 </div>
@@ -295,33 +309,33 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                 <button
                                     type="button"
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    className="w-full flex items-center justify-between gap-2 px-3.5 h-10 rounded-lg border-2 bg-surface text-[13px] transition-all hover:border-content-subtle/40"
+                                    className="w-full flex items-center justify-between gap-1.5 2xl:gap-2 px-3 2xl:px-3.5 h-8 2xl:h-10 rounded-lg border-2 bg-surface text-[12px] 2xl:text-[13px] transition-all hover:border-content-subtle/40"
                                     style={dropdownOpen
                                         ? { borderColor: ORANGE, boxShadow: "0 0 0 3px rgba(249,115,22,0.18)" }
                                         : { borderColor: "rgb(var(--border))" }}
                                 >
-                                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                                        <Building2 size={14} strokeWidth={2.4}
+                                    <div className="flex items-center gap-1.5 2xl:gap-2 min-w-0 flex-1">
+                                        <Building2 className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] shrink-0" strokeWidth={2.4}
                                             style={chatbotSelectedAccount ? { color: ORANGE } : { color: "rgb(var(--content-subtle))" }} />
                                         <span className={`truncate ${chatbotSelectedAccount ? "font-semibold text-content" : "text-content-subtle"}`}>
                                             {chatbotSelectedAccount?.displayName || "Select account"}
                                         </span>
                                     </div>
-                                    <ChevronDown size={16} className={`text-content-muted shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                                    <ChevronDown className={`w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-content-muted shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
                                 </button>
                             )}
 
                             {dropdownOpen && !loadingAccounts && !accountsError && accounts?.length > 0 && (
                                 <div className="absolute z-30 mt-1.5 w-full rounded-xl border-2 border-line bg-surface-elevated shadow-[0_24px_50px_-12px_rgba(15,23,42,0.25)] overflow-hidden">
-                                    <div className="p-2 border-b-2 border-line">
+                                    <div className="p-1.5 2xl:p-2 border-b-2 border-line">
                                         <div className="relative">
-                                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-subtle" />
+                                            <Search className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] absolute left-2.5 2xl:left-3 top-1/2 -translate-y-1/2 text-content-subtle" />
                                             <input
                                                 type="text"
                                                 placeholder="Search accounts..."
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                                className="w-full pl-9 pr-3 h-9 rounded-md text-[13px] bg-surface-muted border-2 border-line placeholder:text-content-subtle focus:outline-none transition-all"
+                                                className="w-full pl-8 2xl:pl-9 pr-3 h-8 2xl:h-9 rounded-md text-[12px] 2xl:text-[13px] bg-surface-muted border-2 border-line placeholder:text-content-subtle focus:outline-none transition-all"
                                                 onFocus={(e) => { e.target.style.borderColor = ORANGE; e.target.style.boxShadow = `0 0 0 3px rgba(249,115,22,0.18)`; }}
                                                 onBlur={(e) => { e.target.style.borderColor = "rgb(var(--border))"; e.target.style.boxShadow = "none"; }}
                                             />
@@ -333,7 +347,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                 acc?.displayName?.toLowerCase()?.includes(searchTerm.toLowerCase())
                                             );
                                             if (filtered.length === 0) {
-                                                return <div className="px-3 py-5 text-center text-[12.5px] text-content-subtle">No matches</div>;
+                                                return <div className="px-3 py-4 2xl:py-5 text-center text-[11px] 2xl:text-[12.5px] text-content-subtle">No matches</div>;
                                             }
                                             return filtered.map((account) => {
                                                 const active = chatbotSelectedAccount?.account === account?.account;
@@ -342,10 +356,10 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                         type="button"
                                                         key={account?.account}
                                                         onClick={() => handleAccountSelect(account)}
-                                                        className="w-full text-left px-3 py-2.5 text-[13px] flex items-center gap-2.5 transition-colors hover:bg-surface-hover"
+                                                        className="w-full text-left px-2.5 2xl:px-3 py-2 2xl:py-2.5 text-[12px] 2xl:text-[13px] flex items-center gap-2 2xl:gap-2.5 transition-colors hover:bg-surface-hover"
                                                         style={active ? { backgroundColor: "rgba(249,115,22,0.08)", color: ORANGE, fontWeight: 600 } : {}}
                                                     >
-                                                        <span className="w-1.5 h-1.5 rounded-full"
+                                                        <span className="w-1 h-1 2xl:w-1.5 2xl:h-1.5 rounded-full"
                                                             style={{ backgroundColor: active ? ORANGE : "rgb(var(--border-strong))" }} />
                                                         <span className="truncate flex-1">{account?.displayName}</span>
                                                     </button>
@@ -359,12 +373,12 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
                         {/* Property select */}
                         <div className="flex-1">
-                            <label className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1.5">
+                            <label className="flex items-center gap-1 2xl:gap-1.5 text-[9px] 2xl:text-[10.5px] font-bold uppercase tracking-[0.14em] text-content-subtle mb-1 2xl:mb-1.5">
                                 Property
                                 {loadingProperties && (
-                                    <span className="inline-flex items-center gap-1 px-1.5 py-px rounded text-[9.5px] font-bold normal-case tracking-normal"
+                                    <span className="inline-flex items-center gap-1 px-1 2xl:px-1.5 py-px rounded text-[8px] 2xl:text-[9.5px] font-bold normal-case tracking-normal"
                                         style={{ backgroundColor: `${ORANGE}1A`, color: ORANGE }}>
-                                        <span className="animate-spin rounded-full h-2.5 w-2.5 border-[1.5px] border-current border-t-transparent" />
+                                        <span className="animate-spin rounded-full h-2 w-2 2xl:h-2.5 2xl:w-2.5 border-[1.5px] border-current border-t-transparent" />
                                         Loading
                                     </span>
                                 )}
@@ -375,10 +389,10 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                        same right-aligned spinner (ml-auto inside a flex row
                                        rather than absolute-positioned, so the spin animation
                                        runs identically to the account one). */
-                                    <div className="w-full h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3.5 pr-3.5 cursor-wait">
-                                        <BarChart3 size={14} strokeWidth={2.4} className="text-content-subtle mr-2" />
+                                    <div className="w-full h-8 2xl:h-10 rounded-lg border-2 border-line bg-surface flex items-center pl-3 pr-3 cursor-wait">
+                                        <BarChart3 className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] text-content-subtle mr-2" strokeWidth={2.4} />
                                         <span className="block h-3 flex-1 max-w-[60%] skeleton-shimmer rounded" />
-                                        <span className="ml-auto animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
+                                        <span className="ml-auto animate-spin rounded-full h-3.5 w-3.5 2xl:h-4 2xl:w-4 border-2 border-current border-t-transparent" style={{ color: ORANGE }} />
                                     </div>
                                 ) : (
                                     <>
@@ -386,7 +400,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                             onChange={handlePropertySelect}
                                             disabled={!chatbotSelectedAccount}
                                             value={chatbotSelectedProperty?.name || ""}
-                                            className="w-full appearance-none rounded-lg border-2 bg-surface h-10 pl-9 pr-9 text-[13px] disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:outline-none"
+                                            className="w-full appearance-none rounded-lg border-2 bg-surface h-8 2xl:h-10 pl-8 2xl:pl-9 pr-8 2xl:pr-9 text-[12px] 2xl:text-[13px] disabled:cursor-not-allowed disabled:opacity-50 transition-all focus:outline-none"
                                             style={{
                                                 borderColor: "rgb(var(--border))",
                                                 color: chatbotSelectedProperty ? "rgb(var(--content))" : "rgb(var(--content-subtle))",
@@ -404,9 +418,9 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                 </option>
                                             ))}
                                         </select>
-                                        <BarChart3 size={14} strokeWidth={2.4} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+                                        <BarChart3 className="w-3.5 h-3.5 2xl:w-[14px] 2xl:h-[14px] pointer-events-none absolute left-2.5 2xl:left-3 top-1/2 -translate-y-1/2" strokeWidth={2.4}
                                             style={chatbotSelectedProperty ? { color: ORANGE } : { color: "rgb(var(--content-subtle))" }} />
-                                        <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-content-muted" />
+                                        <ChevronDown className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 pointer-events-none absolute right-2.5 2xl:right-3 top-1/2 -translate-y-1/2 text-content-muted" />
                                     </>
                                 )}
                             </div>
@@ -420,42 +434,42 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                 )}
 
                 {/* ============== MESSAGES AREA ============== */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-surface-muted">
+                <div className="flex-1 overflow-y-auto p-3 2xl:p-6 space-y-2.5 2xl:space-y-4 bg-surface-muted">
                     {messages.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center">
                             {/* Welcome icon — solid orange square (no gradient) */}
-                            <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center mb-5 shadow-lg"
+                            <div className="relative w-14 h-14 2xl:w-20 2xl:h-20 rounded-xl 2xl:rounded-2xl flex items-center justify-center mb-3 2xl:mb-5 shadow-lg"
                                 style={{ backgroundColor: ORANGE }}>
-                                <MessageCircle size={36} className="text-white" strokeWidth={2.2} />
-                                <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white shadow-md"
+                                <MessageCircle className="w-6 h-6 2xl:w-9 2xl:h-9 text-white" strokeWidth={2.2} />
+                                <span className="absolute -top-1 -right-1 w-4 h-4 2xl:w-6 2xl:h-6 rounded-full flex items-center justify-center text-white shadow-md"
                                     style={{ backgroundColor: BLUE }}>
-                                    <Sparkles size={12} strokeWidth={2.5} />
+                                    <Sparkles className="w-2.5 h-2.5 2xl:w-3 2xl:h-3" strokeWidth={2.5} />
                                 </span>
                             </div>
-                            <h3 className="text-xl font-bold text-content mb-2 tracking-tight">Welcome to GA4 Assistant</h3>
-                            <p className="text-content-muted text-[13.5px] max-w-md mb-6 leading-relaxed">
+                            <h3 className="text-base 2xl:text-xl font-bold text-content mb-1.5 2xl:mb-2 tracking-tight">Welcome to GA4 Assistant</h3>
+                            <p className="text-content-muted text-[12px] 2xl:text-[13.5px] max-w-md mb-4 2xl:mb-6 leading-relaxed px-2">
                                 {chatbotSelectedProperty
                                     ? "Ask anything about your Google Analytics data — I can analyze trends, compare metrics, and answer questions about performance."
                                     : "Please select an account and property above to start chatting."}
                             </p>
 
                             {chatbotSelectedProperty && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-w-2xl w-full">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 2xl:gap-2.5 max-w-2xl w-full">
                                     {starters.map((s) => (
                                         <button
                                             key={s.text}
                                             onClick={() => handleRecommendedQuestion(s.query)}
-                                            className="group px-4 py-3 bg-surface border-2 rounded-xl text-left transition-all hover:-translate-y-0.5"
+                                            className="group px-3 2xl:px-4 py-2.5 2xl:py-3 bg-surface border-2 rounded-lg 2xl:rounded-xl text-left transition-all hover:-translate-y-0.5"
                                             style={{ borderColor: "rgb(var(--border))" }}
                                             onMouseEnter={(e) => { e.currentTarget.style.borderColor = s.accent; }}
                                             onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgb(var(--border))"; }}
                                         >
-                                            <div className="flex items-center gap-2.5">
-                                                <span className="w-7 h-7 rounded-md flex items-center justify-center text-white shrink-0"
+                                            <div className="flex items-center gap-2 2xl:gap-2.5">
+                                                <span className="w-6 h-6 2xl:w-7 2xl:h-7 rounded-md flex items-center justify-center text-white shrink-0"
                                                     style={{ backgroundColor: s.accent }}>
-                                                    <s.icon size={14} strokeWidth={2.4} />
+                                                    <s.icon className="w-3 h-3 2xl:w-3.5 2xl:h-3.5" strokeWidth={2.4} />
                                                 </span>
-                                                <span className="text-[13px] font-semibold text-content">{s.text}</span>
+                                                <span className="text-[12px] 2xl:text-[13px] font-semibold text-content">{s.text}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -468,48 +482,48 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                 {message.type === "user" ? (
                                     <div className="flex justify-end">
                                         {/* User bubble — solid orange */}
-                                        <div className="rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%] shadow-md text-white"
+                                        <div className="rounded-2xl rounded-tr-sm px-3 2xl:px-4 py-2 2xl:py-2.5 max-w-[85%] 2xl:max-w-[80%] shadow-md text-white"
                                             style={{ backgroundColor: ORANGE }}>
-                                            <p className="text-[13.5px] leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                                            <p className="text-[12px] 2xl:text-[13.5px] leading-relaxed whitespace-pre-wrap">{message.content}</p>
                                         </div>
                                     </div>
                                 ) : message.type === "error" ? (
                                     <div className="flex justify-start">
-                                        <div className="bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 text-red-800 dark:text-red-200 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
-                                            <div className="flex items-start gap-2">
-                                                <AlertCircle size={16} className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                                                <p className="text-[13px] leading-relaxed">{message.content}</p>
+                                        <div className="bg-red-50 dark:bg-red-500/10 border-2 border-red-200 dark:border-red-500/30 text-red-800 dark:text-red-200 rounded-2xl rounded-tl-sm px-3 2xl:px-4 py-2 2xl:py-3 max-w-[85%] 2xl:max-w-[80%]">
+                                            <div className="flex items-start gap-1.5 2xl:gap-2">
+                                                <AlertCircle className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                                                <p className="text-[11px] 2xl:text-[13px] leading-relaxed">{message.content}</p>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="flex justify-start">
-                                        <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm">
-                                            <div className="flex items-start gap-2.5">
+                                        <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-3 2xl:px-4 py-2 2xl:py-3 max-w-[90%] 2xl:max-w-[80%] shadow-sm">
+                                            <div className="flex items-start gap-2 2xl:gap-2.5">
                                                 {/* Bot avatar — solid blue (no gradient) */}
-                                                <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 text-white"
+                                                <div className="w-6 h-6 2xl:w-7 2xl:h-7 rounded-md flex items-center justify-center flex-shrink-0 text-white"
                                                     style={{ backgroundColor: BLUE }}>
-                                                    <Bot size={14} strokeWidth={2.4} />
+                                                    <Bot className="w-3 h-3 2xl:w-3.5 2xl:h-3.5" strokeWidth={2.4} />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-[13.5px] leading-relaxed text-content whitespace-pre-wrap">
+                                                    <p className="text-[12px] 2xl:text-[13.5px] leading-relaxed text-content whitespace-pre-wrap">
                                                         {message.content}
                                                     </p>
 
                                                     {/* GA4 data — solid blue accent panel */}
                                                     {message.data?.ga4_dataframe && message.data.ga4_dataframe.length > 0 && (
-                                                        <div className="mt-3 p-3 rounded-lg border"
+                                                        <div className="mt-2 2xl:mt-3 p-2.5 2xl:p-3 rounded-lg border"
                                                             style={{ borderColor: `${BLUE}40`, backgroundColor: `${BLUE}10` }}>
-                                                            <div className="flex items-center gap-1.5 mb-2">
-                                                                <BarChart3 size={12} style={{ color: BLUE }} />
-                                                                <p className="text-[10.5px] font-bold uppercase tracking-[0.14em]" style={{ color: BLUE }}>
+                                                            <div className="flex items-center gap-1 2xl:gap-1.5 mb-1.5 2xl:mb-2">
+                                                                <BarChart3 className="w-3 h-3 2xl:w-3.5 2xl:h-3.5" style={{ color: BLUE }} />
+                                                                <p className="text-[9px] 2xl:text-[10.5px] font-bold uppercase tracking-[0.14em]" style={{ color: BLUE }}>
                                                                     Data summary
                                                                 </p>
                                                             </div>
                                                             {message.data.ga4_dataframe.map((row, idx) => (
-                                                                <div key={idx} className="text-[11.5px] text-content">
+                                                                <div key={idx} className="text-[10px] 2xl:text-[11.5px] text-content">
                                                                     {Object.entries(row).map(([key, value]) => (
-                                                                        <span key={key} className="mr-3">
+                                                                        <span key={key} className="mr-2 2xl:mr-3">
                                                                             <strong>{key}:</strong> {value}
                                                                         </span>
                                                                     ))}
@@ -519,8 +533,8 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                                     )}
 
                                                     {message.data?.response_time && (
-                                                        <p className="text-[10.5px] text-content-subtle mt-2 inline-flex items-center gap-1">
-                                                            <Zap size={10} strokeWidth={2.4} />
+                                                        <p className="text-[9px] 2xl:text-[10.5px] text-content-subtle mt-1.5 2xl:mt-2 inline-flex items-center gap-1">
+                                                            <Zap className="w-2.5 h-2.5 2xl:w-[10px] 2xl:h-[10px]" strokeWidth={2.4} />
                                                             Responded in {message.data.response_time.toFixed(2)}s
                                                         </p>
                                                     )}
@@ -528,19 +542,19 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                             </div>
 
                                             {message.recommendedQuestions && message.recommendedQuestions.length > 0 && (
-                                                <div className="mt-3 pt-3 border-t border-line">
-                                                    <div className="flex items-center gap-1.5 mb-2">
-                                                        <Sparkles size={11} style={{ color: ORANGE }} strokeWidth={2.5} />
-                                                        <p className="text-[10.5px] font-bold uppercase tracking-[0.14em]" style={{ color: ORANGE }}>
+                                                <div className="mt-2 2xl:mt-3 pt-2 2xl:pt-3 border-t border-line">
+                                                    <div className="flex items-center gap-1 2xl:gap-1.5 mb-1.5 2xl:mb-2">
+                                                        <Sparkles className="w-2.5 h-2.5 2xl:w-[11px] 2xl:h-[11px]" style={{ color: ORANGE }} strokeWidth={2.5} />
+                                                        <p className="text-[9px] 2xl:text-[10.5px] font-bold uppercase tracking-[0.14em]" style={{ color: ORANGE }}>
                                                             You might also ask
                                                         </p>
                                                     </div>
-                                                    <div className="flex flex-wrap gap-1.5">
+                                                    <div className="flex flex-wrap gap-1 2xl:gap-1.5">
                                                         {message.recommendedQuestions.map((question, idx) => (
                                                             <button
                                                                 key={idx}
                                                                 onClick={() => handleRecommendedQuestion(question)}
-                                                                className="px-3 py-1.5 rounded-full text-[11.5px] font-semibold border-2 transition-colors"
+                                                                className="px-2.5 2xl:px-3 py-1 2xl:py-1.5 rounded-full text-[10px] 2xl:text-[11.5px] font-semibold border-2 transition-colors"
                                                                 style={{
                                                                     borderColor: idx % 2 === 0 ? `${ORANGE}55` : `${BLUE}55`,
                                                                     color:        idx % 2 === 0 ? ORANGE : BLUE,
@@ -562,16 +576,16 @@ const ChatbotModal = ({ isOpen, onClose }) => {
 
                     {isLoading && (
                         <div className="flex justify-start">
-                            <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-                                <div className="flex items-center gap-2.5">
-                                    <div className="w-7 h-7 rounded-md flex items-center justify-center text-white"
+                            <div className="bg-surface border-2 border-line rounded-2xl rounded-tl-sm px-3 2xl:px-4 py-2 2xl:py-3 shadow-sm">
+                                <div className="flex items-center gap-2 2xl:gap-2.5">
+                                    <div className="w-6 h-6 2xl:w-7 2xl:h-7 rounded-md flex items-center justify-center text-white"
                                         style={{ backgroundColor: BLUE }}>
-                                        <span className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent" />
+                                        <span className="animate-spin rounded-full h-3 w-3 2xl:h-3.5 2xl:w-3.5 border-2 border-white border-t-transparent" />
                                     </div>
                                     <div className="flex gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: ORANGE, animationDelay: '0ms' }} />
-                                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: BLUE, animationDelay: '150ms' }} />
-                                        <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: ORANGE, animationDelay: '300ms' }} />
+                                        <span className="w-1 h-1 2xl:w-1.5 2xl:h-1.5 rounded-full animate-bounce" style={{ backgroundColor: ORANGE, animationDelay: '0ms' }} />
+                                        <span className="w-1 h-1 2xl:w-1.5 2xl:h-1.5 rounded-full animate-bounce" style={{ backgroundColor: BLUE, animationDelay: '150ms' }} />
+                                        <span className="w-1 h-1 2xl:w-1.5 2xl:h-1.5 rounded-full animate-bounce" style={{ backgroundColor: ORANGE, animationDelay: '300ms' }} />
                                     </div>
                                 </div>
                             </div>
@@ -582,7 +596,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* ============== INPUT AREA ============== */}
-                <div className="p-4 bg-surface border-t-2 border-line flex-shrink-0">
+                <div className="p-3 2xl:p-4 bg-surface border-t-2 border-line flex-shrink-0">
                     <div className="flex gap-2">
                         <input
                             ref={inputRef}
@@ -595,7 +609,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                                 : (propertyId ? "Ask a question about your analytics..." : "Please select a property first")
                             }
                             disabled={!propertyId || isLoading || blockedByLimit}
-                            className="flex-1 px-4 h-11 rounded-xl border-2 text-[13.5px] focus:outline-none transition-colors disabled:bg-surface-hover disabled:cursor-not-allowed text-content placeholder:text-content-subtle"
+                            className="flex-1 px-3 2xl:px-4 h-9 2xl:h-11 rounded-xl border-2 text-[12px] 2xl:text-[13.5px] focus:outline-none transition-colors disabled:bg-surface-hover disabled:cursor-not-allowed text-content placeholder:text-content-subtle"
                             style={{ borderColor: "rgb(var(--border-strong))" }}
                             onFocus={(e) => { if (!e.target.disabled) { e.target.style.borderColor = ORANGE; e.target.style.boxShadow = `0 0 0 3px rgba(249,115,22,0.18)`; } }}
                             onBlur={(e) => { e.target.style.borderColor = "rgb(var(--border-strong))"; e.target.style.boxShadow = "none"; }}
@@ -604,7 +618,7 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                         <button
                             onClick={handleSend}
                             disabled={!inputMessage.trim() || !propertyId || isLoading || blockedByLimit}
-                            className="px-5 h-11 rounded-xl font-bold text-[13.5px] text-white inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:-translate-y-0.5 active:translate-y-0"
+                            className="px-3.5 2xl:px-5 h-9 2xl:h-11 rounded-xl font-bold text-[12px] 2xl:text-[13.5px] text-white inline-flex items-center gap-1.5 2xl:gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:-translate-y-0.5 active:translate-y-0"
                             style={{
                                 backgroundColor: ORANGE,
                                 boxShadow: "0 10px 22px -8px rgba(249,115,22,0.55)",
@@ -612,33 +626,33 @@ const ChatbotModal = ({ isOpen, onClose }) => {
                         >
                             {isLoading ? (
                                 <>
-                                    <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                                    <span className="animate-spin rounded-full h-3.5 w-3.5 2xl:h-4 2xl:w-4 border-2 border-white border-t-transparent" />
                                     <span>Sending</span>
                                 </>
                             ) : (
                                 <>
                                     <span>Send</span>
-                                    <Send size={15} strokeWidth={2.4} />
+                                    <Send className="w-3.5 h-3.5 2xl:w-[15px] 2xl:h-[15px]" strokeWidth={2.4} />
                                 </>
                             )}
                         </button>
                     </div>
 
                     {!propertyId && (
-                        <p className="text-[11.5px] text-red-600 dark:text-red-400 mt-2 inline-flex items-center gap-1.5">
-                            <AlertCircle size={13} strokeWidth={2.4} />
+                        <p className="text-[10px] 2xl:text-[11.5px] text-red-600 dark:text-red-400 mt-1.5 2xl:mt-2 inline-flex items-center gap-1 2xl:gap-1.5">
+                            <AlertCircle className="w-3 h-3 2xl:w-[13px] 2xl:h-[13px]" strokeWidth={2.4} />
                             Please select an account and property above before asking questions
                         </p>
                     )}
 
                     {propertyId && !blockedByLimit && (
-                        <div className="mt-2 flex items-center justify-between">
-                            <span className="text-[10.5px] text-content-subtle inline-flex items-center gap-1.5">
-                                <ShieldCheck size={11} style={{ color: BLUE }} strokeWidth={2.4} />
+                        <div className="mt-1.5 2xl:mt-2 flex items-center justify-between">
+                            <span className="text-[9px] 2xl:text-[10.5px] text-content-subtle inline-flex items-center gap-1 2xl:gap-1.5">
+                                <ShieldCheck className="w-2.5 h-2.5 2xl:w-[11px] 2xl:h-[11px]" style={{ color: BLUE }} strokeWidth={2.4} />
                                 Read-only access · queries metered live
                             </span>
                             {usage?.chatbot && !usage.chatbot.unlimited && (
-                                <span className="text-[10.5px] font-mono tabular-nums text-content-subtle font-semibold">
+                                <span className="text-[9px] 2xl:text-[10.5px] font-mono tabular-nums text-content-subtle font-semibold">
                                     {usage.chatbot.used} / {usage.chatbot.limit} this month
                                 </span>
                             )}

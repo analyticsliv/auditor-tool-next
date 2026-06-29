@@ -1,22 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getSession } from 'next-auth/react';
 
-/* ============================================================
-   GA4 Auto-Fix Agent — confirmed WebSocket contract.
-
-   Connect:  wss://<host>/audit/agent/ws?token=<bearerToken>&property_id=<id>
-             (query params — the browser WebSocket API can't send custom
-             headers like Authorization/X-Property-Id on the handshake)
-
-   Messages are PLAIN TEXT in both directions, not JSON:
-   - The agent speaks first once the socket opens; the client sends
-     nothing on connect.
-   - Client replies are raw strings: "yes", "no", free text, or "exit"
-     to end the session.
-
-   All of this is isolated to this file — the UI only sees
-   { status, messages, connect, sendMessage, disconnect }.
-   ============================================================ */
 
 const AGENT_BASE_URL =
     process.env.NEXT_PUBLIC_AGENT_URL ||
