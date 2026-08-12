@@ -44,6 +44,7 @@ export const authOptions = {
 
       // Refresh 5 Min BEFORE the token actually expires so a long-running call
       // (e.g. chatbot LLM completion) doesn't get a token that expires mid-flight.
+      
       const REFRESH_BUFFER_MS = 5 * 60 * 1000;
       if (!token.expiresAt || Date.now() < token.expiresAt - REFRESH_BUFFER_MS) {
         return token;
