@@ -61,7 +61,10 @@ export function useAuditAgent() {
 
         const session = await getSession();
         const token = session?.accessToken;
+
         log('Session resolved', { hasSession: !!session, token: maskToken(token) });
+
+
 
         if (!token) {
             logError('No access token on session — aborting connect');

@@ -31,6 +31,9 @@ export const useChatbot = (onUsageRefetch) => {
         const accessToken = session?.accessToken;
         const email = session?.user?.email;
 
+
+       
+
         const refetch = () => { if (typeof onUsageRefetch === 'function') onUsageRefetch(); };
 
         // Auth guard — if next-auth couldn't refresh the access token (or
